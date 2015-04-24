@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title> EigerDectris Tango Class Attributes </title>
+</head>
+<body text="Black" bgcolor="White" link="Blue" vlink="Purple" alink="Red">
+<br><br><br><br>
+<Table Border=2 Cellpadding=3 CELLSPACING=0>
+	<tr bgcolor="#CCCCFF" class="TableHeadingColor">
+	<td colspan=8> <font size=+1> <center><b> EigerDectris Class Attributes </b></font></center></td>
+	<tr bgcolor="#CCCCFF" class="TableHeadingColor">
+		<td> <center><b> Name </b></center> </td>
+		<td> <center><b> Inherited </b></center> </td>
+		<td> <center><b> Abstract </b></center> </td>
+		<td> <center><b> Attr. type </b></center> </td>
+		<td> <center><b> R/W type </b></center> </td>
+		<td> <center><b> Data type </b></center> </td>
+		<td> <center><b> Level </b></center> </td>
+		<td> <center><b> Description </b></center> </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrNbImages.html"> NbImages </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> Number of images per serie </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrTemperature.html"> Temperature </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> Board temperature </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrHumidity.html"> Humidity </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> Returns the relative humidity reading (in percent) </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrCountTime.html"> CountTime </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> Currently set count time per image in seconds </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrFrameTime.html"> FrameTime </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> Currently set frame time (count time plus read out time) per image in seconds. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrEnergy.html"> Energy </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> Currently set photon energy in electron volts </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrWavelength.html"> Wavelength </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> Currently set photon wavelength in Angstrom. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrEnergyThreshold.html"> EnergyThreshold </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> Currently set energy threshold in electron volts. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrFlatfieldEnabled.html"> FlatfieldEnabled </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> 1 if the flatfield correction is enabled. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrAutoSummationEnabled.html"> AutoSummationEnabled </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> 1 if the auto summation feature (to increase the dynamic range) is enabled. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrTriggerMode.html"> TriggerMode </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_STRING </td>
+		<td> OPERATOR </td>
+		<td> Current trigger mode. Following trigger modes are supported:<Br>
+			expo, extt, extm, exte, exts, ints </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrRateCorrectionEnabled.html"> RateCorrectionEnabled </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> 1 if the rate correction is enabled. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrBitDepth.html"> BitDepth </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td>  Detector  bit depth, i.e. the dynamic range. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrReadoutTime.html"> ReadoutTime </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> OPERATOR </td>
+		<td> detector`s readout time per image </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrDescription.html"> Description </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_STRING </td>
+		<td> OPERATOR </td>
+		<td> Detector description, i.e. the model. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrImagesPerFile.html"> ImagesPerFile </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> Number of images stored in a single data file. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrFilenamePattern.html"> FilenamePattern </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_STRING </td>
+		<td> OPERATOR </td>
+		<td> The file naming pattern. The string ``$id`` is replaced by the series id. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrCompressionEnabled.html"> CompressionEnabled </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> 1 if the LZ4 data compression is enabled. </td>
+	</tr>
+</table>
+<br><br>
+<hr>
+<br><br>
+<font size="+1"><u><b> There is no dynamic attribute defined. </b></u></font>
+</body>
+</html>

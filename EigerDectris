@@ -1,0 +1,13 @@
+#!/bin/bash
+
+output=$(lsb_release -i)
+
+if [[ "$output" == *"Scientific"* ]]; then
+. /home/etc/tango_env
+exec python /usr/local/bin/server/EigerDectris.py $*
+fi
+
+if [[ "$output" == *"Debian"* ]]; then
+. /etc/tangorc
+exec python /usr/lib/tango/server/EigerDectris.py $*
+fi
