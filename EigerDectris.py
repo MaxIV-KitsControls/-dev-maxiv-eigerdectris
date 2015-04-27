@@ -51,7 +51,8 @@ import sys
 # Add additional import
 #----- PROTECTED REGION ID(EigerDectris.additionnal_import) ENABLED START -----#
 
-import dectris_eiger
+from dectris_eiger.eiger import EigerDetector
+import json
 
 #----- PROTECTED REGION END -----#	//	EigerDectris.additionnal_import
 
@@ -105,10 +106,12 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_CompressionEnabled_read = 0
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
         
-        self.det = dectris_eiger.EigerDetector(self.Host, self.PortNb)
+        print "Detector being initialized. This can take about 20 s ..."
+        self.det = EigerDetector(self.Host, self.PortNb)
 
         # initialize the detector
         self.det.initialize()
+        print "Detector initialized"
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.init_device
 
@@ -320,7 +323,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_RateCorrectionEnabled_read = 0
         if self.det.rate_correction_enabled == True:
             self.attr_RateCorrectionEnabled_read = 1
-        attr.set_value(self.attr_RateCorrectionEnable_read)
+        attr.set_value(self.attr_RateCorrectionEnabled_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.RateCorrectionEnabled_read
         
@@ -458,7 +461,8 @@ class EigerDectris (PyTango.Device_4Impl):
         else:
             self.set_state(PyTango.DevState.ON) 
 
-        self.set_status(rstate)
+        print rstate
+        self.set_status(str(rstate))
 
         argout = self.get_state()
         
