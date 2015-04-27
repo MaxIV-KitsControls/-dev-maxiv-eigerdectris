@@ -8,8 +8,8 @@
 
 .. moduleauthor:: Sven Festersen <festersen@physik.uni-kiel.de>
 """
-from communication import get_value, set_value
-from filewriter import EigerFileWriter
+from .communication import get_value, set_value
+from .filewriter import EigerFileWriter
 
 
 class EigerDetector(object):

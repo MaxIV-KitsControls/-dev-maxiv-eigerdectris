@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import requests
 
 
@@ -14,7 +15,7 @@ def get_value(host, port, api_version, subsystem, section, key, timeout=2,
     url = url_fmt.format(**conf)
 
     response = requests.get(url, timeout=timeout)
-    data = response.json()
+    data = json.loads(response.text)
     if return_full:
         return data
     else:
@@ -30,8 +31,11 @@ def set_value(host, port, api_version, subsystem, section, key, value,
                 section=section, key=key)
     url_fmt = "http://{host}:{port}/{sys}/api/{version}/{section}/{key}"
     url = url_fmt.format(**conf)
-    response = requests.put(url, timeout=timeout, json={"value": value})
+    payload = json.dumps({"value": value})
+    headers = {"Content-type": "application/json"}
+    response = requests.put(url, timeout=timeout, data=payload,
+                            headers=headers)
     if no_data:
         return None
-    data = response.json()
+    data = json.loads(response.text)
     return data
