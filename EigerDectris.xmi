@@ -5,11 +5,11 @@
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at mail.desy.de - tnunez" author="tnunez" emailDomain="mail.desy.de" classFamily="Acquisition" siteSpecific="" platform="Unix Like" bus="Not Applicable" manufacturer="Dectris" reference="Eiger"/>
     </description>
-    <deviceProperties name="Host" description="">
+    <deviceProperties name="Host" description="Host name">
       <type xsi:type="pogoDsl:StringType"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </deviceProperties>
-    <deviceProperties name="PortNb" description="">
+    <deviceProperties name="PortNb" description="Port number">
       <type xsi:type="pogoDsl:IntType"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <DefaultPropValue>80</DefaultPropValue>

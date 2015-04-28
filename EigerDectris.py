@@ -591,9 +591,11 @@ class EigerDectrisClass(PyTango.DeviceClass):
     device_property_list = {
         'Host':
             [PyTango.DevString,
+            "Host name",
             [] ],
         'PortNb':
             [PyTango.DevLong,
+            "Port number",
             [80]],
         }
 
