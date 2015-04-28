@@ -37,6 +37,7 @@ all:
 install:
 	cp $(CLASS).py  $(DESTDIR)
 	cp $(CLASS)  $(DESTDIR)
+	cp -r dectris_eiger $(DESTDIR)
 	chmod 755 $(DESTDIR)/$(CLASS)
 
 clean:
