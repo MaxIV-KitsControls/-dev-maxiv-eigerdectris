@@ -461,7 +461,6 @@ class EigerDectris (PyTango.Device_4Impl):
         else:
             self.set_state(PyTango.DevState.ON) 
 
-        print rstate
         self.set_status(str(rstate))
 
         argout = self.get_state()
@@ -481,7 +480,11 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In dev_status()")
         argout = ''
         #----- PROTECTED REGION ID(EigerDectris.Status) ENABLED START -----#
-        
+               
+        rstate = self.det.get_state()
+
+        argout = str(rstate)
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
         self.__status = PyTango.Device_4Impl.dev_status(self)
