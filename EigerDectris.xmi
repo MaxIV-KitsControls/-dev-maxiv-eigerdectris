@@ -30,7 +30,7 @@
       <argout description="Device status">
         <type xsi:type="pogoDsl:ConstStringType"/>
       </argout>
-      <status abstract="true" inherited="true" concrete="true"/>
+      <status abstract="true" inherited="true" concrete="true" concreteHere="true"/>
     </commands>
     <commands name="Arm" description="Arm/Disarm the detector." execMethod="arm" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="0-> Disarm, 1 -> Arm">

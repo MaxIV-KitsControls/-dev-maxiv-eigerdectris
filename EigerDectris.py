@@ -471,6 +471,22 @@ class EigerDectris (PyTango.Device_4Impl):
             PyTango.Device_4Impl.dev_state(self)
         return self.get_state()
         
+    def dev_status(self):
+        """ This command gets the device status (stored in its device_status data member) and returns it to the caller.
+        
+        :param : none
+        :type: PyTango.DevVoid
+        :return: Device status
+        :rtype: PyTango.ConstDevString """
+        self.debug_stream("In dev_status()")
+        argout = ''
+        #----- PROTECTED REGION ID(EigerDectris.Status) ENABLED START -----#
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.Status
+        self.set_status(self.argout)
+        self.__status = PyTango.Device_4Impl.dev_status(self)
+        return self.__status
+        
     def Arm(self, argin):
         """ Arm/Disarm the detector.
         
@@ -482,7 +498,10 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Arm) ENABLED START -----#
         
         if argin == 1:
-            self.det.arm()
+            try:
+                self.det.arm(timeout=0.1)
+            except:
+                pass
         else:
             self.det.disarm()
         
@@ -569,11 +588,9 @@ class EigerDectrisClass(PyTango.DeviceClass):
     device_property_list = {
         'Host':
             [PyTango.DevString,
-            "IP Adress",
             [] ],
         'PortNb':
             [PyTango.DevLong,
-            "Port Number",
             [80]],
         }
 
