@@ -53,6 +53,7 @@ import sys
 
 from dectris_eiger.eiger import EigerDetector
 import json
+from threading import Thread
 
 #----- PROTECTED REGION END -----#	//	EigerDectris.additionnal_import
 
@@ -60,6 +61,19 @@ import json
 ## ON : 
 ## FAULT : 
 ## MOVING : 
+
+class CommonThread(Thread):
+    
+    def __init__ (self, action_flag, detector, arg1, arg2):
+        Thread.__init__(self)
+        self.action_flag = action_flag
+        self.detector = detector
+        self.arg1 = arg1
+        self.arg2 = arg2
+
+    def run(self):
+        if self.action_flag == 0: # save files
+            self.detector.buffer.download(self.arg1, self.arg2)
 
 class EigerDectris (PyTango.Device_4Impl):
 
@@ -104,10 +118,15 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_ImagesPerFile_read = 0
         self.attr_FilenamePattern_read = ''
         self.attr_CompressionEnabled_read = 0
+        self.attr_FileDir_read = ''
+        self.attr_FilesToSave_read = ''
+        self.attr_FilesInBuffer_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
         
         print "Detector being initialized. This can take about 20 s ..."
         self.det = EigerDetector(self.Host, self.PortNb)
+
+        self.flag_arm = 0
 
         # initialize the detector
         self.det.initialize()
@@ -129,7 +148,9 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_NbImages()")
         #----- PROTECTED REGION ID(EigerDectris.NbImages_read) ENABLED START -----#
         
-        self.attr_NbImages_read = self.det.nimages
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_NbImages_read = self.det.nimages
+
         attr.set_value(self.attr_NbImages_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbImages_read
@@ -147,7 +168,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_Temperature()")
         #----- PROTECTED REGION ID(EigerDectris.Temperature_read) ENABLED START -----#
 
-        self.attr_Temperature_read = self.det.temperature
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_Temperature_read = self.det.temperature
         attr.set_value(self.attr_Temperature_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Temperature_read
@@ -156,7 +178,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_Humidity()")
         #----- PROTECTED REGION ID(EigerDectris.Humidity_read) ENABLED START -----#
 
-        self.attr_Humidity_read = self.det.humidity
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_Humidity_read = self.det.humidity
         attr.set_value(self.attr_Humidity_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Humidity_read
@@ -165,7 +188,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_CountTime()")
         #----- PROTECTED REGION ID(EigerDectris.CountTime_read) ENABLED START -----#
 
-        self.attr_CountTime_read = self.det.count_time
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_CountTime_read = self.det.count_time
         attr.set_value(self.attr_CountTime_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.CountTime_read
@@ -183,7 +207,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_FrameTime()")
         #----- PROTECTED REGION ID(EigerDectris.FrameTime_read) ENABLED START -----#
 
-        self.attr_FrameTime_read = self.det.frame_time
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_FrameTime_read = self.det.frame_time
         attr.set_value(self.attr_FrameTime_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTime_read
@@ -201,7 +226,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_Energy()")
         #----- PROTECTED REGION ID(EigerDectris.Energy_read) ENABLED START -----#
 
-        self.attr_Energy_read = self.det.energy
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_Energy_read = self.det.energy
         attr.set_value(self.attr_Energy_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Energy_read
@@ -219,7 +245,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_Wavelength()")
         #----- PROTECTED REGION ID(EigerDectris.Wavelength_read) ENABLED START -----#
         
-        self.attr_Wavelength_read = self.det.wavelength
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_Wavelength_read = self.det.wavelength
         attr.set_value(self.attr_Wavelength_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Wavelength_read
@@ -237,7 +264,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_EnergyThreshold()")
         #----- PROTECTED REGION ID(EigerDectris.EnergyThreshold_read) ENABLED START -----#
 
-        self.attr_EnergyThreshold_read = self.det.threshold
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_EnergyThreshold_read = self.det.threshold
         attr.set_value(self.attr_EnergyThreshold_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.EnergyThreshold_read
@@ -255,9 +283,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_FlatfieldEnabled()")
         #----- PROTECTED REGION ID(EigerDectris.FlatfieldEnabled_read) ENABLED START -----#
         
-        self.attr_FlatfieldEnabled_read = 0
-        if self.det.flatfield_enabled == True:
-            self.attr_FlatfieldEnabled_read = 1
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_FlatfieldEnabled_read = 0
+            if self.det.flatfield_enabled == True:
+                self.attr_FlatfieldEnabled_read = 1
             
         attr.set_value(self.attr_FlatfieldEnabled_read)
         
@@ -278,9 +307,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_AutoSummationEnabled()")
         #----- PROTECTED REGION ID(EigerDectris.AutoSummationEnabled_read) ENABLED START -----#
         
-        self.attr_AutoSummationEnabled_read = 0
-        if self.det.auto_summation_enabled == True:
-            self.attr_AutoSummationEnabled_read = 1
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_AutoSummationEnabled_read = 0
+            if self.det.auto_summation_enabled == True:
+                self.attr_AutoSummationEnabled_read = 1
             
         attr.set_value(self.attr_AutoSummationEnabled_read)
         
@@ -302,7 +332,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_TriggerMode()")
         #----- PROTECTED REGION ID(EigerDectris.TriggerMode_read) ENABLED START -----#
 
-        self.attr_TriggerMode_read = self.det.trigger_mode
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_TriggerMode_read = self.det.trigger_mode
         attr.set_value(self.attr_TriggerMode_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.TriggerMode_read
@@ -320,9 +351,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_RateCorrectionEnabled()")
         #----- PROTECTED REGION ID(EigerDectris.RateCorrectionEnabled_read) ENABLED START -----#
         
-        self.attr_RateCorrectionEnabled_read = 0
-        if self.det.rate_correction_enabled == True:
-            self.attr_RateCorrectionEnabled_read = 1
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_RateCorrectionEnabled_read = 0
+            if self.det.rate_correction_enabled == True:
+                self.attr_RateCorrectionEnabled_read = 1
         attr.set_value(self.attr_RateCorrectionEnabled_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.RateCorrectionEnabled_read
@@ -343,7 +375,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_BitDepth()")
         #----- PROTECTED REGION ID(EigerDectris.BitDepth_read) ENABLED START -----#
 
-        self.attr_BitDepth_read = self.det.bit_depth
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_BitDepth_read = self.det.bit_depth
         attr.set_value(self.attr_BitDepth_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.BitDepth_read
@@ -352,7 +385,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_ReadoutTime()")
         #----- PROTECTED REGION ID(EigerDectris.ReadoutTime_read) ENABLED START -----#
         
-        self.attr_ReadoutTime_read = self.det.readout_time
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_ReadoutTime_read = self.det.readout_time
         attr.set_value(self.attr_ReadoutTime_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.ReadoutTime_read
@@ -361,7 +395,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_Description()")
         #----- PROTECTED REGION ID(EigerDectris.Description_read) ENABLED START -----#
 
-        self.attr_Description_read = self.det.description
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_Description_read = self.det.description
         attr.set_value(self.attr_Description_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Description_read
@@ -370,7 +405,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_ImagesPerFile()")
         #----- PROTECTED REGION ID(EigerDectris.ImagesPerFile_read) ENABLED START -----#
 
-        self.attr_ImagesPerFile_read = self.det.filewriter.images_per_file
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_ImagesPerFile_read = self.det.filewriter.images_per_file
         attr.set_value(self.attr_ImagesPerFile_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.ImagesPerFile_read
@@ -388,7 +424,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_FilenamePattern()")
         #----- PROTECTED REGION ID(EigerDectris.FilenamePattern_read) ENABLED START -----#
 
-        self.attr_FilenamePattern_read = self.det.filewriter.filename_pattern
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_FilenamePattern_read = self.det.filewriter.filename_pattern
         attr.set_value(self.attr_FilenamePattern_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FilenamePattern_read
@@ -406,9 +443,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In read_CompressionEnabled()")
         #----- PROTECTED REGION ID(EigerDectris.CompressionEnabled_read) ENABLED START -----#
         
-        self.attr_CompressionEnabled_read = 0
-        if self.det.filewriter.compression_enabled == True:
-            self.attr_CompressionEnabled_read = 1
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_CompressionEnabled_read = 0
+            if self.det.filewriter.compression_enabled == True:
+                self.attr_CompressionEnabled_read = 1
             
         attr.set_value(self.attr_CompressionEnabled_read)
         
@@ -425,6 +463,51 @@ class EigerDectris (PyTango.Device_4Impl):
             self.det.filewriter.compression_enabled = True
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.CompressionEnabled_write
+        
+    def read_FileDir(self, attr):
+        self.debug_stream("In read_FileDir()")
+        #----- PROTECTED REGION ID(EigerDectris.FileDir_read) ENABLED START -----#
+        attr.set_value(self.attr_FileDir_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.FileDir_read
+        
+    def write_FileDir(self, attr):
+        self.debug_stream("In write_FileDir()")
+        data=attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.FileDir_write) ENABLED START -----#
+        
+        self.attr_FileDir_read = data
+
+        #----- PROTECTED REGION END -----#	//	EigerDectris.FileDir_write
+        
+    def read_FilesToSave(self, attr):
+        self.debug_stream("In read_FilesToSave()")
+        #----- PROTECTED REGION ID(EigerDectris.FilesToSave_read) ENABLED START -----#
+        attr.set_value(self.attr_FilesToSave_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.FilesToSave_read
+        
+    def write_FilesToSave(self, attr):
+        self.debug_stream("In write_FilesToSave()")
+        data=attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.FilesToSave_write) ENABLED START -----#
+        
+        self.attr_FilesToSave_read = data
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.FilesToSave_write
+        
+    def read_FilesInBuffer(self, attr):
+        self.debug_stream("In read_FilesInBuffer()")
+        #----- PROTECTED REGION ID(EigerDectris.FilesInBuffer_read) ENABLED START -----#
+        
+        nb_files = 0
+        for file_name in self.det.buffer.files:
+            self.attr_FilesInBuffer_read.append(str(file_name))
+            nb_files = nb_files + 1
+        
+        attr.set_value(self.attr_FilesInBuffer_read, nb_files)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.FilesInBuffer_read
         
     
     
@@ -456,7 +539,13 @@ class EigerDectris (PyTango.Device_4Impl):
         
         rstate = self.det.get_state()
 
-        if rstate == "acquire":
+        if self.flag_arm:
+            if rstate == "configure" or rstate == "ready":
+                self.flag_arm = 0
+
+        if rstate == "error":
+            self.set_state(PyTango.DevState.FAULT) 
+        elif (rstate != "idle" and rstate != "ready") or self.flag_arm:
             self.set_state(PyTango.DevState.MOVING)
         else:
             self.set_state(PyTango.DevState.ON) 
@@ -483,7 +572,7 @@ class EigerDectris (PyTango.Device_4Impl):
                
         rstate = self.det.get_state()
 
-        argout = str(rstate)
+        self.argout = str(rstate)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
@@ -500,13 +589,19 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In Arm()")
         #----- PROTECTED REGION ID(EigerDectris.Arm) ENABLED START -----#
         
+        rstate = self.det.get_state()
+
         if argin == 1:
-            try:
-                self.det.arm(timeout=0.1)
-            except:
-                pass
+            if rstate != "ready":
+                try:
+                    self.flag_arm = 1
+                    self.det.arm(timeout=0.1)
+                except:
+                    pass
         else:
-            self.det.disarm()
+            if rstate != "idle":
+                self.flag_arm = 0
+                self.det.disarm()
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Arm
         
@@ -551,6 +646,52 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det.cancel()
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Cancel
+        
+    def SaveFiles(self):
+        """ Save the files matching FilesToSave to FileDir
+        
+        :param : 
+        :type: PyTango.DevVoid
+        :return: 
+        :rtype: PyTango.DevVoid """
+        self.debug_stream("In SaveFiles()")
+        #----- PROTECTED REGION ID(EigerDectris.SaveFiles) ENABLED START -----#
+        
+        file_pattern = self.attr_FilesToSave_read + "*"
+
+        
+        th = CommonThread(0,self.det, file_pattern,self.attr_FileDir_read)
+        th.start()
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.SaveFiles
+        
+    def ClearBuffer(self):
+        """ Delete all files from buffer
+        
+        :param : 
+        :type: PyTango.DevVoid
+        :return: 
+        :rtype: PyTango.DevVoid """
+        self.debug_stream("In ClearBuffer()")
+        #----- PROTECTED REGION ID(EigerDectris.ClearBuffer) ENABLED START -----#
+        
+        self.det.clear_buffer()
+
+        #----- PROTECTED REGION END -----#	//	EigerDectris.ClearBuffer
+        
+    def DeleteFileFromBuffer(self, argin):
+        """ Delete the file give the argument name from the buffer
+        
+        :param argin: Name of the file to delete
+        :type: PyTango.DevString
+        :return: 
+        :rtype: PyTango.DevVoid """
+        self.debug_stream("In DeleteFileFromBuffer()")
+        #----- PROTECTED REGION ID(EigerDectris.DeleteFileFromBuffer) ENABLED START -----#
+
+        self.det.buffer.delete_file(argin)
+
+        #----- PROTECTED REGION END -----#	//	EigerDectris.DeleteFileFromBuffer
         
 
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
@@ -613,6 +754,15 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevVoid, "none"]],
         'Cancel':
             [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'SaveFiles':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'ClearBuffer':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'DeleteFileFromBuffer':
+            [[PyTango.DevString, "Name of the file to delete"],
             [PyTango.DevVoid, "none"]],
         }
 
@@ -752,6 +902,29 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "1 if the LZ4 data compression is enabled.",
+            } ],
+        'FileDir':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Directory for saving the files",
+                'Memorized':"true"
+            } ],
+        'FilesToSave':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Pattern of the files to save in FileDir",
+                'Memorized':"true"
+            } ],
+        'FilesInBuffer':
+            [[PyTango.DevString,
+            PyTango.SPECTRUM,
+            PyTango.READ, 1000],
+            {
+                'description': "Name of files in detector data directory",
             } ],
         }
 
