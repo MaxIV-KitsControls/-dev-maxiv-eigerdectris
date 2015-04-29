@@ -615,7 +615,12 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In Trigger()")
         #----- PROTECTED REGION ID(EigerDectris.Trigger) ENABLED START -----#
         
-        self.det.trigger()
+        rstate = self.det.get_state()
+
+        if rstate != "ready":
+            raise Exception("Detector in %s state, not 'ready',  try the arm command first" % str(rstate))
+
+            self.det.trigger()
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Trigger
         
