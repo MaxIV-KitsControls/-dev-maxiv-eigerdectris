@@ -62,19 +62,6 @@ from threading import Thread
 ## FAULT : 
 ## MOVING : 
 
-class CommonThread(Thread):
-    
-    def __init__ (self, action_flag, detector, arg1, arg2):
-        Thread.__init__(self)
-        self.action_flag = action_flag
-        self.detector = detector
-        self.arg1 = arg1
-        self.arg2 = arg2
-
-    def run(self):
-        if self.action_flag == 0: # save files
-            self.detector.buffer.download(self.arg1, self.arg2)
-
 class EigerDectris (PyTango.Device_4Impl):
 
     #--------- Add you global variables here --------------------------
@@ -124,7 +111,13 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
         
         print "Detector being initialized. This can take about 20 s ..."
-        self.det = EigerDetector(self.Host, self.PortNb)
+
+        nums = self.APIVersion.split(".")
+
+        if int(nums[1]) > 2:
+            self.PortNb = -1
+
+        self.det = EigerDetector(self.Host, self.PortNb,self.APIVersion)
 
         self.flag_arm = 0
 
@@ -743,6 +736,10 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevLong,
             "Port number",
             [80]],
+        'APIVersion':
+            [PyTango.DevString,
+            "API Version, ex. 1.0.0",
+            ["1.0.0"] ],
         }
 
 

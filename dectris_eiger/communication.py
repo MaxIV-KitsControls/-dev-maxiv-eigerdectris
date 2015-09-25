@@ -11,7 +11,12 @@ def get_value(host, port, api_version, subsystem, section, key, timeout=2,
     """
     conf = dict(host=host, port=port, sys=subsystem, version=api_version,
                 section=section, key=key)
-    url_fmt = "http://{host}:{port}/{sys}/api/{version}/{section}/{key}"
+
+    if port == -1:
+        url_fmt = "http://{host}/{sys}/api/{version}/{section}/{key}"
+    else:
+        url_fmt = "http://{host}:{port}/{sys}/api/{version}/{section}/{key}"
+
     url = url_fmt.format(**conf)
 
     response = requests.get(url, timeout=timeout)
@@ -29,7 +34,12 @@ def set_value(host, port, api_version, subsystem, section, key, value,
     """
     conf = dict(host=host, port=port, sys=subsystem, version=api_version,
                 section=section, key=key)
-    url_fmt = "http://{host}:{port}/{sys}/api/{version}/{section}/{key}"
+
+    if port == -1:
+        url_fmt = "http://{host}/{sys}/api/{version}/{section}/{key}"
+    else:
+        url_fmt = "http://{host}:{port}/{sys}/api/{version}/{section}/{key}"
+
     url = url_fmt.format(**conf)
     payload = json.dumps({"value": value})
     headers = {"Content-type": "application/json"}

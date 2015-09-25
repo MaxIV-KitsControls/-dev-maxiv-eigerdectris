@@ -61,12 +61,22 @@ class EigerDataBuffer(object):
         :returns: list of files in the buffer
         :rtype: list of string
         """
-        fmt_data = {"host": self._host,
-                    "port": self._port,
-                    "api_version": self._api_v
-                    }
-        url = ("http://{host}:{port}/filewriter/api/"
-               "{api_version}/files").format(**fmt_data)
+
+        if self._port == -1:
+            fmt_data = {"host": self._host,
+                        "api_version": self._api_v
+                        }
+            url = ("http://{host}/filewriter/api/"
+                   "{api_version}/files").format(**fmt_data)
+        else:
+            fmt_data = {"host": self._host,
+                        "port": self._port,
+                        "api_version": self._api_v
+                        }
+        
+            url = ("http://{host}:{port}/filewriter/api/"
+                   "{api_version}/files").format(**fmt_data)
+        
         response = requests.get(url)
         filenames = json.loads(response.text)
         return filenames
@@ -82,11 +92,19 @@ class EigerDataBuffer(object):
         :rtype: bytes
         :raises UnknownDataFileError: if the data file can not be found
         """
-        fmt_data = {"host": self._host,
-                    "port": self._port,
-                    "filename": filename
-                    }
-        url = "http://{host}:{port}/data/{filename}".format(**fmt_data)
+
+        if self._port == -1:
+            fmt_data = {"host": self._host,
+                        "filename": filename
+                        }
+            url = "http://{host}/data/{filename}".format(**fmt_data)
+        else:
+            fmt_data = {"host": self._host,
+                        "port": self._port,
+                        "filename": filename
+                        }
+            url = "http://{host}:{port}/data/{filename}".format(**fmt_data)
+
         response = requests.get(url)
         if response.status_code == 200:
             return response.content
@@ -102,11 +120,18 @@ class EigerDataBuffer(object):
         :param str target_dir: Local directory to save the file in
         :raises UnknownDataFileError: if the data file can not be found
         """
-        fmt_data = {"host": self._host,
-                    "port": self._port,
-                    "filename": filename
-                    }
-        url = "http://{host}:{port}/data/{filename}".format(**fmt_data)
+        if self._port == -1:
+            fmt_data = {"host": self._host,
+                        "filename": filename
+                        }
+            url = "http://{host}/data/{filename}".format(**fmt_data)
+        else:
+            fmt_data = {"host": self._host,
+                        "port": self._port,
+                        "filename": filename
+                        }
+            url = "http://{host}:{port}/data/{filename}".format(**fmt_data)
+
         response = requests.get(url)
         if response.status_code == 200:
             target_fn = os.sep.join([target_dir, filename])
@@ -137,11 +162,18 @@ class EigerDataBuffer(object):
 
         :param str filename: Data file to delete
         """
-        fmt_data = {"host": self._host,
-                    "port": self._port,
-                    "filename": filename
-                    }
-        url = "http://{host}:{port}/data/{filename}".format(**fmt_data)
+        if self._port == -1:
+            fmt_data = {"host": self._host,
+                        "filename": filename
+                        }
+            url = "http://{host}/data/{filename}".format(**fmt_data)
+        else:
+            fmt_data = {"host": self._host,
+                        "port": self._port,
+                        "filename": filename
+                        }
+            url = "http://{host}:{port}/data/{filename}".format(**fmt_data)
+
         response = requests.delete(url)
 
     def delete_all(self):
