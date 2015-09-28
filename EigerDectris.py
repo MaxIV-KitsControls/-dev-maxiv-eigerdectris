@@ -572,11 +572,11 @@ class EigerDectris (PyTango.Device_4Impl):
         self.__status = PyTango.Device_4Impl.dev_status(self)
         return self.__status
         
-    def Arm(self, argin):
-        """ Arm/Disarm the detector.
+    def Arm(self):
+        """ Arm detector.
         
-        :param argin: 0-> Disarm, 1 -> Arm
-        :type: PyTango.DevLong
+        :param : 
+        :type: PyTango.DevVoid
         :return: 
         :rtype: PyTango.DevVoid """
         self.debug_stream("In Arm()")
@@ -584,18 +584,13 @@ class EigerDectris (PyTango.Device_4Impl):
         
         rstate = self.det.get_state()
 
-        if argin == 1:
-            if rstate != "ready":
-                try:
-                    self.flag_arm = 1
-                    self.det.arm(timeout=0.1)
-                except:
-                    pass
-        else:
-            if rstate != "idle":
-                self.flag_arm = 0
-                self.det.disarm()
-        
+        if rstate != "ready":
+            try:
+                self.flag_arm = 1
+                self.det.arm(timeout=0.1)
+            except:
+                pass
+            
         #----- PROTECTED REGION END -----#	//	EigerDectris.Arm
         
     def Trigger(self):
@@ -691,6 +686,24 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.DeleteFileFromBuffer
         
+    def Disarm(self):
+        """ Disarm detector
+        
+        :param : 
+        :type: PyTango.DevVoid
+        :return: 
+        :rtype: PyTango.DevVoid """
+        self.debug_stream("In Disarm()")
+        #----- PROTECTED REGION ID(EigerDectris.Disarm) ENABLED START -----#
+        
+        rstate = self.det.get_state()
+        if rstate != "idle":
+            self.flag_arm = 0
+            self.det.disarm()
+
+
+        #----- PROTECTED REGION END -----#	//	EigerDectris.Disarm
+        
 
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
     
@@ -746,7 +759,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
     #    Command definitions
     cmd_list = {
         'Arm':
-            [[PyTango.DevLong, "0-> Disarm, 1 -> Arm"],
+            [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
         'Trigger':
             [[PyTango.DevVoid, "none"],
@@ -765,6 +778,9 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevVoid, "none"]],
         'DeleteFileFromBuffer':
             [[PyTango.DevString, "Name of the file to delete"],
+            [PyTango.DevVoid, "none"]],
+        'Disarm':
+            [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
         }
 

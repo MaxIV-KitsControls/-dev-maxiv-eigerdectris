@@ -69,6 +69,7 @@
 				<li> <a href="FullDocument.html#cmdSaveFiles"> SaveFiles </a>
 				<li> <a href="FullDocument.html#cmdClearBuffer"> ClearBuffer </a>
 				<li> <a href="FullDocument.html#cmdDeleteFileFromBuffer"> DeleteFileFromBuffer </a>
+				<li> <a href="FullDocument.html#cmdDisarm"> Disarm </a>
 			</ul>
 			<li> <a href="FullDocument.html#attributes">   Attributes   </a>
 			<ul>
@@ -218,10 +219,10 @@
 	</tr>
 	<tr>
 		<td> <a href="CmdArm.html"> Arm </a> </td>
-		<td> DEV_LONG </td>
+		<td> DEV_VOID </td>
 		<td> DEV_VOID </td>
 		<td> OPERATOR </td>
-		<td> Arm/Disarm the detector. </td>
+		<td> Arm detector. </td>
 	</tr>
 	<tr>
 		<td> <a href="CmdTrigger.html"> Trigger </a> </td>
@@ -264,6 +265,13 @@
 		<td> DEV_VOID </td>
 		<td> OPERATOR </td>
 		<td> Delete the file give the argument name from the buffer </td>
+	</tr>
+	<tr>
+		<td> <a href="CmdDisarm.html"> Disarm </a> </td>
+		<td> DEV_VOID </td>
+		<td> DEV_VOID </td>
+		<td> OPERATOR </td>
+		<td> Disarm detector </td>
 	</tr>
 </table>
 <br><br><hr>
@@ -369,7 +377,7 @@
 <br><br><br>
 <font size="+1"><u><b> Command Arm : </b></u></font>
 <ul>
-	Arm/Disarm the detector.
+	Arm detector.
 </ul>
 <br><br><br>
 <Table Border=2 Cellpadding=3 CELLSPACING=0>
@@ -378,8 +386,8 @@
 	</tr>
 	<tr>
 		<td> Input Argument </td>
-		<td> Tango::DEV_LONG </td>
-		<td> 0-> Disarm, 1 -> Arm </td>
+		<td> Tango::DEV_VOID </td>
+		<td>  </td>
 	</tr>
 	<tr>
 		<td> Output Argument </td>
@@ -674,6 +682,55 @@
 		<td> Input Argument </td>
 		<td> Tango::DEV_STRING </td>
 		<td> Name of the file to delete </td>
+	</tr>
+	<tr>
+		<td> Output Argument </td>
+		<td> Tango::DEV_VOID </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td> DisplayLevel </td>
+		<td> OPERATOR </td>
+		<td> .. </td>
+	</tr>
+	<tr>
+		<td> Inherited </td>
+		<td> false </td>
+		<td> .. </td>
+	</tr>
+	<tr>
+		<td> Abstract </td>
+		<td> false </td>
+		<td> .. </td>
+	</tr>
+	<tr>
+		<td> Polling Period </td>
+		<td> Not polled </td>
+		<td> .. </td>
+	</tr>
+<Tr BGCOLOR="#CCCCFF"><Td><Hr></Td><Td><Hr></Td><Td><Hr></Td></Tr>
+	<tr>
+		<td> Command allowed for </td>
+		<td> All states </td>
+		<td> .. </td>
+	</tr>
+</table>
+<br><br><hr>
+<a name="cmdDisarm"> </a>
+<br><br><br>
+<font size="+1"><u><b> Command Disarm : </b></u></font>
+<ul>
+	Disarm detector
+</ul>
+<br><br><br>
+<Table Border=2 Cellpadding=3 CELLSPACING=0>
+	<tr bgcolor="#CCCCFF" class="TableHeadingColor">
+	<td colspan=0> <font size=+1> <center><b> Disarm Definition </b></font></center></td>
+	</tr>
+	<tr>
+		<td> Input Argument </td>
+		<td> Tango::DEV_VOID </td>
+		<td>  </td>
 	</tr>
 	<tr>
 		<td> Output Argument </td>
