@@ -613,7 +613,7 @@ class EigerDectris (PyTango.Device_4Impl):
         if rstate != "ready":
             raise Exception("Detector in %s state, not 'ready',  try the arm command first" % str(rstate))
 
-            self.det.trigger()
+        self.det.trigger()
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Trigger
         
