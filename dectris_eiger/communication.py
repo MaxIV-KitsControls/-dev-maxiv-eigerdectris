@@ -41,7 +41,12 @@ def set_value(host, port, api_version, subsystem, section, key, value,
         url_fmt = "http://{host}:{port}/{sys}/api/{version}/{section}/{key}"
 
     url = url_fmt.format(**conf)
-    payload = json.dumps({"value": value})
+
+    if port == -1:
+        payload = json.dumps({"value": 0})
+    else:
+        payload = json.dumps({"value": value})
+
     headers = {"Content-type": "application/json"}
     response = requests.put(url, timeout=timeout, data=payload,
                             headers=headers)
