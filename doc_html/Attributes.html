@@ -35,7 +35,7 @@
 		<td> Scalar </td>
 		<td> READ </td>
 		<td> Tango::DEV_DOUBLE </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> Board temperature </td>
 	</tr>
 	<tr>
@@ -45,7 +45,7 @@
 		<td> Scalar </td>
 		<td> READ </td>
 		<td> Tango::DEV_DOUBLE </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> Returns the relative humidity reading (in percent) </td>
 	</tr>
 	<tr>
@@ -69,7 +69,7 @@
 		<td> Currently set frame time (count time plus read out time) per image in seconds. </td>
 	</tr>
 	<tr>
-		<td> <a href="AttrEnergy.html"> Energy </a> </td>
+		<td> <a href="AttrPhotonEnergy.html"> PhotonEnergy </a> </td>
 		<td> false </td>
 		<td> false </td>
 		<td> Scalar </td>
@@ -85,7 +85,7 @@
 		<td> Scalar </td>
 		<td> READ_WRITE </td>
 		<td> Tango::DEV_DOUBLE </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> Currently set photon wavelength in Angstrom. </td>
 	</tr>
 	<tr>
@@ -105,7 +105,7 @@
 		<td> Scalar </td>
 		<td> READ_WRITE </td>
 		<td> Tango::DEV_LONG </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> 1 if the flatfield correction is enabled. </td>
 	</tr>
 	<tr>
@@ -115,7 +115,7 @@
 		<td> Scalar </td>
 		<td> READ_WRITE </td>
 		<td> Tango::DEV_LONG </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> 1 if the auto summation feature (to increase the dynamic range) is enabled. </td>
 	</tr>
 	<tr>
@@ -136,7 +136,7 @@
 		<td> Scalar </td>
 		<td> READ_WRITE </td>
 		<td> Tango::DEV_LONG </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> 1 if the rate correction is enabled. </td>
 	</tr>
 	<tr>
@@ -146,8 +146,8 @@
 		<td> Scalar </td>
 		<td> READ </td>
 		<td> Tango::DEV_DOUBLE </td>
-		<td> OPERATOR </td>
-		<td>  Detector  bit depth, i.e. the dynamic range. </td>
+		<td> EXPERT </td>
+		<td> Detector  bit depth, i.e. the dynamic range. </td>
 	</tr>
 	<tr>
 		<td> <a href="AttrReadoutTime.html"> ReadoutTime </a> </td>
@@ -156,7 +156,7 @@
 		<td> Scalar </td>
 		<td> READ </td>
 		<td> Tango::DEV_DOUBLE </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> detector`s readout time per image </td>
 	</tr>
 	<tr>
@@ -166,7 +166,7 @@
 		<td> Scalar </td>
 		<td> READ </td>
 		<td> Tango::DEV_STRING </td>
-		<td> OPERATOR </td>
+		<td> EXPERT </td>
 		<td> Detector description, i.e. the model. </td>
 	</tr>
 	<tr>
@@ -218,6 +218,106 @@
 		<td> Tango::DEV_STRING </td>
 		<td> OPERATOR </td>
 		<td> Pattern of the files to save in FileDir </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrNbImagesMax.html"> NbImagesMax </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_LONG </td>
+		<td> EXPERT </td>
+		<td> Number of images per serie </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrNbImagesMin.html"> NbImagesMin </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_LONG </td>
+		<td> EXPERT </td>
+		<td> Number of images per serie </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrCountTimeMax.html"> CountTimeMax </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set count time per image in seconds </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrCountTimeMin.html"> CountTimeMin </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set count time per image in seconds </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrFrameTimeMax.html"> FrameTimeMax </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set frame time (count time plus read out time) per image in seconds. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrFrameTimeMin.html"> FrameTimeMin </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set frame time (count time plus read out time) per image in seconds. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrPhotonEnergyMax.html"> PhotonEnergyMax </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set photon energy in electron volts </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrPhotonEnergyMin.html"> PhotonEnergyMin </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set photon energy in electron volts </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrEnergyThresholdMax.html"> EnergyThresholdMax </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set energy threshold in electron volts. </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrEnergyThresholdMin.html"> EnergyThresholdMin </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_DOUBLE </td>
+		<td> EXPERT </td>
+		<td> Currently set energy threshold in electron volts. </td>
 	</tr>
 	<tr>
 		<td> <a href="AttrFilesInBuffer.html"> FilesInBuffer </a> </td>

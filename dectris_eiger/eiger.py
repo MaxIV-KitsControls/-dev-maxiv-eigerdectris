@@ -107,6 +107,9 @@ class EigerDetector(object):
                   "config", "count_time", t, timeout=timeout)
     count_time = property(get_count_time, set_count_time)
 
+
+
+    
     # frame time
     def get_frame_time(self, timeout=2.0, return_full=False):
         """
@@ -552,6 +555,22 @@ class EigerDetector(object):
         else:
             return data["sequence id"]
 
+    def get_param_lim(self, parameter, limit, timeout=2.0, return_full = True):
+        """
+        Returns the limit max or min of the given parameter
+
+        :param string parameter: parameter name
+        :param string limit: max or min
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: max count time in seconds
+        :rtype: float
+        """
+        response = get_value(self._host, self._port, self._api_v, "detector",
+                             "config", parameter, timeout=timeout,
+                             return_full=return_full)
+
+        return response[limit]
 
 
 

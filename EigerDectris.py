@@ -92,7 +92,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_Humidity_read = 0.0
         self.attr_CountTime_read = 0.0
         self.attr_FrameTime_read = 0.0
-        self.attr_Energy_read = 0.0
+        self.attr_PhotonEnergy_read = 0.0
         self.attr_Wavelength_read = 0.0
         self.attr_EnergyThreshold_read = 0.0
         self.attr_FlatfieldEnabled_read = 0
@@ -107,6 +107,16 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_CompressionEnabled_read = 0
         self.attr_FileDir_read = ''
         self.attr_FilesToSave_read = ''
+        self.attr_NbImagesMax_read = 0
+        self.attr_NbImagesMin_read = 0
+        self.attr_CountTimeMax_read = 0.0
+        self.attr_CountTimeMin_read = 0.0
+        self.attr_FrameTimeMax_read = 0.0
+        self.attr_FrameTimeMin_read = 0.0
+        self.attr_PhotonEnergyMax_read = 0.0
+        self.attr_PhotonEnergyMin_read = 0.0
+        self.attr_EnergyThresholdMax_read = 0.0
+        self.attr_EnergyThresholdMin_read = 0.0
         self.attr_FilesInBuffer_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
         
@@ -125,6 +135,17 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det.initialize()
         print "Detector initialized"
         
+        self.attr_CountTimeMax_read =  self.det.get_param_lim("count_time", "max")
+        self.attr_CountTimeMin_read =  self.det.get_param_lim("count_time", "min")
+        self.attr_FrameTimeMax_read =  self.det.get_param_lim("frame_time", "max")
+        self.attr_FrameTimeMin_read =  self.det.get_param_lim("frame_time", "min")
+        self.attr_NbImagesMax_read =  self.det.get_param_lim("nimages", "max")
+        self.attr_NbImagesMin_read =  self.det.get_param_lim("nimages", "min")
+        self.attr_PhotonEnergyMax_read =  self.det.get_param_lim("photon_energy", "max")
+        self.attr_PhotonEnergyMin_read =  self.det.get_param_lim("photon_energy", "min")
+        self.attr_EnergyThresholdMax_read =  self.det.get_param_lim("threshold_energy", "max")
+        self.attr_EnergyThresholdMin_read =  self.det.get_param_lim("threshold_energy", "min")
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.init_device
 
     def always_executed_hook(self):
@@ -215,24 +236,24 @@ class EigerDectris (PyTango.Device_4Impl):
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTime_write
         
-    def read_Energy(self, attr):
-        self.debug_stream("In read_Energy()")
-        #----- PROTECTED REGION ID(EigerDectris.Energy_read) ENABLED START -----#
+    def read_PhotonEnergy(self, attr):
+        self.debug_stream("In read_PhotonEnergy()")
+        #----- PROTECTED REGION ID(EigerDectris.PhotonEnergy_read) ENABLED START -----#
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
-            self.attr_Energy_read = self.det.energy
-        attr.set_value(self.attr_Energy_read)
+            self.attr_PhotonEnergy_read = self.det.energy
+        attr.set_value(self.attr_PhotonEnergy_read)
         
-        #----- PROTECTED REGION END -----#	//	EigerDectris.Energy_read
+        #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergy_read
         
-    def write_Energy(self, attr):
-        self.debug_stream("In write_Energy()")
+    def write_PhotonEnergy(self, attr):
+        self.debug_stream("In write_PhotonEnergy()")
         data=attr.get_write_value()
-        #----- PROTECTED REGION ID(EigerDectris.Energy_write) ENABLED START -----#
-        
+        #----- PROTECTED REGION ID(EigerDectris.PhotonEnergy_write) ENABLED START -----#
+                
         self.det.energy = data
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.Energy_write
+
+        #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergy_write
         
     def read_Wavelength(self, attr):
         self.debug_stream("In read_Wavelength()")
@@ -488,6 +509,77 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_FilesToSave_read = data
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FilesToSave_write
+        
+    def read_NbImagesMax(self, attr):
+        self.debug_stream("In read_NbImagesMax()")
+        #----- PROTECTED REGION ID(EigerDectris.NbImagesMax_read) ENABLED START -----#
+        attr.set_value(self.attr_NbImagesMax_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.NbImagesMax_read
+        
+    def read_NbImagesMin(self, attr):
+        self.debug_stream("In read_NbImagesMin()")
+        #----- PROTECTED REGION ID(EigerDectris.NbImagesMin_read) ENABLED START -----#
+        attr.set_value(self.attr_NbImagesMin_read)
+        
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.NbImagesMin_read
+        
+    def read_CountTimeMax(self, attr):
+        self.debug_stream("In read_CountTimeMax()")
+        #----- PROTECTED REGION ID(EigerDectris.CountTimeMax_read) ENABLED START -----#
+        attr.set_value(self.attr_CountTimeMax_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeMax_read
+        
+    def read_CountTimeMin(self, attr):
+        self.debug_stream("In read_CountTimeMin()")
+        #----- PROTECTED REGION ID(EigerDectris.CountTimeMin_read) ENABLED START -----#
+        attr.set_value(self.attr_CountTimeMin_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeMin_read
+        
+    def read_FrameTimeMax(self, attr):
+        self.debug_stream("In read_FrameTimeMax()")
+        #----- PROTECTED REGION ID(EigerDectris.FrameTimeMax_read) ENABLED START -----#
+        attr.set_value(self.attr_FrameTimeMax_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTimeMax_read
+        
+    def read_FrameTimeMin(self, attr):
+        self.debug_stream("In read_FrameTimeMin()")
+        #----- PROTECTED REGION ID(EigerDectris.FrameTimeMin_read) ENABLED START -----#
+        attr.set_value(self.attr_FrameTimeMin_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTimeMin_read
+        
+    def read_PhotonEnergyMax(self, attr):
+        self.debug_stream("In read_PhotonEnergyMax()")
+        #----- PROTECTED REGION ID(EigerDectris.PhotonEnergyMax_read) ENABLED START -----#
+        attr.set_value(self.attr_PhotonEnergyMax_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergyMax_read
+        
+    def read_PhotonEnergyMin(self, attr):
+        self.debug_stream("In read_PhotonEnergyMin()")
+        #----- PROTECTED REGION ID(EigerDectris.PhotonEnergyMin_read) ENABLED START -----#
+        attr.set_value(self.attr_PhotonEnergyMin_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergyMin_read
+        
+    def read_EnergyThresholdMax(self, attr):
+        self.debug_stream("In read_EnergyThresholdMax()")
+        #----- PROTECTED REGION ID(EigerDectris.EnergyThresholdMax_read) ENABLED START -----#
+        attr.set_value(self.attr_EnergyThresholdMax_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.EnergyThresholdMax_read
+        
+    def read_EnergyThresholdMin(self, attr):
+        self.debug_stream("In read_EnergyThresholdMin()")
+        #----- PROTECTED REGION ID(EigerDectris.EnergyThresholdMin_read) ENABLED START -----#
+        attr.set_value(self.attr_EnergyThresholdMin_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.EnergyThresholdMin_read
         
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
@@ -801,6 +893,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "Celsius",
                 'description': "Board temperature",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'Humidity':
             [[PyTango.DevDouble,
@@ -809,6 +902,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "%",
                 'description': "Returns the relative humidity reading (in percent)",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'CountTime':
             [[PyTango.DevDouble,
@@ -826,7 +920,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "s",
                 'description': "Currently set frame time (count time plus read out time) per image in seconds.",
             } ],
-        'Energy':
+        'PhotonEnergy':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
@@ -841,6 +935,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "A",
                 'description': "Currently set photon wavelength in Angstrom.",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'EnergyThreshold':
             [[PyTango.DevDouble,
@@ -856,6 +951,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "1 if the flatfield correction is enabled.",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'AutoSummationEnabled':
             [[PyTango.DevLong,
@@ -863,6 +959,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "1 if the auto summation feature (to increase the dynamic range) is enabled.",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'TriggerMode':
             [[PyTango.DevString,
@@ -877,13 +974,15 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "1 if the rate correction is enabled.",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'BitDepth':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
             PyTango.READ],
             {
-                'description': " Detector  bit depth, i.e. the dynamic range.",
+                'description': "Detector  bit depth, i.e. the dynamic range.",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'ReadoutTime':
             [[PyTango.DevDouble,
@@ -891,7 +990,8 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ],
             {
                 'unit': "s",
-                'description': "detector's readout time per image",
+                'description': "detector`s readout time per image",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'Description':
             [[PyTango.DevString,
@@ -899,6 +999,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ],
             {
                 'description': "Detector description, i.e. the model.",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'ImagesPerFile':
             [[PyTango.DevLong,
@@ -936,6 +1037,94 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "Pattern of the files to save in FileDir",
                 'Memorized':"true"
+            } ],
+        'NbImagesMax':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "Number of images per serie",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'NbImagesMin':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "Number of images per serie",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'CountTimeMax':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "s",
+                'description': "Currently set count time per image in seconds",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'CountTimeMin':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "s",
+                'description': "Currently set count time per image in seconds",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'FrameTimeMax':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "s",
+                'description': "Currently set frame time (count time plus read out time) per image in seconds.",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'FrameTimeMin':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "s",
+                'description': "Currently set frame time (count time plus read out time) per image in seconds.",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'PhotonEnergyMax':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "eV",
+                'description': "Currently set photon energy in electron volts",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'PhotonEnergyMin':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "eV",
+                'description': "Currently set photon energy in electron volts",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'EnergyThresholdMax':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "eV",
+                'description': "Currently set energy threshold in electron volts.",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'EnergyThresholdMin':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "eV",
+                'description': "Currently set energy threshold in electron volts.",
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'FilesInBuffer':
             [[PyTango.DevString,
