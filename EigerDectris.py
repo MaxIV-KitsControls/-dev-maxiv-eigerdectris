@@ -174,6 +174,9 @@ class EigerDectris (PyTango.Device_4Impl):
         data=attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.NbImages_write) ENABLED START -----#
         
+        if data > self.attr_NbImagesMax_read or data < self.attr_NbImagesMin_read:
+            raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_NbImagesMin_read, self.attr_NbImagesMax_read))
+
         self.det.nimages = data
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbImages_write
@@ -212,7 +215,9 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In write_CountTime()")
         data=attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.CountTime_write) ENABLED START -----#
-
+        if data > self.attr_CountTimeMax_read or data < self.attr_CountTimeMin_read:
+            raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_CountTimeMin_read, self.attr_CountTimeMax_read))
+        
         self.det.count_time = data
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.CountTime_write
@@ -232,6 +237,9 @@ class EigerDectris (PyTango.Device_4Impl):
         data=attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.FrameTime_write) ENABLED START -----#
         
+        if data > self.attr_FrameTimeMax_read or data < self.attr_FrameTimeMin_read:
+            raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_FrameTimeMin_read, self.attr_FrameTimeMax_read))
+
         self.det.frame_time = data
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTime_write
@@ -251,6 +259,9 @@ class EigerDectris (PyTango.Device_4Impl):
         data=attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.PhotonEnergy_write) ENABLED START -----#
                 
+        if data > self.attr_PhotonEnergyMax_read or data < self.attr_PhotonEnergyMin_read:
+            raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_PhotonEnergyMin_read, self.attr_PhotonEnergyMax_read))
+
         self.det.energy = data
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergy_write
@@ -289,6 +300,9 @@ class EigerDectris (PyTango.Device_4Impl):
         data=attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.EnergyThreshold_write) ENABLED START -----#
         
+        if data > self.attr_EnergyThresholdMax_read or data < self.attr_EnergyThresholdMin_read:
+            raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_EnergyThresholdMin_read, self.attr_EnergyThresholdMax_read))
+
         self.det.threshold = data
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.EnergyThreshold_write
