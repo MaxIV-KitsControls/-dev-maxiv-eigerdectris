@@ -118,6 +118,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_EnergyThresholdMax_read = 0.0
         self.attr_EnergyThresholdMin_read = 0.0
         self.attr_Time_read = ''
+        self.attr_MustArmFlag_read = 0
         self.attr_FilesInBuffer_read = ['']
         self.attr_Error_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
@@ -180,6 +181,7 @@ class EigerDectris (PyTango.Device_4Impl):
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_NbImagesMin_read, self.attr_NbImagesMax_read))
 
         self.det.nimages = data
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbImages_write
         
@@ -221,6 +223,7 @@ class EigerDectris (PyTango.Device_4Impl):
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_CountTimeMin_read, self.attr_CountTimeMax_read))
         
         self.det.count_time = data
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.CountTime_write
         
@@ -243,6 +246,7 @@ class EigerDectris (PyTango.Device_4Impl):
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_FrameTimeMin_read, self.attr_FrameTimeMax_read))
 
         self.det.frame_time = data
+        self.attr_MustArmFlag_read = 1
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTime_write
         
@@ -265,6 +269,7 @@ class EigerDectris (PyTango.Device_4Impl):
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_PhotonEnergyMin_read, self.attr_PhotonEnergyMax_read))
 
         self.det.energy = data
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergy_write
         
@@ -284,6 +289,7 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Wavelength_write) ENABLED START -----#
         
         self.det.wavelength = data
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Wavelength_write
         
@@ -306,6 +312,7 @@ class EigerDectris (PyTango.Device_4Impl):
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_EnergyThresholdMin_read, self.attr_EnergyThresholdMax_read))
 
         self.det.threshold = data
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.EnergyThreshold_write
         
@@ -331,6 +338,8 @@ class EigerDectris (PyTango.Device_4Impl):
             self.det.flatfield_enabled = False
         else:
             self.det.flatfield_enabled = True
+        self.attr_MustArmFlag_read = 1
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.FlatfieldEnabled_write
         
     def read_AutoSummationEnabled(self, attr):
@@ -355,6 +364,7 @@ class EigerDectris (PyTango.Device_4Impl):
             self.det.auto_summation_enabled = False
         else:
             self.det.auto_summation_enabled = True
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.AutoSummationEnabled_write
         
@@ -374,6 +384,7 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.TriggerMode_write) ENABLED START -----#
         
         self.det.trigger_mode = data
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.TriggerMode_write
         
@@ -398,6 +409,7 @@ class EigerDectris (PyTango.Device_4Impl):
             self.det.rate_correction_enabled = False
         else:
             self.det.rate_correction_enabled = True
+        self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.RateCorrectionEnabled_write
         
@@ -607,6 +619,13 @@ class EigerDectris (PyTango.Device_4Impl):
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Time_read
         
+    def read_MustArmFlag(self, attr):
+        self.debug_stream("In read_MustArmFlag()")
+        #----- PROTECTED REGION ID(EigerDectris.MustArmFlag_read) ENABLED START -----#
+        attr.set_value(self.attr_MustArmFlag_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.MustArmFlag_read
+        
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
         #----- PROTECTED REGION ID(EigerDectris.FilesInBuffer_read) ENABLED START -----#
@@ -717,6 +736,7 @@ class EigerDectris (PyTango.Device_4Impl):
             try:
                 self.flag_arm = 1
                 self.det.arm(timeout=0.1)
+                self.attr_MustArmFlag_read = 0
             except:
                 pass
             
@@ -737,7 +757,10 @@ class EigerDectris (PyTango.Device_4Impl):
         if rstate != "ready":
             raise Exception("Detector in %s state, not 'ready',  try the arm command first" % str(rstate))
 
-        self.det.trigger()
+        try:
+            self.det.trigger(timeout=1.5)
+        except:
+            pass
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Trigger
         
@@ -1170,6 +1193,15 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "Actual system time",
                 'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'MustArmFlag':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'max value': "1",
+                'min value': "0",
+                'description': "1 if any parameters have been changed and the command arm should be run.",
             } ],
         'FilesInBuffer':
             [[PyTango.DevString,
