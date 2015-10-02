@@ -117,7 +117,9 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_PhotonEnergyMin_read = 0.0
         self.attr_EnergyThresholdMax_read = 0.0
         self.attr_EnergyThresholdMin_read = 0.0
+        self.attr_Time_read = ''
         self.attr_FilesInBuffer_read = ['']
+        self.attr_Error_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
         
         print "Detector being initialized. This can take about 20 s ..."
@@ -595,6 +597,16 @@ class EigerDectris (PyTango.Device_4Impl):
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.EnergyThresholdMin_read
         
+    def read_Time(self, attr):
+        self.debug_stream("In read_Time()")
+        #----- PROTECTED REGION ID(EigerDectris.Time_read) ENABLED START -----#
+
+        self.attr_Time_read = self.det.detector_time
+
+        attr.set_value(self.attr_Time_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.Time_read
+        
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
         #----- PROTECTED REGION ID(EigerDectris.FilesInBuffer_read) ENABLED START -----#
@@ -607,6 +619,17 @@ class EigerDectris (PyTango.Device_4Impl):
         attr.set_value(self.attr_FilesInBuffer_read, nb_files)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FilesInBuffer_read
+        
+    def read_Error(self, attr):
+        self.debug_stream("In read_Error()")
+        #----- PROTECTED REGION ID(EigerDectris.Error_read) ENABLED START -----#
+        self.attr_Error_read = []
+        for line in self.det.error:
+            self.attr_Error_read.append(line)
+            
+        attr.set_value(self.attr_Error_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.Error_read
         
     
     
@@ -1140,12 +1163,27 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'description': "Currently set energy threshold in electron volts.",
                 'Display level': PyTango.DispLevel.EXPERT,
             } ],
+        'Time':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "Actual system time",
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
         'FilesInBuffer':
             [[PyTango.DevString,
             PyTango.SPECTRUM,
             PyTango.READ, 1000],
             {
                 'description': "Name of files in detector data directory",
+            } ],
+        'Error':
+            [[PyTango.DevString,
+            PyTango.SPECTRUM,
+            PyTango.READ, 100],
+            {
+                'description': "List of status parameters causing error condition",
             } ],
         }
 

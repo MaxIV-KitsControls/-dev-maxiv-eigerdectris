@@ -82,6 +82,36 @@ class EigerDetector(object):
                          timeout=timeout, return_full=return_full)
     humidity = property(get_humidity)
 
+    # detector error
+    def get_error(self, timeout=2.0, return_full=False):
+        """
+        Returns the list of staus parameters causing an error condition. 
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: error
+        :rytpe: str or dict
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "status", "error", timeout=timeout,
+                         return_full=return_full)
+    error = property(get_error)
+
+    # detector time
+    def get_detector_time(self, timeout=2.0, return_full=False):
+        """
+        Returns the actual system time. 
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: error
+        :rytpe: str or dict
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "status", "time", timeout=timeout,
+                         return_full=return_full)
+    detector_time = property(get_detector_time)
+
     # count time
     def get_count_time(self, timeout=2.0, return_full=False):
         """
