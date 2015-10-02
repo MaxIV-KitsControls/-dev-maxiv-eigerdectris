@@ -681,7 +681,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
         #----- PROTECTED REGION ID(EigerDectris.FilesInBuffer_read) ENABLED START -----#
-        
+        self.attr_FilesInBuffer_read = []
         nb_files = 0
         for file_name in self.det.buffer.files:
             self.attr_FilesInBuffer_read.append(str(file_name))
@@ -872,7 +872,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In ClearBuffer()")
         #----- PROTECTED REGION ID(EigerDectris.ClearBuffer) ENABLED START -----#
         
-        self.det.clear_buffer()
+        self.det.buffer.clear_buffer()
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.ClearBuffer
         
