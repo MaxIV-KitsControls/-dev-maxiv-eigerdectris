@@ -483,6 +483,7 @@ class EigerDectris (PyTango.Device_4Impl):
         data=attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.FilenamePattern_write) ENABLED START -----#
         
+        data = data + "_$id"
         self.det.filewriter.filename_pattern = data
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.FilenamePattern_write
@@ -1125,7 +1126,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.SCALAR,
             PyTango.READ_WRITE],
             {
-                'description': "The file naming pattern. The string ``$id`` is replaced by the series id.",
+                'description': "The file naming pattern. The string ``_$id`` is automatically added at\nthe end of the written string and $id is replaced by the series id.",
             } ],
         'CompressionEnabled':
             [[PyTango.DevLong,
