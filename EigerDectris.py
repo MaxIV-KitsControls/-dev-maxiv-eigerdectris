@@ -119,6 +119,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_EnergyThresholdMin_read = 0.0
         self.attr_Time_read = ''
         self.attr_MustArmFlag_read = 0
+        self.attr_NbTriggers_read = 0
+        self.attr_BufferFree_read = 0
+        self.attr_NbTriggersMax_read = 0
+        self.attr_NbTriggersMin_read = 0
         self.attr_FilesInBuffer_read = ['']
         self.attr_Error_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
@@ -144,6 +148,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_FrameTimeMin_read =  self.det.get_param_lim("frame_time", "min")
         self.attr_NbImagesMax_read =  self.det.get_param_lim("nimages", "max")
         self.attr_NbImagesMin_read =  self.det.get_param_lim("nimages", "min")
+        self.attr_NbTriggersMax_read =  self.det.get_param_lim("ntrigger", "max")
+        self.attr_NbTriggersMin_read =  self.det.get_param_lim("ntrigger", "min")
         self.attr_PhotonEnergyMax_read =  self.det.get_param_lim("photon_energy", "max")
         self.attr_PhotonEnergyMin_read =  self.det.get_param_lim("photon_energy", "min")
         self.attr_EnergyThresholdMax_read =  self.det.get_param_lim("threshold_energy", "max")
@@ -625,6 +631,52 @@ class EigerDectris (PyTango.Device_4Impl):
         attr.set_value(self.attr_MustArmFlag_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.MustArmFlag_read
+        
+    def read_NbTriggers(self, attr):
+        self.debug_stream("In read_NbTriggers()")
+        #----- PROTECTED REGION ID(EigerDectris.NbTriggers_read) ENABLED START -----#
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_NbTriggers_read = self.det.ntrigger
+
+        attr.set_value(self.attr_NbTriggers_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggers_read
+        
+    def write_NbTriggers(self, attr):
+        self.debug_stream("In write_NbTriggers()")
+        data=attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.NbTriggers_write) ENABLED START -----#        
+        if data > self.attr_NbTriggersMax_read or data < self.attr_NbTriggersMin_read:
+            raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_NbTriggersMin_read, self.attr_NbTriggersMax_read))
+
+        self.det.ntrigger = data
+        self.attr_MustArmFlag_read = 1
+        
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggers_write
+        
+    def read_BufferFree(self, attr):
+        self.debug_stream("In read_BufferFree()")
+        #----- PROTECTED REGION ID(EigerDectris.BufferFree_read) ENABLED START -----#
+
+        self.attr_BufferFree_read = self.det.filewriter.buffer_free
+        attr.set_value(self.attr_BufferFree_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.BufferFree_read
+        
+    def read_NbTriggersMax(self, attr):
+        self.debug_stream("In read_NbTriggersMax()")
+        #----- PROTECTED REGION ID(EigerDectris.NbTriggersMax_read) ENABLED START -----#
+        attr.set_value(self.attr_NbTriggersMax_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggersMax_read
+        
+    def read_NbTriggersMin(self, attr):
+        self.debug_stream("In read_NbTriggersMin()")
+        #----- PROTECTED REGION ID(EigerDectris.NbTriggersMin_read) ENABLED START -----#
+        attr.set_value(self.attr_NbTriggersMin_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggersMin_read
         
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
@@ -1202,6 +1254,35 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'max value': "1",
                 'min value': "0",
                 'description': "1 if any parameters have been changed and the command arm should be run.",
+            } ],
+        'NbTriggers':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Allowed number of trigger per arm/disarm sequence",
+            } ],
+        'BufferFree':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'unit': "kB",
+                'description': "Remaining buffer space in KB",
+            } ],
+        'NbTriggersMax':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'NbTriggersMin':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'FilesInBuffer':
             [[PyTango.DevString,

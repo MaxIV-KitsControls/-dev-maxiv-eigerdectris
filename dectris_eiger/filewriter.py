@@ -173,3 +173,18 @@ class EigerFileWriter(object):
                   no_data=True)
     compression_enabled = property(get_compression_enabled,
                                    set_compression_enabled)
+
+    # buffer free
+    def get_buffer_free(self, timeout=2.0, return_full=False):
+        """
+        Returns the remaining buffer space in kB. 
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: error
+        :rytpe: str or dict
+        """
+        return get_value(self._host, self._port, self._api_v, "filewriter",
+                         "status", "buffer_free", timeout=timeout,
+                         return_full=return_full)
+    buffer_free = property(get_buffer_free)

@@ -191,6 +191,31 @@ class EigerDetector(object):
                   "config", "nimages", n, timeout=timeout)
     nimages = property(get_nimages, set_nimages)
 
+    # number of triggers
+    def get_ntrigger(self, timeout=2.0, return_full=False):
+        """
+        Returns the allowed number of trigger per arm/disarm sequence.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: number of images
+        :rtype: int
+        """
+        return int(get_value(self._host, self._port, self._api_v, "detector",
+                             "config", "ntrigger", timeout=timeout,
+                             return_full=return_full))
+
+    def set_ntrigger(self, n, timeout=2.0):
+        """
+        Set the allowed number of triggers per arm/disarm sequence.
+
+        :param int n: number of triggers
+        :param float timeout: communication timeout in seconds
+        """
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "ntrigger", n, timeout=timeout)
+    ntrigger = property(get_ntrigger, set_ntrigger)
+
     # photon energy
     def get_energy(self, timeout=2.0, return_full=False):
         """
