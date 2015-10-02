@@ -473,7 +473,8 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.FilenamePattern_read) ENABLED START -----#
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
-            self.attr_FilenamePattern_read = self.det.filewriter.filename_pattern
+            pattern = self.det.filewriter.filename_pattern
+            self.attr_FilenamePattern_read = pattern.replace("_$id","")
         attr.set_value(self.attr_FilenamePattern_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FilenamePattern_read
