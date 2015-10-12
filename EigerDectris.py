@@ -136,6 +136,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
         self.det = EigerDetector(self.Host, self.PortNb,self.APIVersion)
 
+
         self.flag_arm = 0
 
         # initialize the detector

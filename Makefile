@@ -34,10 +34,19 @@ RELEASE    = Release_$(MAJOR_VERS)_$(MINOR_VERS)
 all:
 	@echo "Nothing to do"
 
+ifdef using_trunk
+	FILEWRITER_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/trunk
+	MONITOR_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/trunk
+else
+	FILEWRITER_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)
+	MONITOR_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)	
+
 install:
 	cp $(CLASS).py  $(DESTDIR)
 	cp $(CLASS)  $(DESTDIR)
 	cp -r dectris_eiger $(DESTDIR)
+	cp $(FILEWRITER_DIR)/EigerFilewriter.py $(DESTDIR)
+	cp $(MONITOR_DIR)/EigerMonitor.py $(DESTDIR)
 	chmod 755 $(DESTDIR)/$(CLASS)
 
 clean:
