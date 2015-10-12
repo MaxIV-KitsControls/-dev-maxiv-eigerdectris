@@ -55,6 +55,18 @@ from dectris_eiger.eiger import EigerDetector
 import json
 from threading import Thread
 
+try:
+    import EigerFilewriter
+except:
+    print "EigerFilewriter can not be imported"
+
+try:
+    import EigerMonitor
+except:
+    print "EigerMonitor can not be imported"
+
+
+
 #----- PROTECTED REGION END -----#	//	EigerDectris.additionnal_import
 
 ## Device States Description
@@ -1309,6 +1321,15 @@ def main():
         py = PyTango.Util(sys.argv)
         py.add_class(EigerDectrisClass,EigerDectris,'EigerDectris')
         #----- PROTECTED REGION ID(EigerDectris.add_classes) ENABLED START -----#
+        try:
+            py.add_class(EigerFilewriter.EigerFilewriterClass,EigerFilewriter.EigerFilewriter,'EigerFilewriter')
+        except:
+            print "Error adding class EigerFilewriter. Device will not be created"
+
+        try:
+            py.add_class(EigerMonitor.EigerMonitorClass,EigerMonitor.EigerMonitor,'EigerMonitor')
+        except:
+            print "Error adding class EigerMonitor. Device will not be created"
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.add_classes
 
