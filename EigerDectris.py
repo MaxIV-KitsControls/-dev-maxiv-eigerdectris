@@ -114,11 +114,6 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_BitDepth_read = 0.0
         self.attr_ReadoutTime_read = 0.0
         self.attr_Description_read = ''
-        self.attr_ImagesPerFile_read = 0
-        self.attr_FilenamePattern_read = ''
-        self.attr_CompressionEnabled_read = 0
-        self.attr_FileDir_read = ''
-        self.attr_FilesToSave_read = ''
         self.attr_NbImagesMax_read = 0
         self.attr_NbImagesMin_read = 0
         self.attr_CountTimeMax_read = 0.0
@@ -132,7 +127,6 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_Time_read = ''
         self.attr_MustArmFlag_read = 0
         self.attr_NbTriggers_read = 0
-        self.attr_BufferFree_read = 0
         self.attr_NbTriggersMax_read = 0
         self.attr_NbTriggersMin_read = 0
         self.attr_FilesInBuffer_read = ['']
@@ -462,103 +456,6 @@ class EigerDectris (PyTango.Device_4Impl):
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.Description_read
         
-    def read_ImagesPerFile(self, attr):
-        self.debug_stream("In read_ImagesPerFile()")
-        #----- PROTECTED REGION ID(EigerDectris.ImagesPerFile_read) ENABLED START -----#
-
-        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
-            self.attr_ImagesPerFile_read = self.det.filewriter.images_per_file
-        attr.set_value(self.attr_ImagesPerFile_read)
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.ImagesPerFile_read
-        
-    def write_ImagesPerFile(self, attr):
-        self.debug_stream("In write_ImagesPerFile()")
-        data=attr.get_write_value()
-        #----- PROTECTED REGION ID(EigerDectris.ImagesPerFile_write) ENABLED START -----#
-        
-        self.det.filewriter.images_per_file = data
-
-        #----- PROTECTED REGION END -----#	//	EigerDectris.ImagesPerFile_write
-        
-    def read_FilenamePattern(self, attr):
-        self.debug_stream("In read_FilenamePattern()")
-        #----- PROTECTED REGION ID(EigerDectris.FilenamePattern_read) ENABLED START -----#
-
-        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
-            pattern = self.det.filewriter.filename_pattern
-            self.attr_FilenamePattern_read = pattern.replace("_$id","")
-        attr.set_value(self.attr_FilenamePattern_read)
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.FilenamePattern_read
-        
-    def write_FilenamePattern(self, attr):
-        self.debug_stream("In write_FilenamePattern()")
-        data=attr.get_write_value()
-        #----- PROTECTED REGION ID(EigerDectris.FilenamePattern_write) ENABLED START -----#
-        
-        data = data + "_$id"
-        self.det.filewriter.filename_pattern = data
-
-        #----- PROTECTED REGION END -----#	//	EigerDectris.FilenamePattern_write
-        
-    def read_CompressionEnabled(self, attr):
-        self.debug_stream("In read_CompressionEnabled()")
-        #----- PROTECTED REGION ID(EigerDectris.CompressionEnabled_read) ENABLED START -----#
-        
-        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
-            self.attr_CompressionEnabled_read = 0
-            if self.det.filewriter.compression_enabled == True:
-                self.attr_CompressionEnabled_read = 1
-            
-        attr.set_value(self.attr_CompressionEnabled_read)
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.CompressionEnabled_read
-        
-    def write_CompressionEnabled(self, attr):
-        self.debug_stream("In write_CompressionEnabled()")
-        data=attr.get_write_value()
-        #----- PROTECTED REGION ID(EigerDectris.CompressionEnabled_write) ENABLED START -----#
-        
-        if data == 0:
-            self.det.filewriter.compression_enabled = False
-        else:
-            self.det.filewriter.compression_enabled = True
-
-        #----- PROTECTED REGION END -----#	//	EigerDectris.CompressionEnabled_write
-        
-    def read_FileDir(self, attr):
-        self.debug_stream("In read_FileDir()")
-        #----- PROTECTED REGION ID(EigerDectris.FileDir_read) ENABLED START -----#
-        attr.set_value(self.attr_FileDir_read)
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.FileDir_read
-        
-    def write_FileDir(self, attr):
-        self.debug_stream("In write_FileDir()")
-        data=attr.get_write_value()
-        #----- PROTECTED REGION ID(EigerDectris.FileDir_write) ENABLED START -----#
-        
-        self.attr_FileDir_read = data
-
-        #----- PROTECTED REGION END -----#	//	EigerDectris.FileDir_write
-        
-    def read_FilesToSave(self, attr):
-        self.debug_stream("In read_FilesToSave()")
-        #----- PROTECTED REGION ID(EigerDectris.FilesToSave_read) ENABLED START -----#
-        attr.set_value(self.attr_FilesToSave_read)
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.FilesToSave_read
-        
-    def write_FilesToSave(self, attr):
-        self.debug_stream("In write_FilesToSave()")
-        data=attr.get_write_value()
-        #----- PROTECTED REGION ID(EigerDectris.FilesToSave_write) ENABLED START -----#
-        
-        self.attr_FilesToSave_read = data
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.FilesToSave_write
-        
     def read_NbImagesMax(self, attr):
         self.debug_stream("In read_NbImagesMax()")
         #----- PROTECTED REGION ID(EigerDectris.NbImagesMax_read) ENABLED START -----#
@@ -669,15 +566,6 @@ class EigerDectris (PyTango.Device_4Impl):
         
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggers_write
-        
-    def read_BufferFree(self, attr):
-        self.debug_stream("In read_BufferFree()")
-        #----- PROTECTED REGION ID(EigerDectris.BufferFree_read) ENABLED START -----#
-
-        self.attr_BufferFree_read = self.det.filewriter.buffer_free
-        attr.set_value(self.attr_BufferFree_read)
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.BufferFree_read
         
     def read_NbTriggersMax(self, attr):
         self.debug_stream("In read_NbTriggersMax()")
@@ -859,24 +747,6 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Cancel
         
-    def SaveFiles(self):
-        """ Save the files matching FilesToSave to FileDir
-        
-        :param : 
-        :type: PyTango.DevVoid
-        :return: 
-        :rtype: PyTango.DevVoid """
-        self.debug_stream("In SaveFiles()")
-        #----- PROTECTED REGION ID(EigerDectris.SaveFiles) ENABLED START -----#
-        
-        file_pattern = self.attr_FilesToSave_read + "*"
-
-        
-        th = CommonThread(0,self.det, file_pattern,self.attr_FileDir_read)
-        th.start()
-        
-        #----- PROTECTED REGION END -----#	//	EigerDectris.SaveFiles
-        
     def ClearBuffer(self):
         """ Delete all files from buffer
         
@@ -987,9 +857,6 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
         'Cancel':
-            [[PyTango.DevVoid, "none"],
-            [PyTango.DevVoid, "none"]],
-        'SaveFiles':
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
         'ClearBuffer':
@@ -1128,43 +995,6 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'description': "Detector description, i.e. the model.",
                 'Display level': PyTango.DispLevel.EXPERT,
             } ],
-        'ImagesPerFile':
-            [[PyTango.DevLong,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'description': "Number of images stored in a single data file.",
-            } ],
-        'FilenamePattern':
-            [[PyTango.DevString,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'description': "The file naming pattern. The string ``_$id`` is automatically added at\nthe end of the written string and $id is replaced by the series id.",
-            } ],
-        'CompressionEnabled':
-            [[PyTango.DevLong,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'description': "1 if the LZ4 data compression is enabled.",
-            } ],
-        'FileDir':
-            [[PyTango.DevString,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'description': "Directory for saving the files",
-                'Memorized':"true"
-            } ],
-        'FilesToSave':
-            [[PyTango.DevString,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'description': "Pattern of the files to save in FileDir",
-                'Memorized':"true"
-            } ],
         'NbImagesMax':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1276,14 +1106,6 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Allowed number of trigger per arm/disarm sequence",
-            } ],
-        'BufferFree':
-            [[PyTango.DevLong,
-            PyTango.SCALAR,
-            PyTango.READ],
-            {
-                'unit': "kB",
-                'description': "Remaining buffer space in KB",
             } ],
         'NbTriggersMax':
             [[PyTango.DevLong,

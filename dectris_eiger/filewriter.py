@@ -21,6 +21,28 @@ class EigerFileWriter(object):
         self._port = port
         self._api_v = api_version
 
+    # initialize
+    def initialize(self, timeout=100.0):
+        """
+        Resets the filewriter to its original state.
+
+        :param float timeout: communication timeout in seconds
+        """
+        set_value(self._host, self._port, self._api_v, "filewriter",
+                  "command", "initialize", "initialize", timeout=timeout,
+                  no_data=True) 
+    # clear
+    def clear(self, timeout=100.0):
+        """
+        Drops all data (image data and directories) on the DCU.
+
+        :param float timeout: communication timeout in seconds
+        """
+        set_value(self._host, self._port, self._api_v, "filewriter",
+                  "command", "clear", "clear", timeout=timeout,
+                  no_data=True)
+
+
     # status
     def get_status(self, timeout=2.0, return_full=False):
         """
@@ -36,6 +58,21 @@ class EigerFileWriter(object):
                          "status", "state", timeout=timeout,
                          return_full=return_full)
     status = property(get_status)
+
+    # error
+    def get_error(self, timeout=2.0, return_full=False):
+        """
+        Returns list of status parameters causing error state.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: subsystem status
+        :rytpe: str
+        """
+        return get_value(self._host, self._port, self._api_v, "filewriter",
+                         "status", "error", timeout=timeout,
+                         return_full=return_full)
+    error = property(get_error)
 
     # available buffer space
     def get_available_space(self, timeout=2.0, return_full=False):
@@ -66,6 +103,31 @@ class EigerFileWriter(object):
                          "status", "time", timeout=timeout,
                          return_full=return_full)
     time = property(get_time)
+
+    #  mode
+    def get_mode(self, timeout=2.0, return_full=False):
+        """
+        Returns the operation mode, which can be "enabled" or "disabled".
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: the  mode
+        :rytpe: str
+        """
+        return get_value(self._host, self._port, self._api_v, "filewriter",
+                         "config", "mode", timeout=timeout,
+                         return_full=return_full)
+
+    def set_mode(self, mode, timeout=2.0):
+        """
+        Set the filewriter's operation mode, which can be "enabled" or "disabled".
+
+        :param str mode: mode
+        :param float timeout: communication timeout in seconds
+        """
+        set_value(self._host, self._port, self._api_v, "filewriter",
+                  "config", "mode", mode, timeout=timeout)
+    mode = property(get_mode, set_mode)
 
     # transfer mode
     def get_transfer_mode(self, timeout=2.0, return_full=False):
@@ -118,6 +180,32 @@ class EigerFileWriter(object):
                   "config", "nimages_per_file", n, timeout=timeout,
                   no_data=True)
     images_per_file = property(get_images_per_file, set_images_per_file)
+
+    # image_nr_low metadata parameter in the first HDF5 data file
+    def get_image_nr_start(self, timeout=2.0, return_full=False):
+        """
+        Returns the image_nr_low metadata parameter in the first HDF5 data file.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: number of images per file
+        :rytpe: int
+        """
+        return int(get_value(self._host, self._port, self._api_v, "filewriter",
+                             "config", "image_nr_start", timeout=timeout,
+                             return_full=return_full))
+
+    def set_image_nr_start(self, n, timeout=2.0):
+        """
+        Set the image_nr_low metadata parameter in the first HDF5 data file.
+
+        :param int n: image_nr_low
+        :param float timeout: communication timeout in seconds
+        """
+        set_value(self._host, self._port, self._api_v, "filewriter",
+                  "config", "image_nr_start", n, timeout=timeout,
+                  no_data=True)
+    image_nr_start = property(get_image_nr_start, set_image_nr_start)
 
     # filename pattern
     def get_filename_pattern(self, timeout=2.0, return_full=False):

@@ -170,57 +170,6 @@
 		<td> Detector description, i.e. the model. </td>
 	</tr>
 	<tr>
-		<td> <a href="AttrImagesPerFile.html"> ImagesPerFile </a> </td>
-		<td> false </td>
-		<td> false </td>
-		<td> Scalar </td>
-		<td> READ_WRITE </td>
-		<td> Tango::DEV_LONG </td>
-		<td> OPERATOR </td>
-		<td> Number of images stored in a single data file. </td>
-	</tr>
-	<tr>
-		<td> <a href="AttrFilenamePattern.html"> FilenamePattern </a> </td>
-		<td> false </td>
-		<td> false </td>
-		<td> Scalar </td>
-		<td> READ_WRITE </td>
-		<td> Tango::DEV_STRING </td>
-		<td> OPERATOR </td>
-		<td> The file naming pattern. The string ``_$id`` is automatically added at<Br>
-			the end of the written string and $id is replaced by the series id. </td>
-	</tr>
-	<tr>
-		<td> <a href="AttrCompressionEnabled.html"> CompressionEnabled </a> </td>
-		<td> false </td>
-		<td> false </td>
-		<td> Scalar </td>
-		<td> READ_WRITE </td>
-		<td> Tango::DEV_LONG </td>
-		<td> OPERATOR </td>
-		<td> 1 if the LZ4 data compression is enabled. </td>
-	</tr>
-	<tr>
-		<td> <a href="AttrFileDir.html"> FileDir </a> </td>
-		<td> false </td>
-		<td> false </td>
-		<td> Scalar </td>
-		<td> READ_WRITE </td>
-		<td> Tango::DEV_STRING </td>
-		<td> OPERATOR </td>
-		<td> Directory for saving the files </td>
-	</tr>
-	<tr>
-		<td> <a href="AttrFilesToSave.html"> FilesToSave </a> </td>
-		<td> false </td>
-		<td> false </td>
-		<td> Scalar </td>
-		<td> READ_WRITE </td>
-		<td> Tango::DEV_STRING </td>
-		<td> OPERATOR </td>
-		<td> Pattern of the files to save in FileDir </td>
-	</tr>
-	<tr>
 		<td> <a href="AttrNbImagesMax.html"> NbImagesMax </a> </td>
 		<td> false </td>
 		<td> false </td>
@@ -349,16 +298,6 @@
 		<td> Tango::DEV_LONG </td>
 		<td> OPERATOR </td>
 		<td> Allowed number of trigger per arm/disarm sequence </td>
-	</tr>
-	<tr>
-		<td> <a href="AttrBufferFree.html"> BufferFree </a> </td>
-		<td> false </td>
-		<td> false </td>
-		<td> Scalar </td>
-		<td> READ </td>
-		<td> Tango::DEV_LONG </td>
-		<td> OPERATOR </td>
-		<td> Remaining buffer space in KB </td>
 	</tr>
 	<tr>
 		<td> <a href="AttrNbTriggersMax.html"> NbTriggersMax </a> </td>
