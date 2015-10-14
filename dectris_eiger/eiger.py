@@ -556,7 +556,7 @@ class EigerDetector(object):
                          no_data=True)
 
     # trigger
-    def trigger(self, timeout=100.0):
+    def trigger(self, timeout=100.0, input_value=-1):
         """
         Trigger the detector.
 

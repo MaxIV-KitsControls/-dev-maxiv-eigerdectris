@@ -128,6 +128,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_NbTriggers_read = 0
         self.attr_NbTriggersMax_read = 0
         self.attr_NbTriggersMin_read = 0
+        self.attr_CountTimeInte_read = 0
         self.attr_FilesInBuffer_read = ['']
         self.attr_Error_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
@@ -580,6 +581,22 @@ class EigerDectris (PyTango.Device_4Impl):
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggersMin_read
         
+    def read_CountTimeInte(self, attr):
+        self.debug_stream("In read_CountTimeInte()")
+        #----- PROTECTED REGION ID(EigerDectris.CountTimeInte_read) ENABLED START -----#
+        attr.set_value(self.attr_CountTimeInte_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeInte_read
+        
+    def write_CountTimeInte(self, attr):
+        self.debug_stream("In write_CountTimeInte()")
+        data=attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.CountTimeInte_write) ENABLED START -----#
+
+        self.attr_CountTimeInte_read = data
+
+        #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeInte_write
+        
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
         #----- PROTECTED REGION ID(EigerDectris.FilesInBuffer_read) ENABLED START -----#
@@ -712,7 +729,10 @@ class EigerDectris (PyTango.Device_4Impl):
             raise Exception("Detector in %s state, not 'ready',  try the arm command first" % str(rstate))
 
         try:
-            self.det.trigger(timeout=1.5)
+            if self.det.trigger_mode == "inte":
+                self.det.trigger(timeout=1.5, input_value = self.attr_CountTimeInte_read)
+            else:
+                self.det.trigger(timeout=1.5)
         except:
             pass
 
@@ -1119,6 +1139,14 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ],
             {
                 'Display level': PyTango.DispLevel.EXPERT,
+            } ],
+        'CountTimeInte':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Count time send with trigger if trigger mode is inte",
+                'Memorized':"true"
             } ],
         'FilesInBuffer':
             [[PyTango.DevString,
