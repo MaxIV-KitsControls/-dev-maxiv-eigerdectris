@@ -53,7 +53,6 @@ import sys
 
 from dectris_eiger.eiger import EigerDetector
 import json
-from threading import Thread
 
 try:
     import EigerFilewriter
