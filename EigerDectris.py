@@ -140,21 +140,23 @@ class EigerDectris (PyTango.Device_4Impl):
 
         self.det = EigerDetector(self.Host, self.PortNb,self.APIVersion)
 
-
         self.flag_arm = 0
         
-        self.attr_CountTimeMax_read =  self.det.get_param_lim("count_time", "max")
-        self.attr_CountTimeMin_read =  self.det.get_param_lim("count_time", "min")
-        self.attr_FrameTimeMax_read =  self.det.get_param_lim("frame_time", "max")
-        self.attr_FrameTimeMin_read =  self.det.get_param_lim("frame_time", "min")
-        self.attr_NbImagesMax_read =  self.det.get_param_lim("nimages", "max")
-        self.attr_NbImagesMin_read =  self.det.get_param_lim("nimages", "min")
-        self.attr_NbTriggersMax_read =  self.det.get_param_lim("ntrigger", "max")
-        self.attr_NbTriggersMin_read =  self.det.get_param_lim("ntrigger", "min")
-        self.attr_PhotonEnergyMax_read =  self.det.get_param_lim("photon_energy", "max")
-        self.attr_PhotonEnergyMin_read =  self.det.get_param_lim("photon_energy", "min")
-        self.attr_EnergyThresholdMax_read =  self.det.get_param_lim("threshold_energy", "max")
-        self.attr_EnergyThresholdMin_read =  self.det.get_param_lim("threshold_energy", "min")
+        try:
+            self.attr_CountTimeMax_read =  self.det.get_param_lim("count_time", "max")
+            self.attr_CountTimeMin_read =  self.det.get_param_lim("count_time", "min")
+            self.attr_FrameTimeMax_read =  self.det.get_param_lim("frame_time", "max")
+            self.attr_FrameTimeMin_read =  self.det.get_param_lim("frame_time", "min")
+            self.attr_NbImagesMax_read =  self.det.get_param_lim("nimages", "max")
+            self.attr_NbImagesMin_read =  self.det.get_param_lim("nimages", "min")
+            self.attr_NbTriggersMax_read =  self.det.get_param_lim("ntrigger", "max")
+            self.attr_NbTriggersMin_read =  self.det.get_param_lim("ntrigger", "min")
+            self.attr_PhotonEnergyMax_read =  self.det.get_param_lim("photon_energy", "max")
+            self.attr_PhotonEnergyMin_read =  self.det.get_param_lim("photon_energy", "min")
+            self.attr_EnergyThresholdMax_read =  self.det.get_param_lim("threshold_energy", "max")
+            self.attr_EnergyThresholdMin_read =  self.det.get_param_lim("threshold_energy", "min")
+        except:
+            print "Error reading parameter limit from detector"
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.init_device
 
@@ -656,7 +658,6 @@ class EigerDectris (PyTango.Device_4Impl):
         else:
             self.set_state(PyTango.DevState.ON) 
 
-        self.set_status(str(rstate))
 
         argout = self.get_state()
         
