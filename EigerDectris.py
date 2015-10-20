@@ -132,8 +132,6 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_FilesInBuffer_read = ['']
         self.attr_Error_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
-        
-        print "Detector being initialized. This can take about 20 s ..."
 
         nums = self.APIVersion.split(".")
 
@@ -144,10 +142,6 @@ class EigerDectris (PyTango.Device_4Impl):
 
 
         self.flag_arm = 0
-
-        # initialize the detector
-        self.det.initialize()
-        print "Detector initialized"
         
         self.attr_CountTimeMax_read =  self.det.get_param_lim("count_time", "max")
         self.attr_CountTimeMin_read =  self.det.get_param_lim("count_time", "min")
