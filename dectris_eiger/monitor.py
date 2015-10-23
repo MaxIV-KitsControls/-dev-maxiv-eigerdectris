@@ -94,7 +94,7 @@ class EigerMonitorCtrl(object):
         :param float timeout: communication timeout in seconds
         """
         set_value(self._host, self._port, self._api_v, "monitor",
-                  "config", "mode", mode, timeout=timeout)
+                  "config", "mode", mode, timeout=timeout, no_data=True)
     mode = property(get_mode, set_mode)
 
     # number of images that can be buffered by the monitor interface
