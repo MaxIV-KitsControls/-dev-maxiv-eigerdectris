@@ -42,6 +42,7 @@ def set_value(host, port, api_version, subsystem, section, key, value,
 
     url = url_fmt.format(**conf)
 
+    
     if port == -1 and subsystem == "detector" and section == "command":
         if key == "trigger" and value != -1:
             payload = json.dumps({"value": value})
@@ -51,8 +52,11 @@ def set_value(host, port, api_version, subsystem, section, key, value,
         payload = json.dumps({"value": value})
 
     headers = {"Content-type": "application/json"}
-    response = requests.put(url, timeout=timeout, data=payload,
-                            headers=headers)
+    try:
+        response = requests.put(url, timeout=timeout, data=payload,
+                                headers=headers)
+    except: # avoiding timeouts
+        return None
     if no_data:
         return None
     data = json.loads(response.text)
