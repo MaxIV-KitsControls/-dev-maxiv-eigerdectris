@@ -142,7 +142,7 @@ class EigerFileWriter(object):
         """
         return get_value(self._host, self._port, self._api_v, "filewriter",
                          "config", "transfer_mode", timeout=timeout,
-                         return_full=return_full, no_data = True)
+                         return_full=return_full)
 
     def set_transfer_mode(self, mode, timeout=2.0):
         """
@@ -153,7 +153,7 @@ class EigerFileWriter(object):
         :param float timeout: communication timeout in seconds
         """
         set_value(self._host, self._port, self._api_v, "filewriter",
-                  "config", "transfer_mode", mode, timeout=timeout)
+                  "config", "transfer_mode", mode, timeout=timeout, no_data = True)
     transfer_mode = property(get_transfer_mode, set_transfer_mode)
 
     # number of images per file

@@ -358,6 +358,7 @@ class EigerDetector(object):
          * exte
          * exts
          * ints
+         * inte
 
         This is likely to change with future API versions.
 
@@ -378,7 +379,7 @@ class EigerDetector(object):
         :param string mode: trigger mode
         :param float timeout: communication timeout in seconds
         """
-        if mode not in ["expo", "extt", "extm", "exte", "exts", "ints"]:
+        if mode not in ["expo", "extt", "extm", "exte", "exts", "ints", "inte"]:
             raise ValueError("Invalid trigger mode.")
         set_value(self._host, self._port, self._api_v, "detector",
                   "config", "trigger_mode", mode, timeout=timeout)
