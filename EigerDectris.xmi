@@ -373,6 +373,9 @@
     <states name="MOVING" description="">
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </states>
+    <states name="OFF" description="The detector was rebooted and has to be initialized">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
     <preferences docHome="./doc_html" makefileHome="/usr/share/pogo/preferences"/>
   </classes>
 </pogoDsl:PogoSystem>

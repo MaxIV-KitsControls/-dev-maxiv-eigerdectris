@@ -72,6 +72,7 @@ except:
 ## ON : 
 ## FAULT : 
 ## MOVING : 
+## OFF : The detector was rebooted and has to be initialized
 
 class EigerDectris (PyTango.Device_4Impl):
 
@@ -653,7 +654,9 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if rstate == "error":
             self.set_state(PyTango.DevState.FAULT) 
-        elif (rstate != "idle" and rstate != "ready" and rstate != "na") or self.flag_arm:
+        elif (rstate != "na") or self.flag_arm:
+            self.set_state(PyTango.DevState.OFF)
+        elif (rstate != "idle" and rstate != "ready") or self.flag_arm:
             self.set_state(PyTango.DevState.MOVING)
         else:
             self.set_state(PyTango.DevState.ON) 
@@ -679,6 +682,8 @@ class EigerDectris (PyTango.Device_4Impl):
                
         rstate = self.det.get_state()
 
+        if rstate == "na":
+            rstate = rstate + ". The detector was rebooted and \n has to be initialized"
         self.argout = str(rstate)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
