@@ -653,7 +653,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if rstate == "error":
             self.set_state(PyTango.DevState.FAULT) 
-        elif (rstate != "idle" and rstate != "ready") or self.flag_arm:
+        elif (rstate != "idle" and rstate != "ready" and rstate != "na") or self.flag_arm:
             self.set_state(PyTango.DevState.MOVING)
         else:
             self.set_state(PyTango.DevState.ON) 
