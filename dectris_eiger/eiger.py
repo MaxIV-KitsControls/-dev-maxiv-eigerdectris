@@ -564,7 +564,7 @@ class EigerDetector(object):
         :param float timeout: communication timeout in seconds
         """
         set_value(self._host, self._port, self._api_v, "detector",
-                  "command", "trigger", "trigger", timeout=timeout,
+                  "command", "trigger", input_value, timeout=timeout,
                   no_data=True)
 
     # cancel
