@@ -1151,7 +1151,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
         'FilesInBuffer':
             [[PyTango.DevString,
             PyTango.SPECTRUM,
-            PyTango.READ, 1000],
+            PyTango.READ, 100000],
             {
                 'description': "Name of files in detector data directory",
             } ],
