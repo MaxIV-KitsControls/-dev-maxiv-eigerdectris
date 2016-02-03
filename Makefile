@@ -40,6 +40,7 @@ ifdef using_trunk
 else
 	FILEWRITER_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)
 	MONITOR_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)	
+endif
 
 install:
 	cp $(CLASS).py  $(DESTDIR)
