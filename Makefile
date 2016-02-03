@@ -28,19 +28,21 @@ MAJOR_VERS = 1
 MINOR_VERS = 1
 RELEASE    = Release_$(MAJOR_VERS)_$(MINOR_VERS)
 
+
 #-----------------------------------------
 #	 Install binary file
 #-----------------------------------------
-all:
-	@echo "Nothing to do"
 
 ifdef using_trunk
-	FILEWRITER_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/trunk
-	MONITOR_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/trunk
+	FILEWRITER_DIR=$(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/trunk
+	MONITOR_DIR=$(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/trunk
 else
-	FILEWRITER_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)
-	MONITOR_DIR = $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)	
+	FILEWRITER_DIR = $(shell find $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)
+	MONITOR_DIR = $(shell find $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)
 endif
+
+all:
+	@echo "Nothing to do"
 
 install:
 	cp $(CLASS).py  $(DESTDIR)
