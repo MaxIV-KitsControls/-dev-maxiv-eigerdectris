@@ -25,7 +25,7 @@
 MAKE_ENV = $(TANGO_DIR)/Libraries/cppserver/common
 CLASS      = EigerDectris
 MAJOR_VERS = 1
-MINOR_VERS = 0
+MINOR_VERS = 1
 RELEASE    = Release_$(MAJOR_VERS)_$(MINOR_VERS)
 
 #-----------------------------------------
