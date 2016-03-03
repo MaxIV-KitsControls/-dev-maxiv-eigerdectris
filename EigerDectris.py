@@ -129,7 +129,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_NbTriggers_read = 0
         self.attr_NbTriggersMax_read = 0
         self.attr_NbTriggersMin_read = 0
-        self.attr_CountTimeInte_read = 0
+        self.attr_CountTimeInte_read = 0.0
         self.attr_FilesInBuffer_read = ['']
         self.attr_Error_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
@@ -1141,7 +1141,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'Display level': PyTango.DispLevel.EXPERT,
             } ],
         'CountTimeInte':
-            [[PyTango.DevLong,
+            [[PyTango.DevDouble,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
             {
