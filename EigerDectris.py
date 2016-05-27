@@ -130,6 +130,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_NbTriggersMax_read = 0
         self.attr_NbTriggersMin_read = 0
         self.attr_CountTimeInte_read = 0.0
+        self.attr_DownloadDirectory_read = ''
         self.attr_FilesInBuffer_read = ['']
         self.attr_Error_read = ['']
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
@@ -594,6 +595,21 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeInte_write
         
+    def read_DownloadDirectory(self, attr):
+        self.debug_stream("In read_DownloadDirectory()")
+        #----- PROTECTED REGION ID(EigerDectris.DownloadDirectory_read) ENABLED START -----#
+        attr.set_value(self.attr_DownloadDirectory_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.DownloadDirectory_read
+        
+    def write_DownloadDirectory(self, attr):
+        self.debug_stream("In write_DownloadDirectory()")
+        data=attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.DownloadDirectory_write) ENABLED START -----#
+        self.attr_DownloadDirectory_read = data
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.DownloadDirectory_write
+        
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
         #----- PROTECTED REGION ID(EigerDectris.FilesInBuffer_read) ENABLED START -----#
@@ -812,6 +828,20 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Disarm
         
+    def DownloadFilesFromBuffer(self, argin):
+        """ Download the file with the given name or the files matching the given
+        pattern (with * for glob expansion).
+        
+        :param argin: Filename or pattern
+        :type: PyTango.DevString
+        :return: 
+        :rtype: PyTango.DevVoid """
+        self.debug_stream("In DownloadFilesFromBuffer()")
+        #----- PROTECTED REGION ID(EigerDectris.DownloadFilesFromBuffer) ENABLED START -----#
+        self.det.buffer.download(argin, self.attr_DownloadDirectory_read)
+        
+        #----- PROTECTED REGION END -----#	//	EigerDectris.DownloadFilesFromBuffer
+        
 
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
     
@@ -886,6 +916,9 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevVoid, "none"]],
         'Disarm':
             [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'DownloadFilesFromBuffer':
+            [[PyTango.DevString, "Filename or pattern"],
             [PyTango.DevVoid, "none"]],
         }
 
@@ -1146,6 +1179,14 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Count time send with trigger if trigger mode is inte",
+                'Memorized':"true"
+            } ],
+        'DownloadDirectory':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Name of the directory for downloading the files with the command DownloadFilesFromBuffer",
                 'Memorized':"true"
             } ],
         'FilesInBuffer':
