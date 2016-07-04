@@ -53,6 +53,7 @@ install:
 	cp $(FILEWRITER_DIR)/EigerFilewriter.py $(DESTDIR)
 	cp $(MONITOR_DIR)/EigerMonitor.py $(DESTDIR)
 	cp $(HIDRACLIENT_DIR)/EigerHiDRAClient.py $(DESTDIR)
+	cp $(HIDRACLIENT_DIR)/HiDRAControlAPI.py $(DESTDIR)
 	chmod 755 $(DESTDIR)/$(CLASS)
 
 clean:
