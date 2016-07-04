@@ -36,9 +36,11 @@ RELEASE    = Release_$(MAJOR_VERS)_$(MINOR_VERS)
 ifdef using_trunk
 	FILEWRITER_DIR=$(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/trunk
 	MONITOR_DIR=$(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/trunk
+	HIDRACLIENT_DIR=$(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerHiDRAClient/trunk
 else
 	FILEWRITER_DIR = $(shell find $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerFilewriter/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)
 	MONITOR_DIR = $(shell find $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerMonitor/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)
+	HIDRACLIENT_DIR $(shell find $(TANGO_DIR)/DeviceClasses/Acquisition/2D/EigerHiDRAClient/tags -type d -regex '.*Release_[0-9]*_[0-9]*' | sort -t '_' -k2 -k3 -nr | head -1)	
 endif
 
 all:
@@ -50,6 +52,7 @@ install:
 	cp -r dectris_eiger $(DESTDIR)
 	cp $(FILEWRITER_DIR)/EigerFilewriter.py $(DESTDIR)
 	cp $(MONITOR_DIR)/EigerMonitor.py $(DESTDIR)
+	cp $(HIDRACLIENT_DIR)/EigerHiDRAClient.py $(DESTDIR)
 	chmod 755 $(DESTDIR)/$(CLASS)
 
 clean:

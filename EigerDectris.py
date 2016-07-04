@@ -63,6 +63,10 @@ try:
     import EigerMonitor
 except:
     print "EigerMonitor can not be imported"
+try:
+    import EigerHiDRAClient
+except:
+    print "EigerHiDRAClient can not be imported"
 
 
 
@@ -1220,6 +1224,12 @@ def main():
             py.add_class(EigerMonitor.EigerMonitorClass,EigerMonitor.EigerMonitor,'EigerMonitor')
         except:
             print "Error adding class EigerMonitor. Device will not be created"
+            
+        try:
+            py.add_class(EigerHiDRAClient.EigerHiDRAClientClass,EigerHiDRAClient.EigerHiDRAClient,'EigerHiDRAClient')
+        except:
+            print "Error adding class EigerHiDRAClient. Device will not be created"
+
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.add_classes
 
