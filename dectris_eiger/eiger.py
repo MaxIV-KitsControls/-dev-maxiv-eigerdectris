@@ -700,3 +700,51 @@ class EigerDetector(object):
         set_value(self._host, self._port, self._api_v, "detector",
                   "config", "detector_distance", detector_distance, timeout=timeout)
     detector_distance = property(get_detector_distance, set_detector_distance)
+
+    def get_omega_increment(self, timeout=2.0, return_full=False):
+        """
+        Return the currently set omega increment per frame.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: omega increment per frame
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "omega_increment", timeout=timeout,
+                         return_full=return_full)
+
+    def set_omega_increment(self, omega_increment, timeout=2.0):
+        """
+        Set the omega increment per frame.
+
+        :param float timeout: communication timeout in seconds
+        :param float omega_increment: the new detector distance
+        """
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "omega_increment", omega_increment, timeout=timeout)
+    omega_increment = property(get_omega_increment, set_omega_increment)
+
+    def get_omega_start(self, timeout=2.0, return_full=False):
+        """
+        Return the currently set omega start angle.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: omega start angle
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "omega_start", timeout=timeout,
+                         return_full=return_full)
+
+    def set_omega_start(self, omega_start, timeout=2.0):
+        """
+        Set the omega start angle.
+
+        :param float timeout: communication timeout in seconds
+        :param float omega_start: the new detector distance
+        """
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "omega_start", omega_start, timeout=timeout)
+    omega_start = property(get_omega_start, set_omega_start)

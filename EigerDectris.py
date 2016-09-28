@@ -140,6 +140,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_BeamCenterX_read = 0
         self.attr_BeamCenterY_read = 0
         self.attr_DetectorDistance_read = 0
+        self.attr_OmegaIncrement_read = 0
+        self.attr_OmegaStart_read = 0
 
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
@@ -694,9 +696,39 @@ class EigerDectris (PyTango.Device_4Impl):
 
     def write_DetectorDistance(self, attr):
         self.debug_stream("In write_DetectorDistance()")
-        data=attr.get_write_value()
+        data= attr.get_write_value()
 
         self.det.detector_distance = data
+        self.attr_MustArmFlag_read = 1
+
+    def read_OmegaIncrement(self, attr):
+        self.debug_stream("In read_OmegaIncrement())")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_OmegaIncrement_read = self.det.omega_increment
+        attr.set_value(self.attr_OmegaIncrement_read)
+
+
+    def write_OmegaIncrement(self, attr):
+        self.debug_stream("In write_OmegaIncrement()")
+        data = attr.get_write_value()
+
+        self.det.omega_increment = data
+        self.attr_MustArmFlag_read = 1
+
+    def read_OmegaStart(self, attr):
+        self.debug_stream("In read_OmegaStart())")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_OmegaStart_read = self.det.omega_start
+        attr.set_value(self.attr_OmegaStart_read)
+
+
+    def write_OmegaIncrement(self, attr):
+        self.debug_stream("In write_OmegaStart()")
+        data = attr.get_write_value()
+
+        self.det.omega_start = data
         self.attr_MustArmFlag_read = 1
 
     #-----------------------------------------------------------------------------
@@ -1278,6 +1310,22 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "mm",
                 'description': "Currently set sample to detector distance.",
+            } ],
+        'OmegaIncrement':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "deg",
+                'description': "Currently set omega imcrement per frame.",
+            } ],
+        'OmegaStart':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "deg",
+                'description': "Currently set omega start angle.",
             } ],
         }
 
