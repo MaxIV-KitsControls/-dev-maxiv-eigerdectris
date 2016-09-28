@@ -825,5 +825,38 @@ class EigerDetector(object):
         if compression not in ["lz4", "bslz4"]:
             raise ValueError("Invalid compression value.")
         set_value(self._host, self._port, self._api_v, "detector",
-                  "config", "compression", mode, timeout=timeout)
+                  "config", "compression", compression, timeout=timeout)
     compression = property(get_compression, set_compression)
+
+    def get_roi_mode(self, timeout=2.0, return_full=False):
+        """
+        Returns the current roi mode. Following roi modes are
+        supported:
+
+        * 4M
+        * 16M
+        * TODO: check correct values, only 4M is documented, check also
+        how to enable/disable
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: the current roi mode
+        :rtype: string
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "roi_mode", timeout=timeout,
+                         return_full=return_full)
+
+    def set_roi_mode(self, roi_mode, timeout=2.0):
+        """
+        Set the roi mode. Raises ``ValueError`` if *roi mode* is an invalid
+        mode string. See :py:meth:`get_roi_mode` for supported modes.
+
+        :param string roi_mode: roi mode value
+        :param float timeout: communication timeout in seconds
+        """
+        if roi_mode not in ["4M", "16M"]:
+            raise ValueError("Invalid roi_mode value.")
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "roi_mode", roi_mode, timeout=timeout)
+    roi_mode = property(get_roi_mode, set_roi_mode)

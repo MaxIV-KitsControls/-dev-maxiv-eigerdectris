@@ -145,6 +145,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_PixelMask_read = 0
         self.attr_PixelMaskApplied_read = 0
         self.attr_Compression_read = 0
+        self.attr_RoiMode_read = 0
 
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
@@ -766,7 +767,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
             self.attr_Compression_read = self.det.compression
-        attr.set_value(self.attr_PixelMask_read)
+        attr.set_value(self.attr_Compression_read)
 
     def write_Compression(self, attr):
         self.debug_stream("In write_Compression()")
@@ -774,6 +775,21 @@ class EigerDectris (PyTango.Device_4Impl):
 
         self.det.compression = data
         self.attr_MustArmFlag_read = 1
+
+    def read_RoiMode(self, attr):
+        self.debug_stream("In read_RoiMode())")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_RoiMode_read = self.det.roi_mode
+        attr.set_value(self.attr_RoiMode_read)
+
+    def write_RoiMode(self, attr):
+        self.debug_stream("In write_RoiMode()")
+        data = attr.get_write_value()
+
+        self.det.roi_mode = data
+        self.attr_MustArmFlag_read = 1
+
     #-----------------------------------------------------------------------------
     #    EigerDectris command methods
     #-----------------------------------------------------------------------------
@@ -1392,6 +1408,13 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Current compression. Following compression modes are supported:\nlz4, bslz4",
+            } ],
+        'RoiMode':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Current roi mode. Following compression modes are supported:\n4M, 16M",
             } ],
         }
 
