@@ -142,6 +142,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_DetectorDistance_read = 0
         self.attr_OmegaIncrement_read = 0
         self.attr_OmegaStart_read = 0
+        self.attr_PixelMask_read = 0
+        self.attr_PixelMaskApplied_read = 0
 
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
@@ -723,12 +725,39 @@ class EigerDectris (PyTango.Device_4Impl):
             self.attr_OmegaStart_read = self.det.omega_start
         attr.set_value(self.attr_OmegaStart_read)
 
-
     def write_OmegaIncrement(self, attr):
         self.debug_stream("In write_OmegaStart()")
         data = attr.get_write_value()
 
         self.det.omega_start = data
+        self.attr_MustArmFlag_read = 1
+
+    def read_PixelMask(self, attr):
+        self.debug_stream("In read_PixelMask())")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_PixelMask_read = self.det.pixel_mask
+        attr.set_value(self.attr_PixelMask_read)
+
+    def write_PixelMask(self, attr):
+        self.debug_stream("In write_PixelMask()")
+        data = attr.get_write_value()
+
+        self.det.pixel_mask = data
+        self.attr_MustArmFlag_read = 1
+
+    def read_PixelMaskApplied(self, attr):
+        self.debug_stream("In read_PixelMaskApplied())")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_PixelMaskApplied_read = self.det.pixel_mask_applied
+        attr.set_value(self.attr_PixelMaskApplied_read)
+
+    def write_PixelMaskApplied(self, attr):
+        self.debug_stream("In write_PixelMaskApplied()")
+        data = attr.get_write_value()
+
+        self.det.pixel_mask_applied = data
         self.attr_MustArmFlag_read = 1
 
     #-----------------------------------------------------------------------------
@@ -1326,6 +1355,22 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "deg",
                 'description': "Currently set omega start angle.",
+            } ],
+        'PixelMask':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "",
+                'description': "Currently set pixel mask.",
+            } ],
+        'PixelMaskApplied':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "",
+                'description': "1 if the pixel mask is applied.",
             } ],
         }
 
