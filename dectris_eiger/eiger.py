@@ -796,3 +796,34 @@ class EigerDetector(object):
         set_value(self._host, self._port, self._api_v, "detector",
                   "config", "pixel_mask_applied", pixel_mask_applied, timeout=timeout)
     pixel_mask_applied = property(get_pixel_mask_applied, set_pixel_mask_applied)
+
+    def get_compression(self, timeout=2.0, return_full=False):
+        """
+        Returns the current compression. Following compressions are
+        supported:
+
+         * lz4
+         * bslz4
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: the current compression
+        :rtype: string
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "compression", timeout=timeout,
+                         return_full=return_full)
+
+    def set_compression(self, compression, timeout=2.0):
+        """
+        Set the compression. Raises ``ValueError`` if *compression* is an invalid
+        mode string. See :py:meth:`get_compression` for supported modes.
+
+        :param string compression: compression value
+        :param float timeout: communication timeout in seconds
+        """
+        if compression not in ["lz4", "bslz4"]:
+            raise ValueError("Invalid compression value.")
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "compression", mode, timeout=timeout)
+    compression = property(get_compression, set_compression)

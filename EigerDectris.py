@@ -144,6 +144,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_OmegaStart_read = 0
         self.attr_PixelMask_read = 0
         self.attr_PixelMaskApplied_read = 0
+        self.attr_Compression_read = 0
 
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
@@ -760,6 +761,19 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det.pixel_mask_applied = data
         self.attr_MustArmFlag_read = 1
 
+    def read_Compression(self, attr):
+        self.debug_stream("In read_Compression())")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_Compression_read = self.det.compression
+        attr.set_value(self.attr_PixelMask_read)
+
+    def write_Compression(self, attr):
+        self.debug_stream("In write_Compression()")
+        data = attr.get_write_value()
+
+        self.det.compression = data
+        self.attr_MustArmFlag_read = 1
     #-----------------------------------------------------------------------------
     #    EigerDectris command methods
     #-----------------------------------------------------------------------------
@@ -1371,6 +1385,13 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "",
                 'description': "1 if the pixel mask is applied.",
+            } ],
+        'Compression':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Current compression. Following compression modes are supported:\nlz4, bslz4",
             } ],
         }
 
