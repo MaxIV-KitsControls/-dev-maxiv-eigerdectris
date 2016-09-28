@@ -628,5 +628,53 @@ class EigerDetector(object):
 
         return response[limit]
 
+    # beam center
+    def get_beam_center_x(self, timeout=2.0, return_full=False):
+        """
+        Returns the currently set beam center horizontal position.
 
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: beam center horizontal position
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "beam_center_x", timeout=timeout,
+                         return_full=return_full)
 
+    def set_beam_center_x(self, beam_center_x, timeout=2.0):
+        """
+        Set the beam center horizontal position. This will also affect the
+        wavelength property and the threshold.
+
+        :param float timeout: communication timeout in seconds
+        :param float beam_center_x: the new beam center horizontal position
+        """
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "beam_center_x", beam_center_x, timeout=timeout)
+    beam_center_x = property(get_beam_center_x, set_beam_center_x)
+
+    def get_beam_center_y(self, timeout=2.0, return_full=False):
+        """
+        Returns the currently set beam center vertical position.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: beam center vertical position
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "beam_center_y", timeout=timeout,
+                         return_full=return_full)
+
+    def set_beam_center_y(self, beam_center_y, timeout=2.0):
+        """
+        Set the beam center horizontal position. This will also affect the
+        wavelength property and the threshold.
+
+        :param float timeout: communication timeout in seconds
+        :param float beam_center_y: the new beam center vertical position
+        """
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "beam_center_y", beam_center_y, timeout=timeout)
+    beam_center_y = property(get_beam_center_y, set_beam_center_y)

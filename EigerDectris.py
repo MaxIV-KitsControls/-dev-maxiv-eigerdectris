@@ -137,6 +137,9 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_DownloadDirectory_read = ''
         self.attr_FilesInBuffer_read = ['']
         self.attr_Error_read = ['']
+        self.attr_BeamCenterX_read = 0
+        self.attr_BeamCenterY_read = 0
+
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
         nums = self.APIVersion.split(".")
@@ -649,6 +652,36 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.read_attr_hardware) ENABLED START -----#
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.read_attr_hardware
+
+    def read_BeamCenterX(self, attr):
+        self.debug_stream("In read_BeamCenterX()")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_BeamCenterX_read = self.det.beam_center_x
+        attr.set_value(self.attr_BeamCenterX_read)
+
+
+    def write_BeamCenterX(self, attr):
+        self.debug_stream("In write_BeamCenterX()")
+        data=attr.get_write_value()
+
+        self.det.beam_center_x = data
+        self.attr_MustArmFlag_read = 1
+
+    def read_BeamCenterY(self, attr):
+        self.debug_stream("In read_BeamCenterY()")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_BeamCenterY_read = self.det.beam_center_y
+        attr.set_value(self.attr_BeamCenterY_read)
+
+
+    def write_BeamCenterY(self, attr):
+        self.debug_stream("In write_BeamCenterY()")
+        data=attr.get_write_value()
+
+        self.det.beam_center_y = data
+        self.attr_MustArmFlag_read = 1
 
 
     #-----------------------------------------------------------------------------
@@ -1206,6 +1239,22 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ, 100],
             {
                 'description': "List of status parameters causing error condition",
+            } ],
+        'BeamCenterX':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "pixels",
+                'description': "Currently set beam center horizontal position.",
+            } ],
+        'BeamCenterY':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "pixels",
+                'description': "Currently set beam center vertical position.",
             } ],
         }
 
