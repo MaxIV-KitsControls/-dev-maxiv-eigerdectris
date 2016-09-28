@@ -644,8 +644,7 @@ class EigerDetector(object):
 
     def set_beam_center_x(self, beam_center_x, timeout=2.0):
         """
-        Set the beam center horizontal position. This will also affect the
-        wavelength property and the threshold.
+        Set the beam center horizontal position.
 
         :param float timeout: communication timeout in seconds
         :param float beam_center_x: the new beam center horizontal position
@@ -669,8 +668,7 @@ class EigerDetector(object):
 
     def set_beam_center_y(self, beam_center_y, timeout=2.0):
         """
-        Set the beam center horizontal position. This will also affect the
-        wavelength property and the threshold.
+        Set the beam center horizontal position.
 
         :param float timeout: communication timeout in seconds
         :param float beam_center_y: the new beam center vertical position
@@ -678,3 +676,27 @@ class EigerDetector(object):
         set_value(self._host, self._port, self._api_v, "detector",
                   "config", "beam_center_y", beam_center_y, timeout=timeout)
     beam_center_y = property(get_beam_center_y, set_beam_center_y)
+
+    def get_detector_distance(self, timeout=2.0, return_full=False):
+        """
+        Returns the currently set detector distance.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: detector distance
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "detector_distance", timeout=timeout,
+                         return_full=return_full)
+
+    def set_detector_distance(self, detector_distance, timeout=2.0):
+        """
+        Set the detector distance.
+
+        :param float timeout: communication timeout in seconds
+        :param float detector_distance: the new detector distance
+        """
+        set_value(self._host, self._port, self._api_v, "detector",
+                  "config", "detector_distance", detector_distance, timeout=timeout)
+    detector_distance = property(get_detector_distance, set_detector_distance)

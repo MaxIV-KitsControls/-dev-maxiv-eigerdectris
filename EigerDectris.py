@@ -139,6 +139,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_Error_read = ['']
         self.attr_BeamCenterX_read = 0
         self.attr_BeamCenterY_read = 0
+        self.attr_DetectorDistance_read = 0
 
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
@@ -683,6 +684,20 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det.beam_center_y = data
         self.attr_MustArmFlag_read = 1
 
+    def read_DetectorDistance(self, attr):
+        self.debug_stream("In read_DetectorDistance()")
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_DetectorDistance_read = self.det.detector_distance
+        attr.set_value(self.attr_DetectorDistance_read)
+
+
+    def write_DetectorDistance(self, attr):
+        self.debug_stream("In write_DetectorDistance()")
+        data=attr.get_write_value()
+
+        self.det.detector_distance = data
+        self.attr_MustArmFlag_read = 1
 
     #-----------------------------------------------------------------------------
     #    EigerDectris command methods
@@ -1255,6 +1270,14 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "pixels",
                 'description': "Currently set beam center vertical position.",
+            } ],
+        'DetectorDistance':
+            [[PyTango.DevDouble,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "mm",
+                'description': "Currently set sample to detector distance.",
             } ],
         }
 
