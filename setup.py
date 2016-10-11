@@ -7,5 +7,5 @@ setup(name = "tangods-eigerdectris",
       description = "Device server for the Eiger detector",
       packages =['dectris_eiger'],
       py_modules=['EigerDectris'],
-      scripts = ['scripts/eigerdectris']
+      scripts = ['scripts/EigerDectris']
      )
