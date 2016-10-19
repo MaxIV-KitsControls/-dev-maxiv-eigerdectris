@@ -808,7 +808,7 @@ class EigerDetector(object):
         :param string roi_mode: roi mode value
         :param float timeout: communication timeout in seconds
         """
-        if roi_mode not in ["4M", "16M"]:
+        if roi_mode not in ["4M", "disabled"]:
             raise ValueError("Invalid roi_mode value.")
         set_value(self._host, self._port, self._api_v, "detector",
                   "config", "roi_mode", roi_mode, timeout=timeout)
