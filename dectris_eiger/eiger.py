@@ -749,53 +749,6 @@ class EigerDetector(object):
                   "config", "omega_start", omega_start, timeout=timeout)
     omega_start = property(get_omega_start, set_omega_start)
 
-    def get_pixel_mask(self, timeout=2.0, return_full=False):
-        """
-        Return the currently set pixel mask.
-
-        :param float timeout: communication timeout in seconds
-        :param bool return_full: whether to return the full response dict
-        :returns: pixel mask
-        :rtype: int
-        """
-        return get_value(self._host, self._port, self._api_v, "detector",
-                         "config", "pixel_mask", timeout=timeout,
-                         return_full=return_full)
-
-    def set_pixel_mask(self, pixel_mask, timeout=2.0):
-        """
-        Set the pixel mask.
-
-        :param float timeout: communication timeout in seconds
-        :param float pixel mask: the new pixel mask
-        """
-        set_value(self._host, self._port, self._api_v, "detector",
-                  "config", "pixel_mask", pixel_mask, timeout=timeout)
-    pixel_mask = property(get_pixel_mask, set_pixel_mask)
-
-    def get_pixel_mask_applied(self, timeout=2.0, return_full=False):
-        """
-        Return True if the pixel mask is applied.
-
-        :param float timeout: communication timeout in seconds
-        :param bool return_full: whether to return the full response dict
-        :returns: True if the pixel mask is applied
-        :rtype: boolean
-        """
-        return get_value(self._host, self._port, self._api_v, "detector",
-                         "config", "pixel_mask_applied", timeout=timeout,
-                         return_full=return_full)
-
-    def set_pixel_mask_applied(self, pixel_mask_applied, timeout=2.0):
-        """
-        Enable/disable the pixel mask.
-
-        :param boolean timeout: communication timeout in seconds
-        :param boolean pixel_mask_applied: enable/disable the pixel mask
-        """
-        set_value(self._host, self._port, self._api_v, "detector",
-                  "config", "pixel_mask_applied", pixel_mask_applied, timeout=timeout)
-    pixel_mask_applied = property(get_pixel_mask_applied, set_pixel_mask_applied)
 
     def get_compression(self, timeout=2.0, return_full=False):
         """
