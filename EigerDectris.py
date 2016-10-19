@@ -256,6 +256,8 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
             self.attr_FrameTime_read = self.det.frame_time
+            self.attr_FrameTimeMax_read = self.det.get_param_lim("frame_time", "max")
+            self.attr_FrameTimeMin_read = self.det.get_param_lim("frame_time", "min")
         attr.set_value(self.attr_FrameTime_read)
         
         #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTime_read
@@ -264,7 +266,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In write_FrameTime()")
         data=attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.FrameTime_write) ENABLED START -----#
-        
+
         if data > self.attr_FrameTimeMax_read or data < self.attr_FrameTimeMin_read:
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_FrameTimeMin_read, self.attr_FrameTimeMax_read))
 
@@ -1355,6 +1357,22 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "deg",
                 'description': "Currently set omega start angle.",
+            } ],
+        'PixelMask':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "",
+                'description': "Currently set pixel mask.",
+            } ],
+        'PixelMaskApplied':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'unit': "",
+                'description': "1 if the pixel mask is applied.",
             } ],
         'Compression':
             [[PyTango.DevString,
