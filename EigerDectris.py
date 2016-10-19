@@ -727,7 +727,7 @@ class EigerDectris (PyTango.Device_4Impl):
             self.attr_OmegaStart_read = self.det.omega_start
         attr.set_value(self.attr_OmegaStart_read)
 
-    def write_OmegaIncrement(self, attr):
+    def write_OmegaStart(self, attr):
         self.debug_stream("In write_OmegaStart()")
         data = attr.get_write_value()
 
