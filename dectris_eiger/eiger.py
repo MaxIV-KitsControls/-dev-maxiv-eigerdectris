@@ -813,3 +813,63 @@ class EigerDetector(object):
         set_value(self._host, self._port, self._api_v, "detector",
                   "config", "roi_mode", roi_mode, timeout=timeout)
     roi_mode = property(get_roi_mode, set_roi_mode)
+
+    def get_x_pixel_size(self, timeout=2.0, return_full=False):
+        """
+        Return the x pixel size.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: x pixel size
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "x_pixel_size", timeout=timeout,
+                         return_full=return_full)
+
+    x_pixel_size = property(get_x_pixel_size)
+
+    def get_y_pixel_size(self, timeout=2.0, return_full=False):
+        """
+        Return the y pixel size.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: y pixel size
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "y_pixel_size", timeout=timeout,
+                         return_full=return_full)
+
+    y_pixel_size = property(get_y_pixel_size)
+
+    def get_x_pixels_detector(self, timeout=2.0, return_full=False):
+        """
+        Return the x pixels in detector.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: x pixels in the detector
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "x_pixels_in_detector", timeout=timeout,
+                         return_full=return_full)
+
+    x_pixels_detector = property(get_x_pixels_detector)
+
+    def get_y_pixels_detector(self, timeout=2.0, return_full=False):
+        """
+        Return the y pixels in detector.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: y pixels in the detector
+        :rtype: float
+        """
+        return get_value(self._host, self._port, self._api_v, "detector",
+                         "config", "y_pixels_in_detector", timeout=timeout,
+                         return_full=return_full)
+
+    y_pixels_detector = property(get_y_pixels_detector)

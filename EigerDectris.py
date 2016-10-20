@@ -169,6 +169,10 @@ class EigerDectris (PyTango.Device_4Impl):
             self.attr_PhotonEnergyMin_read =  self.det.get_param_lim("photon_energy", "min")
             self.attr_EnergyThresholdMax_read =  self.det.get_param_lim("threshold_energy", "max")
             self.attr_EnergyThresholdMin_read =  self.det.get_param_lim("threshold_energy", "min")
+            self.attr_XPixelSize_read = self.det.x_pixel_size
+            self.attr_YPixelSize_read = self.det.y_pixel_size
+            self.attr_XPixelsDetector_read = self.det.x_pixels_detector
+            self.attr_YPixelsDetector_read = self.det.y_pixels_detector
         except:
             print "Error reading parameter limit from detector"
 
@@ -645,7 +649,27 @@ class EigerDectris (PyTango.Device_4Impl):
             self.attr_Error_read.append(line)
             
         attr.set_value(self.attr_Error_read)
-        
+
+    def read_XPixelSize(self, attr):
+        self.debug_stream("In read_XPixelSize()")
+        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
+        attr.set_value(self.attr_XPixelSize_read)
+
+    def read_YPixelSize(self, attr):
+        self.debug_stream("In read_YPixelSize()")
+        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
+        attr.set_value(self.attr_YPixelSize_read)
+
+    def read_XPixelsDetector(self, attr):
+        self.debug_stream("In read_XPixelsDetector()")
+        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
+        attr.set_value(self.attr_XPixelsDetector_read)
+
+    def read_YPixelsDetector(self, attr):
+        self.debug_stream("In read_YPixelsDetector()")
+        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
+        attr.set_value(self.attr_YPixelsDetector_read)
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.Error_read
         
     
@@ -1389,6 +1413,34 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Current roi mode. Following compression modes are supported:\n4M, 16M",
+            } ],
+        'XPixelSize':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "size of a pixel along x-axis",
+            } ],
+       'YPixelSize':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "size of a pixel along y-axis",
+            } ],
+        'XPixelsDetector':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "number of pizels along x-axis",
+            } ],
+       'YPixelsDetector':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "number of pixels along y-axis",
             } ],
         }
 
