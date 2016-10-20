@@ -780,21 +780,23 @@ class EigerDectris (PyTango.Device_4Impl):
         rstate = self.det.get_state()
 
         if self.flag_arm:
-            if rstate == "configure" or rstate == "ready":
+            if rstate == "configure" or rstate == "idle":
                 self.flag_arm = 0
 
         if rstate == "error":
-            self.set_state(PyTango.DevState.FAULT) 
+            self.set_state(PyTango.DevState.FAULT)
         elif (rstate == "na") or self.flag_arm:
             self.set_state(PyTango.DevState.OFF)
         elif (rstate != "idle" and rstate != "ready") or self.flag_arm:
             self.set_state(PyTango.DevState.MOVING)
+        elif rstate == 'acquire':
+            self.set_state(PyTango.DevState.MOVING)
         else:
-            self.set_state(PyTango.DevState.ON) 
+            self.set_state(PyTango.DevState.ON)
 
 
         argout = self.get_state()
-        
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.State
         if argout != PyTango.DevState.ALARM:
             PyTango.Device_4Impl.dev_state(self)
@@ -924,17 +926,17 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det.buffer.delete_file(argin)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.DeleteFileFromBuffer
-        
+
     def Disarm(self):
         """ Disarm detector
-        
-        :param : 
+
+        :param :
         :type: PyTango.DevVoid
-        :return: 
+        :return:
         :rtype: PyTango.DevVoid """
         self.debug_stream("In Disarm()")
         #----- PROTECTED REGION ID(EigerDectris.Disarm) ENABLED START -----#
-        
+
         rstate = self.det.get_state()
         if rstate != "idle":
             self.flag_arm = 0
