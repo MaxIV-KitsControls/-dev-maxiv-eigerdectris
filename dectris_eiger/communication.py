@@ -42,12 +42,12 @@ def set_value(host, port, api_version, subsystem, section, key, value,
 
     url = url_fmt.format(**conf)
 
-    
+
     if port == -1 and subsystem == "detector" and section == "command":
         if key == "trigger" and value != -1:
             payload = json.dumps({"value": value})
         else:
-            payload = json.dumps({"value": 0})       
+            payload = json.dumps({"value": 0})
     else:
         payload = json.dumps({"value": value})
 

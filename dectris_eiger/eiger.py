@@ -634,6 +634,24 @@ class EigerDetector(object):
         else:
             return data["sequence id"]
 
+    # wait_for_trigger
+    def wait_for_trigger(self, timeout=2.0, return_full=False):
+        """
+        Wait for the trigger.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: current series id
+        :rtype: int
+        """
+        data = set_value(self._host, self._port, self._api_v, "detector",
+                         "command", "wait_for_trigger", "wait_for_trigger",
+                         timeout=timeout)
+        if return_full:
+            return data
+        else:
+            return data["sequence id"]
+
     def get_param_lim(self, parameter, limit, timeout=2.0, return_full = True):
         """
         Returns the limit max or min of the given parameter
