@@ -616,11 +616,6 @@ class EigerDetector(object):
         """
         Update the status of the detector
 
-        .. note::
-
-           The status_update() command is not available in firmware version 0.9 and
-           below.
-
         :param float timeout: communication timeout in seconds
         :param bool return_full: whether to return the full response dict
         :returns: current series id
