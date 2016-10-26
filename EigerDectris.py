@@ -874,6 +874,10 @@ class EigerDectris (PyTango.Device_4Impl):
             try:
                 self.flag_arm = 1
                 self.det.arm(timeout=0.1)
+
+                # Prepare trigger detection (undocumented)
+                self.det.wait_for_trigger()
+
                 self.attr_MustArmFlag_read = 0
             except:
                 pass
