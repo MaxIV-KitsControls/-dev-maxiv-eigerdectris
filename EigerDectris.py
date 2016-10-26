@@ -800,7 +800,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In dev_state()")
         argout = PyTango.DevState.UNKNOWN
         #----- PROTECTED REGION ID(EigerDectris.State) ENABLED START -----#
-        
+
+        # Workaround: this might get fixed in api v1.8.x
+        self.det.status_update()
+
         rstate = self.det.get_state()
 
         if self.flag_arm:
@@ -836,7 +839,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In dev_status()")
         argout = ''
         #----- PROTECTED REGION ID(EigerDectris.Status) ENABLED START -----#
-               
+
+        # Workaround: this might get fixed in api v1.8.x
+        self.det.status_update()
+
         rstate = self.det.get_state()
 
         if rstate == "na":

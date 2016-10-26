@@ -85,7 +85,7 @@ class EigerDetector(object):
     # detector error
     def get_error(self, timeout=2.0, return_full=False):
         """
-        Returns the list of staus parameters causing an error condition. 
+        Returns the list of staus parameters causing an error condition.
 
         :param float timeout: communication timeout in seconds
         :param bool return_full: whether to return the full response dict
@@ -100,7 +100,7 @@ class EigerDetector(object):
     # detector time
     def get_detector_time(self, timeout=2.0, return_full=False):
         """
-        Returns the actual system time. 
+        Returns the actual system time.
 
         :param float timeout: communication timeout in seconds
         :param bool return_full: whether to return the full response dict
@@ -139,7 +139,7 @@ class EigerDetector(object):
 
 
 
-    
+
     # frame time
     def get_frame_time(self, timeout=2.0, return_full=False):
         """
@@ -606,6 +606,29 @@ class EigerDetector(object):
         """
         data = set_value(self._host, self._port, self._api_v, "detector",
                          "command", "abort", "abort", timeout=timeout)
+        if return_full:
+            return data
+        else:
+            return data["sequence id"]
+
+    # status_update
+    def status_update(self, timeout=2.0, return_full=False):
+        """
+        Update the status of the detector
+
+        .. note::
+
+           The status_update() command is not available in firmware version 0.9 and
+           below.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: current series id
+        :rtype: int
+        """
+        data = set_value(self._host, self._port, self._api_v, "detector",
+                         "command", "status_update", "status_update",
+                         timeout=timeout)
         if return_full:
             return data
         else:
