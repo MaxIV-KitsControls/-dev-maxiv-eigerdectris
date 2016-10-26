@@ -217,6 +217,8 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Temperature_read) ENABLED START -----#
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            # Workaround: this might get fixed in api v1.8.x
+            self.det.status_update()
             self.attr_Temperature_read = self.det.temperature
         attr.set_value(self.attr_Temperature_read)
 
@@ -227,6 +229,8 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Humidity_read) ENABLED START -----#
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            # Workaround: this might get fixed in api v1.8.x
+            self.det.status_update()
             self.attr_Humidity_read = self.det.humidity
         attr.set_value(self.attr_Humidity_read)
 
