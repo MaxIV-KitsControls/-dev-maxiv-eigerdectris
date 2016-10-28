@@ -654,29 +654,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
         attr.set_value(self.attr_Error_read)
 
-    def read_XPixelSize(self, attr):
-        self.debug_stream("In read_XPixelSize()")
-        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
-        attr.set_value(self.attr_XPixelSize_read)
-
-    def read_YPixelSize(self, attr):
-        self.debug_stream("In read_YPixelSize()")
-        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
-        attr.set_value(self.attr_YPixelSize_read)
-
-    def read_XPixelsDetector(self, attr):
-        self.debug_stream("In read_XPixelsDetector()")
-        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
-        attr.set_value(self.attr_XPixelsDetector_read)
-
-    def read_YPixelsDetector(self, attr):
-        self.debug_stream("In read_YPixelsDetector()")
-        #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
-        attr.set_value(self.attr_YPixelsDetector_read)
-
         #----- PROTECTED REGION END -----#	//	EigerDectris.Error_read
-
-
 
         #----- PROTECTED REGION ID(EigerDectris.initialize_dynamic_attributes) ENABLED START -----#
 
