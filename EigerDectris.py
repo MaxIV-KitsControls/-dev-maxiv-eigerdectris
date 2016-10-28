@@ -252,6 +252,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In write_CountTime()")
         data = attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.CountTime_write) ENABLED START -----#
+
         if data > self.attr_CountTimeMax_read or data < self.attr_CountTimeMin_read:
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_CountTimeMin_read, self.attr_CountTimeMax_read))
 
@@ -481,6 +482,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_NbImagesMax(self, attr):
         self.debug_stream("In read_NbImagesMax()")
         #----- PROTECTED REGION ID(EigerDectris.NbImagesMax_read) ENABLED START -----#
+
         attr.set_value(self.attr_NbImagesMax_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbImagesMax_read
@@ -488,14 +490,15 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_NbImagesMin(self, attr):
         self.debug_stream("In read_NbImagesMin()")
         #----- PROTECTED REGION ID(EigerDectris.NbImagesMin_read) ENABLED START -----#
-        attr.set_value(self.attr_NbImagesMin_read)
 
+        attr.set_value(self.attr_NbImagesMin_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbImagesMin_read
 
     def read_CountTimeMax(self, attr):
         self.debug_stream("In read_CountTimeMax()")
         #----- PROTECTED REGION ID(EigerDectris.CountTimeMax_read) ENABLED START -----#
+
         attr.set_value(self.attr_CountTimeMax_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeMax_read
@@ -503,6 +506,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_CountTimeMin(self, attr):
         self.debug_stream("In read_CountTimeMin()")
         #----- PROTECTED REGION ID(EigerDectris.CountTimeMin_read) ENABLED START -----#
+
         attr.set_value(self.attr_CountTimeMin_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeMin_read
@@ -510,6 +514,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_FrameTimeMax(self, attr):
         self.debug_stream("In read_FrameTimeMax()")
         #----- PROTECTED REGION ID(EigerDectris.FrameTimeMax_read) ENABLED START -----#
+
         attr.set_value(self.attr_FrameTimeMax_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.FrameTimeMax_read
@@ -524,6 +529,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_PhotonEnergyMax(self, attr):
         self.debug_stream("In read_PhotonEnergyMax()")
         #----- PROTECTED REGION ID(EigerDectris.PhotonEnergyMax_read) ENABLED START -----#
+
         attr.set_value(self.attr_PhotonEnergyMax_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergyMax_read
@@ -531,6 +537,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_PhotonEnergyMin(self, attr):
         self.debug_stream("In read_PhotonEnergyMin()")
         #----- PROTECTED REGION ID(EigerDectris.PhotonEnergyMin_read) ENABLED START -----#
+
         attr.set_value(self.attr_PhotonEnergyMin_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergyMin_read
@@ -545,6 +552,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_EnergyThresholdMin(self, attr):
         self.debug_stream("In read_EnergyThresholdMin()")
         #----- PROTECTED REGION ID(EigerDectris.EnergyThresholdMin_read) ENABLED START -----#
+
         attr.set_value(self.attr_EnergyThresholdMin_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.EnergyThresholdMin_read
@@ -554,7 +562,6 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Time_read) ENABLED START -----#
 
         self.attr_Time_read = self.det.detector_time
-
         attr.set_value(self.attr_Time_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Time_read
@@ -562,6 +569,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_MustArmFlag(self, attr):
         self.debug_stream("In read_MustArmFlag()")
         #----- PROTECTED REGION ID(EigerDectris.MustArmFlag_read) ENABLED START -----#
+
         attr.set_value(self.attr_MustArmFlag_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.MustArmFlag_read
@@ -569,9 +577,9 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_NbTriggers(self, attr):
         self.debug_stream("In read_NbTriggers()")
         #----- PROTECTED REGION ID(EigerDectris.NbTriggers_read) ENABLED START -----#
+
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
             self.attr_NbTriggers_read = self.det.ntrigger
-
         attr.set_value(self.attr_NbTriggers_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggers_read
@@ -580,12 +588,11 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In write_NbTriggers()")
         data = attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.NbTriggers_write) ENABLED START -----#
+
         if data > self.attr_NbTriggersMax_read or data < self.attr_NbTriggersMin_read:
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_NbTriggersMin_read, self.attr_NbTriggersMax_read))
-
         self.det.ntrigger = data
         self.attr_MustArmFlag_read = 1
-
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggers_write
 
@@ -599,6 +606,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_NbTriggersMin(self, attr):
         self.debug_stream("In read_NbTriggersMin()")
         #----- PROTECTED REGION ID(EigerDectris.NbTriggersMin_read) ENABLED START -----#
+
         attr.set_value(self.attr_NbTriggersMin_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.NbTriggersMin_read
@@ -606,6 +614,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_CountTimeInte(self, attr):
         self.debug_stream("In read_CountTimeInte()")
         #----- PROTECTED REGION ID(EigerDectris.CountTimeInte_read) ENABLED START -----#
+
         attr.set_value(self.attr_CountTimeInte_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.CountTimeInte_read
@@ -622,6 +631,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_DownloadDirectory(self, attr):
         self.debug_stream("In read_DownloadDirectory()")
         #----- PROTECTED REGION ID(EigerDectris.DownloadDirectory_read) ENABLED START -----#
+
         attr.set_value(self.attr_DownloadDirectory_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.DownloadDirectory_read
@@ -630,6 +640,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In write_DownloadDirectory()")
         data = attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.DownloadDirectory_write) ENABLED START -----#
+
         self.attr_DownloadDirectory_read = data
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.DownloadDirectory_write
@@ -637,6 +648,9 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_DcuBufferFree(self, attr):
         self.debug_stream("In read_DcuBufferFree()")
         #----- PROTECTED REGION ID(EigerDectris.DcuBufferFree_read) ENABLED START -----#
+
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_DcuBufferFree_read = self.det.dcu_buffer_free
         attr.set_value(self.attr_DcuBufferFree_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.DcuBufferFree_read
@@ -715,8 +729,10 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In write_OmegaIncrement()")
         data = attr.get_write_value()
         #----- PROTECTED REGION ID(EigerDectris.OmegaIncrement_write) ENABLED START -----#
+
         self.det.omega_increment = data
         self.attr_MustArmFlag_read = 1
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.OmegaIncrement_write
 
     def read_OmegaStart(self, attr):
@@ -782,6 +798,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_XPixelSize(self, attr):
         self.debug_stream("In read_XPixelSize()")
         #----- PROTECTED REGION ID(EigerDectris.XPixelSize_read) ENABLED START -----#
+
         attr.set_value(self.attr_XPixelSize_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.XPixelSize_read
@@ -789,6 +806,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_YPixelSize(self, attr):
         self.debug_stream("In read_YPixelSize()")
         #----- PROTECTED REGION ID(EigerDectris.YPixelSize_read) ENABLED START -----#
+
         attr.set_value(self.attr_YPixelSize_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.YPixelSize_read
@@ -796,6 +814,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_XPixelsDetector(self, attr):
         self.debug_stream("In read_XPixelsDetector()")
         #----- PROTECTED REGION ID(EigerDectris.XPixelsDetector_read) ENABLED START -----#
+
         attr.set_value(self.attr_XPixelsDetector_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.XPixelsDetector_read
@@ -803,6 +822,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_YPixelsDetector(self, attr):
         self.debug_stream("In read_YPixelsDetector()")
         #----- PROTECTED REGION ID(EigerDectris.YPixelsDetector_read) ENABLED START -----#
+
         attr.set_value(self.attr_YPixelsDetector_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.YPixelsDetector_read
@@ -810,6 +830,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_FilesInBuffer(self, attr):
         self.debug_stream("In read_FilesInBuffer()")
         #----- PROTECTED REGION ID(EigerDectris.FilesInBuffer_read) ENABLED START -----#
+
         self.attr_FilesInBuffer_read = []
         nb_files = 0
         for file_name in self.det.buffer.files:
@@ -823,6 +844,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_Error(self, attr):
         self.debug_stream("In read_Error()")
         #----- PROTECTED REGION ID(EigerDectris.Error_read) ENABLED START -----#
+
         self.attr_Error_read = []
         for line in self.det.error:
             self.attr_Error_read.append(line)

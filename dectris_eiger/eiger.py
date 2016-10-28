@@ -112,6 +112,21 @@ class EigerDetector(object):
                          return_full=return_full)
     detector_time = property(get_detector_time)
 
+    # detector dcu buffer free
+    def get_dcu_buffer_free(self, timeout=2.0, return_full=False):
+        """
+        Returns the percentage of available buffer space on the DCU.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: percentage
+        :rytpe: float
+        """
+        return get_value(self._host, self._port, self._api_v,
+                         "detector", "status", "builder/dcu_buffer_free",
+                         timeout=timeout, return_full=return_full)
+    dcu_buffer_free = property(get_dcu_buffer_free)
+
     # count time
     def get_count_time(self, timeout=2.0, return_full=False):
         """
