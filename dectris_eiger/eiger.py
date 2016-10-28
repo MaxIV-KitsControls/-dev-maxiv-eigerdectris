@@ -621,16 +621,12 @@ class EigerDetector(object):
         :returns: current series id
         :rtype: int
         """
-        data = set_value(self._host, self._port, self._api_v, "detector",
-                         "command", "status_update", "status_update",
-                         timeout=timeout)
-        if return_full:
-            return data
-        else:
-            return data["sequence id"]
+        set_value(self._host, self._port, self._api_v, "detector",
+                 "command", "status_update", "status_update",
+                 timeout=timeout, no_data=True)
 
-    # wait_for_trigger
-    def wait_for_trigger(self, timeout=2.0, return_full=False):
+    # wait
+    def wait(self, timeout=2.0, return_full=False):
         """
         Wait for the trigger.
 
@@ -640,7 +636,7 @@ class EigerDetector(object):
         :rtype: int
         """
         data = set_value(self._host, self._port, self._api_v, "detector",
-                         "command", "wait_for_trigger", "wait_for_trigger",
+                         "command", "wait", "wait",
                          timeout=timeout)
         if return_full:
             return data
