@@ -139,8 +139,6 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_DetectorDistance_read = 0.0
         self.attr_OmegaIncrement_read = 0.0
         self.attr_OmegaStart_read = 0.0
-        self.attr_PixelMask_read = 0
-        self.attr_PixelMaskApplied_read = 0
         self.attr_Compression_read = ""
         self.attr_RoiMode_read = ""
         self.attr_XPixelSize_read = 0
@@ -1387,20 +1385,6 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "deg",
                 'description': "Currently set omega start angle.",
-            } ],
-        'PixelMask':
-            [[PyTango.DevLong,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'description': "Currently set pixel mask.",
-            } ],
-        'PixelMaskApplied':
-            [[PyTango.DevLong,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'description': "1 if the pixel mask is applied.",
             } ],
         'Compression':
             [[PyTango.DevString,
