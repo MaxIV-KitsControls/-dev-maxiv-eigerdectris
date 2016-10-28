@@ -816,9 +816,9 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if rstate == "error":
             self.set_state(PyTango.DevState.FAULT)
-        elif (rstate == "na") or self.flag_arm:
+        elif (rstate == "na"):
             self.set_state(PyTango.DevState.OFF)
-        elif (rstate != "idle" and rstate != "ready") or self.flag_arm:
+        elif (rstate != "idle" and rstate != "ready"):
             self.set_state(PyTango.DevState.MOVING)
         elif rstate == 'acquire':
             self.set_state(PyTango.DevState.MOVING)
@@ -871,17 +871,16 @@ class EigerDectris (PyTango.Device_4Impl):
         rstate = self.det.get_state()
 
         if rstate != "ready":
-            try:
-                self.flag_arm = 1
-                self.det.arm(timeout=0.1)
-
-                # Prepare trigger detection (undocumented)
-                self.det.wait_for_trigger()
-
-                self.attr_MustArmFlag_read = 0
-            except:
-                pass
-
+            self.flag_arm = 1
+            self.det.arm()
+            self.attr_MustArmFlag_read = 0
+            # Prepare trigger detection (undocumented)
+            if "ext" in self.attr_TriggerMode_read.lower():
+                try:
+                    self.det.wait(timeout=0.1)
+	        except Exception as exc:
+                    # Ignore timeout error (wait is a blocking command)
+                    pass
         #----- PROTECTED REGION END -----#	//	EigerDectris.Arm
 
     def Trigger(self):
