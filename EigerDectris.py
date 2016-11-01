@@ -65,7 +65,6 @@ except:
     print "EigerHiDRAClient can not be imported"
 
 
-
 #----- PROTECTED REGION END -----#	//	EigerDectris.additionnal_import
 
 # Device States Description
@@ -76,6 +75,7 @@ except:
 
 
 class EigerDectris (PyTango.Device_4Impl):
+
     """Class for controlling the Eiger detector from Dectris"""
 
     # -------- Add you global variables here --------------------------
@@ -84,11 +84,10 @@ class EigerDectris (PyTango.Device_4Impl):
     #----- PROTECTED REGION END -----#	//	EigerDectris.global_variables
 
     def __init__(self, cl, name):
-        PyTango.Device_4Impl.__init__(self,cl,name)
+        PyTango.Device_4Impl.__init__(self, cl, name)
         self.debug_stream("In __init__()")
         EigerDectris.init_device(self)
         #----- PROTECTED REGION ID(EigerDectris.__init__) ENABLED START -----#
-
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.__init__
 
@@ -141,8 +140,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_OmegaStart_read = 0.0
         self.attr_Compression_read = ""
         self.attr_RoiMode_read = ""
-        self.attr_XPixelSize_read = 0
-        self.attr_YPixelSize_read = 0
+        self.attr_XPixelSize_read = 0.0
+        self.attr_YPixelSize_read = 0.0
         self.attr_XPixelsDetector_read = 0
         self.attr_YPixelsDetector_read = 0
         self.attr_FilesInBuffer_read = [""]
@@ -154,23 +153,23 @@ class EigerDectris (PyTango.Device_4Impl):
         if int(nums[1]) > 2:
             self.PortNb = -1
 
-        self.det = EigerDetector(self.Host, self.PortNb,self.APIVersion)
+        self.det = EigerDetector(self.Host, self.PortNb, self.APIVersion)
 
         self.flag_arm = 0
 
         try:
-            self.attr_CountTimeMax_read =  self.det.get_param_lim("count_time", "max")
-            self.attr_CountTimeMin_read =  self.det.get_param_lim("count_time", "min")
-            self.attr_FrameTimeMax_read =  self.det.get_param_lim("frame_time", "max")
-            self.attr_FrameTimeMin_read =  self.det.get_param_lim("frame_time", "min")
-            self.attr_NbImagesMax_read =  self.det.get_param_lim("nimages", "max")
-            self.attr_NbImagesMin_read =  self.det.get_param_lim("nimages", "min")
-            self.attr_NbTriggersMax_read =  self.det.get_param_lim("ntrigger", "max")
-            self.attr_NbTriggersMin_read =  self.det.get_param_lim("ntrigger", "min")
-            self.attr_PhotonEnergyMax_read =  self.det.get_param_lim("photon_energy", "max")
-            self.attr_PhotonEnergyMin_read =  self.det.get_param_lim("photon_energy", "min")
-            self.attr_EnergyThresholdMax_read =  self.det.get_param_lim("threshold_energy", "max")
-            self.attr_EnergyThresholdMin_read =  self.det.get_param_lim("threshold_energy", "min")
+            self.attr_CountTimeMax_read = self.det.get_param_lim("count_time", "max")
+            self.attr_CountTimeMin_read = self.det.get_param_lim("count_time", "min")
+            self.attr_FrameTimeMax_read = self.det.get_param_lim("frame_time", "max")
+            self.attr_FrameTimeMin_read = self.det.get_param_lim("frame_time", "min")
+            self.attr_NbImagesMax_read = self.det.get_param_lim("nimages", "max")
+            self.attr_NbImagesMin_read = self.det.get_param_lim("nimages", "min")
+            self.attr_NbTriggersMax_read = self.det.get_param_lim("ntrigger", "max")
+            self.attr_NbTriggersMin_read = self.det.get_param_lim("ntrigger", "min")
+            self.attr_PhotonEnergyMax_read = self.det.get_param_lim("photon_energy", "max")
+            self.attr_PhotonEnergyMin_read = self.det.get_param_lim("photon_energy", "min")
+            self.attr_EnergyThresholdMax_read = self.det.get_param_lim("threshold_energy", "max")
+            self.attr_EnergyThresholdMin_read = self.det.get_param_lim("threshold_energy", "min")
             self.attr_XPixelSize_read = self.det.x_pixel_size
             self.attr_YPixelSize_read = self.det.y_pixel_size
             self.attr_XPixelsDetector_read = self.det.x_pixels_detector
@@ -853,15 +852,11 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Error_read
 
-
-
-
     def read_attr_hardware(self, data):
         self.debug_stream("In read_attr_hardware()")
         #----- PROTECTED REGION ID(EigerDectris.read_attr_hardware) ENABLED START -----#
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.read_attr_hardware
-
 
     # -------------------------------------------------------------------------
     #    EigerDectris command methods
@@ -895,7 +890,6 @@ class EigerDectris (PyTango.Device_4Impl):
             self.set_state(PyTango.DevState.MOVING)
         else:
             self.set_state(PyTango.DevState.ON)
-
 
         argout = self.get_state()
 
@@ -943,7 +937,7 @@ class EigerDectris (PyTango.Device_4Impl):
             if "ext" in self.attr_TriggerMode_read.lower():
                 try:
                     self.det.wait(timeout=0.1)
-	        except Exception as exc:
+                except Exception as exc:
                     # Ignore timeout error (wait is a blocking command)
                     pass
         #----- PROTECTED REGION END -----#	//	EigerDectris.Arm
@@ -961,7 +955,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
         try:
             if self.det.trigger_mode == "inte":
-                self.det.trigger(timeout=1.5, input_value = self.attr_CountTimeInte_read)
+                self.det.trigger(timeout=1.5, input_value=self.attr_CountTimeInte_read)
             else:
                 self.det.trigger(timeout=1.5)
         except:
@@ -1022,7 +1016,6 @@ class EigerDectris (PyTango.Device_4Impl):
             self.flag_arm = 0
             self.det.disarm()
 
-
         #----- PROTECTED REGION END -----#	//	EigerDectris.Disarm
 
     def DownloadFilesFromBuffer(self, argin):
@@ -1037,10 +1030,10 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.DownloadFilesFromBuffer
 
-
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
 
     #----- PROTECTED REGION END -----#	//	EigerDectris.programmer_methods
+
 
 class EigerDectrisClass(PyTango.DeviceClass):
     # -------- Add you global class variables here --------------------------
@@ -1048,18 +1041,16 @@ class EigerDectrisClass(PyTango.DeviceClass):
 
     #----- PROTECTED REGION END -----#	//	EigerDectris.global_class_variables
 
-
     #    Class Properties
     class_property_list = {
-        }
-
+    }
 
     #    Device Properties
     device_property_list = {
         'Host':
             [PyTango.DevString,
             "Host name",
-            [] ],
+            []],
         'PortNb':
             [PyTango.DevLong,
             "Port number",
@@ -1067,9 +1058,8 @@ class EigerDectrisClass(PyTango.DeviceClass):
         'APIVersion':
             [PyTango.DevString,
             "API Version, ex. 1.0.0",
-            ["1.0.0"] ],
-        }
-
+            ["1.0.0"]],
+    }
 
     #    Command definitions
     cmd_list = {
@@ -1097,8 +1087,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
         'DownloadFilesFromBuffer':
             [[PyTango.DevString, "Filename or pattern"],
             [PyTango.DevVoid, "none"]],
-        }
-
+    }
 
     #    Attribute definitions
     attr_list = {
@@ -1108,7 +1097,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Number of images per serie",
-            } ],
+            }],
         'Temperature':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1117,7 +1106,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "Celsius",
                 'description': "Board temperature",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'Humidity':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1126,7 +1115,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "%",
                 'description': "Returns the relative humidity reading (in percent)",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'CountTime':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1134,7 +1123,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "s",
                 'description': "Currently set count time per image in seconds",
-            } ],
+            }],
         'FrameTime':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1142,7 +1131,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "s",
                 'description': "Currently set frame time (count time plus read out time) per image in seconds.",
-            } ],
+            }],
         'PhotonEnergy':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1150,7 +1139,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "eV",
                 'description': "Currently set photon energy in electron volts",
-            } ],
+            }],
         'Wavelength':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1159,7 +1148,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "A",
                 'description': "Currently set photon wavelength in Angstrom.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'EnergyThreshold':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1167,7 +1156,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "eV",
                 'description': "Currently set energy threshold in electron volts.",
-            } ],
+            }],
         'FlatfieldEnabled':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1175,7 +1164,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "1 if the flatfield correction is enabled.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'AutoSummationEnabled':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1183,14 +1172,14 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "1 if the auto summation feature (to increase the dynamic range) is enabled.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'TriggerMode':
             [[PyTango.DevString,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
             {
                 'description': "Current trigger mode. Following trigger modes are supported:\nexpo, extt, extm, exte, exts, ints",
-            } ],
+            }],
         'RateCorrectionEnabled':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1198,7 +1187,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "1 if the rate correction is enabled.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'BitDepth':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1206,7 +1195,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "Detector  bit depth, i.e. the dynamic range.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'ReadoutTime':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1215,7 +1204,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "s",
                 'description': "detector`s readout time per image",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'Description':
             [[PyTango.DevString,
             PyTango.SCALAR,
@@ -1223,7 +1212,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "Detector description, i.e. the model.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'NbImagesMax':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1231,7 +1220,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "Number of images per serie",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'NbImagesMin':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1239,7 +1228,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "Number of images per serie",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'CountTimeMax':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1248,7 +1237,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "s",
                 'description': "Currently set count time per image in seconds",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'CountTimeMin':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1257,7 +1246,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "s",
                 'description': "Currently set count time per image in seconds",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'FrameTimeMax':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1266,7 +1255,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "s",
                 'description': "Currently set frame time (count time plus read out time) per image in seconds.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'FrameTimeMin':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1275,7 +1264,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "s",
                 'description': "Currently set frame time (count time plus read out time) per image in seconds.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'PhotonEnergyMax':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1284,7 +1273,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "eV",
                 'description': "Currently set photon energy in electron volts",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'PhotonEnergyMin':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1293,7 +1282,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "eV",
                 'description': "Currently set photon energy in electron volts",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'EnergyThresholdMax':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1302,7 +1291,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "eV",
                 'description': "Currently set energy threshold in electron volts.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'EnergyThresholdMin':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1311,7 +1300,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'unit': "eV",
                 'description': "Currently set energy threshold in electron volts.",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'Time':
             [[PyTango.DevString,
             PyTango.SCALAR,
@@ -1319,7 +1308,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'description': "Actual system time",
                 'Display level': PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'MustArmFlag':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1328,14 +1317,14 @@ class EigerDectrisClass(PyTango.DeviceClass):
                 'max value': "1",
                 'min value': "0",
                 'description': "1 if any parameters have been changed and the command arm should be run.",
-            } ],
+            }],
         'NbTriggers':
             [[PyTango.DevLong,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
             {
                 'description': "Allowed number of trigger per arm/disarm sequence",
-            } ],
+            }],
         'NbTriggersMax':
             [[PyTango.DevLong,
             PyTango.SCALAR,
@@ -1350,16 +1339,16 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Count time send with trigger if trigger mode is inte",
-                'Memorized':"true"
-            } ],
+                'Memorized': "true"
+            }],
         'DownloadDirectory':
             [[PyTango.DevString,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
             {
                 'description': "Name of the directory for downloading the files with the command DownloadFilesFromBuffer",
-                'Memorized':"true"
-            } ],
+                'Memorized': "true"
+            }],
         'DcuBufferFree':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1367,7 +1356,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "%",
                 'description': "Percentage of available buffer space on the DCU.",
-            } ],
+            }],
         'BeamCenterX':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1375,7 +1364,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "pixels",
                 'description': "Currently set beam center horizontal position.",
-            } ],
+            }],
         'BeamCenterY':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1383,7 +1372,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "pixels",
                 'description': "Currently set beam center vertical position.",
-            } ],
+            }],
         'DetectorDistance':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1391,7 +1380,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "mm",
                 'description': "Currently set sample to detector distance.",
-            } ],
+            }],
         'OmegaIncrement':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1399,7 +1388,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "deg",
                 'description': "Currently set omega imcrement per frame.",
-            } ],
+            }],
         'OmegaStart':
             [[PyTango.DevDouble,
             PyTango.SCALAR,
@@ -1407,64 +1396,64 @@ class EigerDectrisClass(PyTango.DeviceClass):
             {
                 'unit': "deg",
                 'description': "Currently set omega start angle.",
-            } ],
+            }],
         'Compression':
             [[PyTango.DevString,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
             {
                 'description': "Name of files in detector data directory",
-            } ],
+            }],
         'RoiMode':
             [[PyTango.DevString,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
             {
                 'description': "Current roi mode. Following compression modes are supported:\n4M, 16M",
-            } ],
+            }],
         'XPixelSize':
-            [[PyTango.DevLong,
+            [[PyTango.DevFloat,
             PyTango.SCALAR,
             PyTango.READ],
             {
                 'description': "size of a pixel along x-axis",
-            } ],
+            }],
         'YPixelSize':
-            [[PyTango.DevLong,
+            [[PyTango.DevFloat,
             PyTango.SCALAR,
             PyTango.READ],
             {
                 'description': "size of a pixel along y-axis",
-            } ],
+            }],
         'XPixelsDetector':
             [[PyTango.DevLong,
             PyTango.SCALAR,
             PyTango.READ],
             {
                 'description': "number of pizels along x-axis",
-            } ],
+            }],
         'YPixelsDetector':
             [[PyTango.DevLong,
             PyTango.SCALAR,
             PyTango.READ],
             {
                 'description': "number of pixels along y-axis",
-            } ],
+            }],
         'FilesInBuffer':
             [[PyTango.DevString,
             PyTango.SPECTRUM,
             PyTango.READ, 100000],
             {
                 'description': "Name of files in detector data directory",
-            } ],
+            }],
         'Error':
             [[PyTango.DevString,
             PyTango.SPECTRUM,
             PyTango.READ, 100],
             {
                 'description': "List of status parameters causing error condition",
-            } ],
-        }
+            }],
+    }
 
 
 def main():
@@ -1473,20 +1462,19 @@ def main():
         py.add_class(EigerDectrisClass, EigerDectris, 'EigerDectris')
         #----- PROTECTED REGION ID(EigerDectris.add_classes) ENABLED START -----#
         try:
-            py.add_class(EigerFilewriter.EigerFilewriterClass,EigerFilewriter.EigerFilewriter,'EigerFilewriter')
+            py.add_class(EigerFilewriter.EigerFilewriterClass, EigerFilewriter.EigerFilewriter, 'EigerFilewriter')
         except:
             print "Error adding class EigerFilewriter. Device will not be created"
 
         try:
-            py.add_class(EigerMonitor.EigerMonitorClass,EigerMonitor.EigerMonitor,'EigerMonitor')
+            py.add_class(EigerMonitor.EigerMonitorClass, EigerMonitor.EigerMonitor, 'EigerMonitor')
         except:
             print "Error adding class EigerMonitor. Device will not be created"
 
         try:
-            py.add_class(EigerHiDRAClient.EigerHiDRAClientClass,EigerHiDRAClient.EigerHiDRAClient,'EigerHiDRAClient')
+            py.add_class(EigerHiDRAClient.EigerHiDRAClientClass, EigerHiDRAClient.EigerHiDRAClient, 'EigerHiDRAClient')
         except:
             print "Error adding class EigerHiDRAClient. Device will not be created"
-
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.add_classes
 
