@@ -790,6 +790,8 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.RoiMode_write) ENABLED START -----#
 
         self.det.roi_mode = data
+        self.attr_XPixelSize_read = self.det.x_pixel_size
+        self.attr_YPixelSize_read = self.det.y_pixel_size
         self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.RoiMode_write
