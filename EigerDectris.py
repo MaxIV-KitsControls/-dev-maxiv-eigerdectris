@@ -790,8 +790,8 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.RoiMode_write) ENABLED START -----#
 
         self.det.roi_mode = data
-        self.attr_XPixelSize_read = self.det.x_pixel_size
-        self.attr_YPixelSize_read = self.det.y_pixel_size
+        self.attr_XPixelsDetector_read = self.det.x_pixels_detector
+        self.attr_YPixelsDetector_read = self.det.y_pixels_detector
         self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.RoiMode_write
@@ -815,7 +815,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_XPixelsDetector(self, attr):
         self.debug_stream("In read_XPixelsDetector()")
         #----- PROTECTED REGION ID(EigerDectris.XPixelsDetector_read) ENABLED START -----#
-
+        self.attr_XPixelsDetector_read = self.det.x_pixels_detector
         attr.set_value(self.attr_XPixelsDetector_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.XPixelsDetector_read
@@ -823,7 +823,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_YPixelsDetector(self, attr):
         self.debug_stream("In read_YPixelsDetector()")
         #----- PROTECTED REGION ID(EigerDectris.YPixelsDetector_read) ENABLED START -----#
-
+        self.attr_YPixelsDetector_read = self.det.y_pixels_detector
         attr.set_value(self.attr_YPixelsDetector_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.YPixelsDetector_read
