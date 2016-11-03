@@ -245,7 +245,7 @@ class EigerDetector(object):
                          "config", "photon_energy", timeout=timeout,
                          return_full=return_full)
 
-    def set_energy(self, energy, timeout=2.0):
+    def set_energy(self, energy, timeout=5.0):
         """
         Set the photon energy in electron volts. This will also affect the
         wavelength property and the threshold.
@@ -271,7 +271,7 @@ class EigerDetector(object):
                          "config", "wavelength", timeout=timeout,
                          return_full=return_full)
 
-    def set_wavelength(self, wavelength, timeout=2.0):
+    def set_wavelength(self, wavelength, timeout=5.0):
         """
         Set the photon energy in Angstrom. This will also affect the energy
         and threshold properties.
@@ -297,7 +297,7 @@ class EigerDetector(object):
                          "config", "threshold_energy", timeout=timeout,
                          return_full=return_full)
 
-    def set_threshold(self, energy, timeout=2.0):
+    def set_threshold(self, energy, timeout=5.0):
         """
         Set the energy threshold in electron volts.
 
@@ -443,7 +443,7 @@ class EigerDetector(object):
     bit_depth = property(get_bit_depth)
 
     # readout time
-    def get_readout_time(self, timeout=2.0, return_full=False):
+    def get_readout_time(self, timeout=5.0, return_full=False):
         """
         Return the detector's readout time per image.
 
@@ -828,7 +828,7 @@ class EigerDetector(object):
                   "config", "compression", compression, timeout=timeout)
     compression = property(get_compression, set_compression)
 
-    def get_roi_mode(self, timeout=2.0, return_full=False):
+    def get_roi_mode(self, timeout=3.0, return_full=False):
         """
         Returns the current roi mode. Following roi modes are
         supported:
@@ -847,7 +847,7 @@ class EigerDetector(object):
                          "config", "roi_mode", timeout=timeout,
                          return_full=return_full)
 
-    def set_roi_mode(self, roi_mode, timeout=2.0):
+    def set_roi_mode(self, roi_mode, timeout=3.0):
         """
         Set the roi mode. Raises ``ValueError`` if *roi mode* is an invalid
         mode string. See :py:meth:`get_roi_mode` for supported modes.
