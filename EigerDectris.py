@@ -65,6 +65,42 @@ except:
     print "EigerHiDRAClient can not be imported"
 
 
+import thread
+
+# attr_list_w = ["photon_energy"]
+# attr_list_r = ["detector_readout_time"]
+reading_list = []
+
+def writer_thread(prop, data)
+    """This is to avoid the long timeouts when writing to some attributes.
+        While writing the state of the device is "busy"
+    """
+    previous_status = self.get_status()
+    self.set_status = "busy"
+    try:
+        prop = data
+    except Exception as e:
+        raise e
+
+    self.set_status = previous_status
+
+def reader_thread(prop, attr, read_value)
+    """This is to avoid the long timeouts when reading some attributes.
+    """
+    global reading_list
+
+    try:
+        if attr in reading_list:  # do not read again if we are already reading
+            return
+        reading_list.append(attr)
+        read_value = prop # for consistency
+    except Exception as e:
+        reading_list.pop(attr)
+        raise e
+    attr.set_value(read_value)
+    reading_list.pop(attr)
+
+
 #----- PROTECTED REGION END -----#	//	EigerDectris.additionnal_import
 
 # Device States Description
@@ -302,8 +338,10 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if data > self.attr_PhotonEnergyMax_read or data < self.attr_PhotonEnergyMin_read:
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_PhotonEnergyMin_read, self.attr_PhotonEnergyMax_read))
+        
+        thread.start_new_thread(writer_thread, self.det.energy, data)
 
-        self.det.energy = data
+        # self.det.energy = data
         self.attr_MustArmFlag_read = 1
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.PhotonEnergy_write
@@ -463,8 +501,9 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.ReadoutTime_read) ENABLED START -----#
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
-            self.attr_ReadoutTime_read = self.det.readout_time
-        attr.set_value(self.attr_ReadoutTime_read)
+            # self.attr_ReadoutTime_read = self.det.readout_time
+            thread.start_new_thread(reader_thread, self.det.readout_time, attr, self.attr_ReadoutTime_read)
+        #attr.set_value(self.attr_ReadoutTime_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.ReadoutTime_read
 
@@ -917,6 +956,9 @@ class EigerDectris (PyTango.Device_4Impl):
         if rstate == "na":
             rstate = rstate + ". The detector was rebooted and \n has to be initialized"
         self.argout = str(rstate)
+
+        if self.get_status() == "busy":
+            self.argout = "busy"  # never override busy status
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
