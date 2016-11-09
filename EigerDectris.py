@@ -71,29 +71,30 @@ import thread
 # attr_list_r = ["detector_readout_time"]
 reading_list = []
 
-def writer_thread(prop, data)
+def writer_thread(*args):
     """This is to avoid the long timeouts when writing to some attributes.
         While writing the state of the device is "busy"
     """
+    func, data, self = args
     previous_status = self.get_status()
-    self.set_status = "busy"
+    self.set_status("busy")
     try:
-        prop = data
+        func(data)
     except Exception as e:
         raise e
 
-    self.set_status = previous_status
+    self.set_status(previous_status)
 
-def reader_thread(prop, attr, read_value)
+def reader_thread(*args):
     """This is to avoid the long timeouts when reading some attributes.
     """
     global reading_list
-
+    func, attr, device_self = args
     try:
         if attr in reading_list:  # do not read again if we are already reading
             return
         reading_list.append(attr)
-        read_value = prop # for consistency
+        read_value = func()  # for consistency
     except Exception as e:
         reading_list.pop(attr)
         raise e
@@ -338,8 +339,9 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if data > self.attr_PhotonEnergyMax_read or data < self.attr_PhotonEnergyMin_read:
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_PhotonEnergyMin_read, self.attr_PhotonEnergyMax_read))
-        
-        thread.start_new_thread(writer_thread, self.det.energy, data)
+
+        f_set = lambda val: setattr(self.det, 'energy', val)
+        thread.start_new_thread(writer_thread, (f_set, data, self))
 
         # self.det.energy = data
         self.attr_MustArmFlag_read = 1
@@ -501,9 +503,8 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.ReadoutTime_read) ENABLED START -----#
 
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
-            # self.attr_ReadoutTime_read = self.det.readout_time
-            thread.start_new_thread(reader_thread, self.det.readout_time, attr, self.attr_ReadoutTime_read)
-        #attr.set_value(self.attr_ReadoutTime_read)
+            self.attr_ReadoutTime_read = self.det.readout_time
+        attr.set_value(self.attr_ReadoutTime_read)
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.ReadoutTime_read
 
