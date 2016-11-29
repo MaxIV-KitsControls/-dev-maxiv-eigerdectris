@@ -917,9 +917,11 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det.status_update()
 
         rstate = self.det.get_state()
+        self.debug_stream("In dev_state() state: %s, flag: %s", rstate, self.flag_arm)
 
         if self.flag_arm:
             if rstate == "configure" or rstate == "idle":
+                self.debug_stream("In dev_state()... flag gonna reset")
                 self.flag_arm = 0
 
         if rstate == "error":
@@ -948,9 +950,9 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In dev_status()")
         argout = ""
         #----- PROTECTED REGION ID(EigerDectris.Status) ENABLED START -----#
-
+        self.dev_state()
         # Workaround: this might get fixed in api v1.8.x
-        self.det.status_update()
+        #self.det.status_update()
 
         rstate = self.det.get_state()
 
@@ -973,6 +975,7 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Arm) ENABLED START -----#
 
         rstate = self.det.get_state()
+        self.debug_stream("In Arm() state: %s", rstate)
 
         if rstate != "ready":
             self.flag_arm = 1
@@ -1023,7 +1026,7 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In Cancel()")
         #----- PROTECTED REGION ID(EigerDectris.Cancel) ENABLED START -----#
-
+        self.flag_arm = 0
         self.det.cancel()
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Cancel
@@ -1057,6 +1060,7 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Disarm) ENABLED START -----#
 
         rstate = self.det.get_state()
+        self.debug_stream("In Disarm() rstate: %s", rstate)
         if rstate != "idle":
             self.flag_arm = 0
             self.det.disarm()
