@@ -1016,8 +1016,8 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In Abort()")
         #----- PROTECTED REGION ID(EigerDectris.Abort) ENABLED START -----#
-
         self.det.abort()
+        self.dev_status()
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Abort
 
@@ -1026,8 +1026,8 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In Cancel()")
         #----- PROTECTED REGION ID(EigerDectris.Cancel) ENABLED START -----#
-        self.flag_arm = 0
         self.det.cancel()
+        self.dev_status()
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Cancel
 
