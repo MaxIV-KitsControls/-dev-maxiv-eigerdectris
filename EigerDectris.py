@@ -340,8 +340,9 @@ class EigerDectris (PyTango.Device_4Impl):
         if data > self.attr_PhotonEnergyMax_read or data < self.attr_PhotonEnergyMin_read:
             raise Exception("Value %f out of limits (%e, %e)" % (data, self.attr_PhotonEnergyMin_read, self.attr_PhotonEnergyMax_read))
 
-        f_set = lambda val: setattr(self.det, 'energy', val)
-        thread.start_new_thread(writer_thread, (f_set, data, self))
+        self.det.energy = data
+        # f_set = lambda val: setattr(self.det, 'energy', val)
+        # thread.start_new_thread(writer_thread, (f_set, data, self))
 
         # self.det.energy = data
         self.attr_MustArmFlag_read = 1
