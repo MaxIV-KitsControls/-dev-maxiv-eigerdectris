@@ -32,7 +32,7 @@ class EigerDetector(object):
         self._api_v = api_version
 
     # detector state
-    def get_state(self, timeout=2.0, return_full=False):
+    def get_state(self, timeout=10.0, return_full=False):
         """
         Returns the detector state. This can be one of "na", "initialize",
         "configure", "acquire", "test", "ready", and "idle".
@@ -48,7 +48,7 @@ class EigerDetector(object):
     state = property(get_state)
 
     # board temperature
-    def get_temperature(self, timeout=2.0, return_full=False,
+    def get_temperature(self, timeout=10.0, return_full=False,
                         board="board_000"):
         """
         Returns the temperature reading (in Celsius) for a specific detector
@@ -66,7 +66,7 @@ class EigerDetector(object):
     temperature = property(get_temperature)
 
     # board humidity
-    def get_humidity(self, timeout=2.0, return_full=False, board="board_000"):
+    def get_humidity(self, timeout=10.0, return_full=False, board="board_000"):
         """
         Returns the relative humidity reading (in percent) for a specific
         detector board.
@@ -83,7 +83,7 @@ class EigerDetector(object):
     humidity = property(get_humidity)
 
     # detector error
-    def get_error(self, timeout=2.0, return_full=False):
+    def get_error(self, timeout=10.0, return_full=False):
         """
         Returns the list of staus parameters causing an error condition.
 
@@ -98,7 +98,7 @@ class EigerDetector(object):
     error = property(get_error)
 
     # detector time
-    def get_detector_time(self, timeout=2.0, return_full=False):
+    def get_detector_time(self, timeout=10.0, return_full=False):
         """
         Returns the actual system time.
 
@@ -113,7 +113,7 @@ class EigerDetector(object):
     detector_time = property(get_detector_time)
 
     # detector dcu buffer free
-    def get_dcu_buffer_free(self, timeout=2.0, return_full=False):
+    def get_dcu_buffer_free(self, timeout=10.0, return_full=False):
         """
         Returns the percentage of available buffer space on the DCU.
 
@@ -128,7 +128,7 @@ class EigerDetector(object):
     dcu_buffer_free = property(get_dcu_buffer_free)
 
     # count time
-    def get_count_time(self, timeout=2.0, return_full=False):
+    def get_count_time(self, timeout=10.0, return_full=False):
         """
         Returns the currently set count time per image in seconds.
 
@@ -141,7 +141,7 @@ class EigerDetector(object):
                          "config", "count_time", timeout=timeout,
                          return_full=return_full)
 
-    def set_count_time(self, t, timeout=2.0):
+    def set_count_time(self, t, timeout=10.0):
         """
         Set the count time per image in seconds.
 
@@ -156,7 +156,7 @@ class EigerDetector(object):
 
 
     # frame time
-    def get_frame_time(self, timeout=2.0, return_full=False):
+    def get_frame_time(self, timeout=10.0, return_full=False):
         """
         Returns the currently set frame time (count time plus read out time)
         per image in seconds.
@@ -170,7 +170,7 @@ class EigerDetector(object):
                          "config", "frame_time", timeout=timeout,
                          return_full=return_full)
 
-    def set_frame_time(self, t, timeout=2.0):
+    def set_frame_time(self, t, timeout=10.0):
         """
         Set the frame time per image in seconds.
 
@@ -182,7 +182,7 @@ class EigerDetector(object):
     frame_time = property(get_frame_time, set_frame_time)
 
     # number of images
-    def get_nimages(self, timeout=2.0, return_full=False):
+    def get_nimages(self, timeout=10.0, return_full=False):
         """
         Returns the number of images per series.
 
@@ -195,7 +195,7 @@ class EigerDetector(object):
                              "config", "nimages", timeout=timeout,
                              return_full=return_full))
 
-    def set_nimages(self, n, timeout=2.0):
+    def set_nimages(self, n, timeout=10.0):
         """
         Set the number of images per series.
 
@@ -207,7 +207,7 @@ class EigerDetector(object):
     nimages = property(get_nimages, set_nimages)
 
     # number of triggers
-    def get_ntrigger(self, timeout=2.0, return_full=False):
+    def get_ntrigger(self, timeout=10.0, return_full=False):
         """
         Returns the allowed number of trigger per arm/disarm sequence.
 
@@ -220,7 +220,7 @@ class EigerDetector(object):
                              "config", "ntrigger", timeout=timeout,
                              return_full=return_full))
 
-    def set_ntrigger(self, n, timeout=2.0):
+    def set_ntrigger(self, n, timeout=10.0):
         """
         Set the allowed number of triggers per arm/disarm sequence.
 
@@ -232,7 +232,7 @@ class EigerDetector(object):
     ntrigger = property(get_ntrigger, set_ntrigger)
 
     # photon energy
-    def get_energy(self, timeout=2.0, return_full=False):
+    def get_energy(self, timeout=10.0, return_full=False):
         """
         Returns the currently set photon energy in electron volts.
 
@@ -245,7 +245,7 @@ class EigerDetector(object):
                          "config", "photon_energy", timeout=timeout,
                          return_full=return_full)
 
-    def set_energy(self, energy, timeout=5.0):
+    def set_energy(self, energy, timeout=10.0):
         """
         Set the photon energy in electron volts. This will also affect the
         wavelength property and the threshold.
@@ -258,7 +258,7 @@ class EigerDetector(object):
     energy = property(get_energy, set_energy)
 
     # photon wavelength
-    def get_wavelength(self, timeout=2.0, return_full=False):
+    def get_wavelength(self, timeout=10.0, return_full=False):
         """
         Returns the currently set photon wavelength in Angstrom.
 
@@ -271,7 +271,7 @@ class EigerDetector(object):
                          "config", "wavelength", timeout=timeout,
                          return_full=return_full)
 
-    def set_wavelength(self, wavelength, timeout=5.0):
+    def set_wavelength(self, wavelength, timeout=10.0):
         """
         Set the photon energy in Angstrom. This will also affect the energy
         and threshold properties.
@@ -284,7 +284,7 @@ class EigerDetector(object):
     wavelength = property(get_wavelength, set_wavelength)
 
     # energy threshold
-    def get_threshold(self, timeout=2.0, return_full=False):
+    def get_threshold(self, timeout=10.0, return_full=False):
         """
         Returns the currently set energy threshold in electron volts.
 
@@ -297,7 +297,7 @@ class EigerDetector(object):
                          "config", "threshold_energy", timeout=timeout,
                          return_full=return_full)
 
-    def set_threshold(self, energy, timeout=5.0):
+    def set_threshold(self, energy, timeout=10.0):
         """
         Set the energy threshold in electron volts.
 
@@ -309,7 +309,7 @@ class EigerDetector(object):
     threshold = property(get_threshold, set_threshold)
 
     # flatfield
-    def get_flatfield_enabled(self, timeout=2.0, return_full=False):
+    def get_flatfield_enabled(self, timeout=10.0, return_full=False):
         """
         Returns True if the flatfield correction is enabled.
 
@@ -322,7 +322,7 @@ class EigerDetector(object):
                          "config", "flatfield_correction_applied",
                          timeout=timeout, return_full=return_full)
 
-    def set_flatfield_enabled(self, enabled, timeout=2.0):
+    def set_flatfield_enabled(self, enabled, timeout=10.0):
         """
         Enable or disable the flatfield correction.
 
@@ -335,7 +335,7 @@ class EigerDetector(object):
     flatfield_enabled = property(get_flatfield_enabled, set_flatfield_enabled)
 
     # auto summation
-    def get_auto_summation_enabled(self, timeout=2.0, return_full=False):
+    def get_auto_summation_enabled(self, timeout=10.0, return_full=False):
         """
         Returns True if the auto summation feature (to increase the dynamic
         range) is enabled.
@@ -349,7 +349,7 @@ class EigerDetector(object):
                          "config", "auto_summation", timeout=timeout,
                          return_full=return_full)
 
-    def set_auto_summation_enabled(self, enabled, timeout=2.0):
+    def set_auto_summation_enabled(self, enabled, timeout=10.0):
         """
         Enable or disable the auto summation feature.
 
@@ -362,7 +362,7 @@ class EigerDetector(object):
                                       set_auto_summation_enabled)
 
     # trigger mode
-    def get_trigger_mode(self, timeout=2.0, return_full=False):
+    def get_trigger_mode(self, timeout=10.0, return_full=False):
         """
         Returns the current trigger mode. Following trigger modes are
         supported:
@@ -386,7 +386,7 @@ class EigerDetector(object):
                          "config", "trigger_mode", timeout=timeout,
                          return_full=return_full)
 
-    def set_trigger_mode(self, mode, timeout=2.0):
+    def set_trigger_mode(self, mode, timeout=10.0):
         """
         Set the trigger mode. Raises ``ValueError`` if *mode* is an invalid
         mode string. See :py:meth:`get_trigger_mode` for supported modes.
@@ -401,7 +401,7 @@ class EigerDetector(object):
     trigger_mode = property(get_trigger_mode, set_trigger_mode)
 
     # rate correction
-    def get_rate_correction_enabled(self, timeout=2.0, return_full=False):
+    def get_rate_correction_enabled(self, timeout=10.0, return_full=False):
         """
         Returns True if the rate correction is enabled, False otherwise.
 
@@ -414,7 +414,7 @@ class EigerDetector(object):
                          "config", "countrate_correction_applied",
                          timeout=timeout, return_full=return_full)
 
-    def set_rate_correction_enabled(self, enabled, timeout=2.0):
+    def set_rate_correction_enabled(self, enabled, timeout=10.0):
         """
         Enable or disable the rate correction.
 
@@ -428,7 +428,7 @@ class EigerDetector(object):
                                        set_rate_correction_enabled)
 
     # bit depth
-    def get_bit_depth(self, timeout=2.0, return_full=False):
+    def get_bit_depth(self, timeout=10.0, return_full=False):
         """
         Returns the detector's bit depth, i.e. the dynamic range.
 
@@ -443,7 +443,7 @@ class EigerDetector(object):
     bit_depth = property(get_bit_depth)
 
     # readout time
-    def get_readout_time(self, timeout=5.0, return_full=False):
+    def get_readout_time(self, timeout=10.0, return_full=False):
         """
         Return the detector's readout time per image.
 
@@ -458,7 +458,7 @@ class EigerDetector(object):
     readout_time = property(get_readout_time)
 
     # description
-    def get_description(self, timeout=2.0, return_full=False):
+    def get_description(self, timeout=10.0, return_full=False):
         """
         Returns the detector description, i.e. the model.
 
@@ -473,7 +473,7 @@ class EigerDetector(object):
     description = property(get_description)
 
     # serial number
-    def get_serial_number(self, timeout=2.0, return_full=False):
+    def get_serial_number(self, timeout=10.0, return_full=False):
         """
         Returns the detector's serial number.
 
@@ -488,7 +488,7 @@ class EigerDetector(object):
     serial_number = property(get_serial_number)
 
     # firmware version
-    def get_firmware_version(self, timeout=2.0, return_full=False):
+    def get_firmware_version(self, timeout=10.0, return_full=False):
         """
         Returns the detector's firmware version.
 
@@ -503,7 +503,7 @@ class EigerDetector(object):
     firmware_version = property(get_firmware_version)
 
     # sensor material
-    def get_sensor_material(self, timeout=2.0, return_full=False):
+    def get_sensor_material(self, timeout=10.0, return_full=False):
         """
         Returns the detector sensor's material.
 
@@ -518,7 +518,7 @@ class EigerDetector(object):
     sensor_material = property(get_sensor_material)
 
     # sensor thickness
-    def get_sensor_thickness(self, timeout=2.0, return_full=False):
+    def get_sensor_thickness(self, timeout=10.0, return_full=False):
         """
         Returns the thickness of the sensor material in meters.
 
@@ -583,7 +583,7 @@ class EigerDetector(object):
                   no_data=True)
 
     # cancel
-    def cancel(self, timeout=2.0, return_full=False):
+    def cancel(self, timeout=10.0, return_full=False):
         """
         Stop data acquisition after the current image.
 
@@ -605,7 +605,7 @@ class EigerDetector(object):
             return data["sequence id"]
 
     # abort
-    def abort(self, timeout=2.0, return_full=False):
+    def abort(self, timeout=10.0, return_full=False):
         """
         Abort all operations and reset the detector system.
 
@@ -627,7 +627,7 @@ class EigerDetector(object):
             return data["sequence id"]
 
     # status_update
-    def status_update(self, timeout=2.0, return_full=False):
+    def status_update(self, timeout=10.0, return_full=False):
         """
         Update the status of the detector
 
@@ -641,7 +641,7 @@ class EigerDetector(object):
                  timeout=timeout, no_data=True)
 
     # wait
-    def wait(self, timeout=2.0, return_full=False):
+    def wait(self, timeout=10.0, return_full=False):
         """
         Wait for the trigger.
 
@@ -658,7 +658,7 @@ class EigerDetector(object):
         else:
             return data["sequence id"]
 
-    def get_param_lim(self, parameter, limit, timeout=2.0, return_full = True):
+    def get_param_lim(self, parameter, limit, timeout=10.0, return_full = True):
         """
         Returns the limit max or min of the given parameter
 
@@ -676,7 +676,7 @@ class EigerDetector(object):
         return response[limit]
 
     # beam center
-    def get_beam_center_x(self, timeout=2.0, return_full=False):
+    def get_beam_center_x(self, timeout=10.0, return_full=False):
         """
         Returns the currently set beam center horizontal position.
 
@@ -689,7 +689,7 @@ class EigerDetector(object):
                          "config", "beam_center_x", timeout=timeout,
                          return_full=return_full)
 
-    def set_beam_center_x(self, beam_center_x, timeout=2.0):
+    def set_beam_center_x(self, beam_center_x, timeout=10.0):
         """
         Set the beam center horizontal position.
 
@@ -700,7 +700,7 @@ class EigerDetector(object):
                   "config", "beam_center_x", beam_center_x, timeout=timeout)
     beam_center_x = property(get_beam_center_x, set_beam_center_x)
 
-    def get_beam_center_y(self, timeout=2.0, return_full=False):
+    def get_beam_center_y(self, timeout=10.0, return_full=False):
         """
         Returns the currently set beam center vertical position.
 
@@ -713,7 +713,7 @@ class EigerDetector(object):
                          "config", "beam_center_y", timeout=timeout,
                          return_full=return_full)
 
-    def set_beam_center_y(self, beam_center_y, timeout=2.0):
+    def set_beam_center_y(self, beam_center_y, timeout=10.0):
         """
         Set the beam center horizontal position.
 
@@ -724,7 +724,7 @@ class EigerDetector(object):
                   "config", "beam_center_y", beam_center_y, timeout=timeout)
     beam_center_y = property(get_beam_center_y, set_beam_center_y)
 
-    def get_detector_distance(self, timeout=2.0, return_full=False):
+    def get_detector_distance(self, timeout=10.0, return_full=False):
         """
         Returns the currently set detector distance.
 
@@ -737,7 +737,7 @@ class EigerDetector(object):
                          "config", "detector_distance", timeout=timeout,
                          return_full=return_full)
 
-    def set_detector_distance(self, detector_distance, timeout=2.0):
+    def set_detector_distance(self, detector_distance, timeout=10.0):
         """
         Set the detector distance.
 
@@ -748,7 +748,7 @@ class EigerDetector(object):
                   "config", "detector_distance", detector_distance, timeout=timeout)
     detector_distance = property(get_detector_distance, set_detector_distance)
 
-    def get_omega_increment(self, timeout=2.0, return_full=False):
+    def get_omega_increment(self, timeout=10.0, return_full=False):
         """
         Return the currently set omega increment per frame.
 
@@ -761,7 +761,7 @@ class EigerDetector(object):
                          "config", "omega_increment", timeout=timeout,
                          return_full=return_full)
 
-    def set_omega_increment(self, omega_increment, timeout=2.0):
+    def set_omega_increment(self, omega_increment, timeout=10.0):
         """
         Set the omega increment per frame.
 
@@ -772,7 +772,7 @@ class EigerDetector(object):
                   "config", "omega_increment", omega_increment, timeout=timeout)
     omega_increment = property(get_omega_increment, set_omega_increment)
 
-    def get_omega_start(self, timeout=2.0, return_full=False):
+    def get_omega_start(self, timeout=10.0, return_full=False):
         """
         Return the currently set omega start angle.
 
@@ -785,7 +785,7 @@ class EigerDetector(object):
                          "config", "omega_start", timeout=timeout,
                          return_full=return_full)
 
-    def set_omega_start(self, omega_start, timeout=2.0):
+    def set_omega_start(self, omega_start, timeout=10.0):
         """
         Set the omega start angle.
 
@@ -797,7 +797,7 @@ class EigerDetector(object):
     omega_start = property(get_omega_start, set_omega_start)
 
 
-    def get_compression(self, timeout=2.0, return_full=False):
+    def get_compression(self, timeout=10.0, return_full=False):
         """
         Returns the current compression. Following compressions are
         supported:
@@ -814,7 +814,7 @@ class EigerDetector(object):
                          "config", "compression", timeout=timeout,
                          return_full=return_full)
 
-    def set_compression(self, compression, timeout=2.0):
+    def set_compression(self, compression, timeout=10.0):
         """
         Set the compression. Raises ``ValueError`` if *compression* is an invalid
         mode string. See :py:meth:`get_compression` for supported modes.
@@ -828,7 +828,7 @@ class EigerDetector(object):
                   "config", "compression", compression, timeout=timeout)
     compression = property(get_compression, set_compression)
 
-    def get_roi_mode(self, timeout=3.0, return_full=False):
+    def get_roi_mode(self, timeout=10.0, return_full=False):
         """
         Returns the current roi mode. Following roi modes are
         supported:
@@ -847,7 +847,7 @@ class EigerDetector(object):
                          "config", "roi_mode", timeout=timeout,
                          return_full=return_full)
 
-    def set_roi_mode(self, roi_mode, timeout=3.0):
+    def set_roi_mode(self, roi_mode, timeout=10.0):
         """
         Set the roi mode. Raises ``ValueError`` if *roi mode* is an invalid
         mode string. See :py:meth:`get_roi_mode` for supported modes.
@@ -861,7 +861,7 @@ class EigerDetector(object):
                   "config", "roi_mode", roi_mode, timeout=timeout)
     roi_mode = property(get_roi_mode, set_roi_mode)
 
-    def get_x_pixel_size(self, timeout=2.0, return_full=False):
+    def get_x_pixel_size(self, timeout=10.0, return_full=False):
         """
         Return the x pixel size.
 
@@ -876,7 +876,7 @@ class EigerDetector(object):
 
     x_pixel_size = property(get_x_pixel_size)
 
-    def get_y_pixel_size(self, timeout=2.0, return_full=False):
+    def get_y_pixel_size(self, timeout=10.0, return_full=False):
         """
         Return the y pixel size.
 
@@ -891,7 +891,7 @@ class EigerDetector(object):
 
     y_pixel_size = property(get_y_pixel_size)
 
-    def get_x_pixels_detector(self, timeout=2.0, return_full=False):
+    def get_x_pixels_detector(self, timeout=10.0, return_full=False):
         """
         Return the x pixels in detector.
 
@@ -906,7 +906,7 @@ class EigerDetector(object):
 
     x_pixels_detector = property(get_x_pixels_detector)
 
-    def get_y_pixels_detector(self, timeout=2.0, return_full=False):
+    def get_y_pixels_detector(self, timeout=10.0, return_full=False):
         """
         Return the y pixels in detector.
 
