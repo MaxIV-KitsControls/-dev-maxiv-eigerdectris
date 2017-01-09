@@ -71,6 +71,7 @@ import thread
 # attr_list_r = ["detector_readout_time"]
 reading_list = []
 
+
 def writer_thread(*args):
     """This is to avoid the long timeouts when writing to some attributes.
         While writing the state of the device is "busy"
@@ -84,6 +85,7 @@ def writer_thread(*args):
         raise e
 
     self.set_status(previous_status)
+
 
 def reader_thread(*args):
     """This is to avoid the long timeouts when reading some attributes.
@@ -112,7 +114,6 @@ def reader_thread(*args):
 
 
 class EigerDectris (PyTango.Device_4Impl):
-
     """Class for controlling the Eiger detector from Dectris"""
 
     # -------- Add you global variables here --------------------------
@@ -918,7 +919,8 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det.status_update()
 
         rstate = self.det.get_state()
-        self.debug_stream("In dev_state() state: %s, flag: %s", rstate, self.flag_arm)
+        self.debug_stream("In dev_state() state: %s, flag: %s",
+                          rstate, self.flag_arm)
 
         if self.flag_arm:
             if rstate == "configure" or rstate == "idle":
@@ -953,7 +955,7 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.Status) ENABLED START -----#
         self.dev_state()
         # Workaround: this might get fixed in api v1.8.x
-        #self.det.status_update()
+        # self.det.status_update()
 
         rstate = self.det.get_state()
 
@@ -978,6 +980,11 @@ class EigerDectris (PyTango.Device_4Impl):
         rstate = self.det.get_state()
         self.debug_stream("In Arm() state: %s", rstate)
 
+        if os.path.exists(os.path.join(self.PathPrefix,
+                                       EigerFilewriter.filename_pattern)):
+            self.debug_stream("In Arm(): Path collision detected")
+            raise("In Arm(): Path collision detected")
+
         if rstate != "ready":
             self.flag_arm = 1
             self.det.arm()
@@ -999,12 +1006,19 @@ class EigerDectris (PyTango.Device_4Impl):
 
         rstate = self.det.get_state()
 
+        if os.path.exists(os.path.join(self.PathPrefix,
+                                       EigerFilewriter.filename_pattern)):
+            self.debug_stream("In Trigger(): Path collision detected")
+            raise("In Trigger(): Path collision detected")
+
         if rstate != "ready":
-            raise Exception("Detector in %s state, not 'ready',  try the arm command first" % str(rstate))
+            raise Exception(
+                "Detector in %s state, not 'ready',  try the arm command first" % str(rstate))
 
         try:
             if self.det.trigger_mode == "inte":
-                self.det.trigger(timeout=1.5, input_value=self.attr_CountTimeInte_read)
+                self.det.trigger(
+                    timeout=1.5, input_value=self.attr_CountTimeInte_read)
             else:
                 self.det.trigger(timeout=1.5)
         except:
@@ -1109,6 +1123,10 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevString,
             "API Version, ex. 1.0.0",
             ["1.0.0"]],
+        'PathPrefix':
+            [PyTango.DevString,
+            '',
+            []],
     }
 
     #    Command definitions
@@ -1512,17 +1530,20 @@ def main():
         py.add_class(EigerDectrisClass, EigerDectris, 'EigerDectris')
         #----- PROTECTED REGION ID(EigerDectris.add_classes) ENABLED START -----#
         try:
-            py.add_class(EigerFilewriter.EigerFilewriterClass, EigerFilewriter.EigerFilewriter, 'EigerFilewriter')
+            py.add_class(EigerFilewriter.EigerFilewriterClass,
+                         EigerFilewriter.EigerFilewriter, 'EigerFilewriter')
         except:
             print "Error adding class EigerFilewriter. Device will not be created"
 
         try:
-            py.add_class(EigerMonitor.EigerMonitorClass, EigerMonitor.EigerMonitor, 'EigerMonitor')
+            py.add_class(EigerMonitor.EigerMonitorClass,
+                         EigerMonitor.EigerMonitor, 'EigerMonitor')
         except:
             print "Error adding class EigerMonitor. Device will not be created"
 
         try:
-            py.add_class(EigerHiDRAClient.EigerHiDRAClientClass, EigerHiDRAClient.EigerHiDRAClient, 'EigerHiDRAClient')
+            py.add_class(EigerHiDRAClient.EigerHiDRAClientClass,
+                         EigerHiDRAClient.EigerHiDRAClient, 'EigerHiDRAClient')
         except:
             print "Error adding class EigerHiDRAClient. Device will not be created"
 
@@ -1533,9 +1554,9 @@ def main():
         U.server_run()
 
     except PyTango.DevFailed as e:
-        print ('-------> Received a DevFailed exception:', e)
+        print('-------> Received a DevFailed exception:', e)
     except Exception as e:
-        print ('-------> An unforeseen exception occured....', e)
+        print('-------> An unforeseen exception occured....', e)
 
 if __name__ == '__main__':
     main()
