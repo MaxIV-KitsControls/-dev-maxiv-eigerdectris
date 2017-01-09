@@ -44,11 +44,14 @@ __docformat__ = 'restructuredtext'
 
 import PyTango
 import sys
+import os
 # Add additional import
 #----- PROTECTED REGION ID(EigerDectris.additionnal_import) ENABLED START -----#
 
 from dectris_eiger.eiger import EigerDetector
 import json
+
+import dectris_eiger.backup
 
 try:
     import EigerFilewriter
@@ -214,6 +217,11 @@ class EigerDectris (PyTango.Device_4Impl):
             self.attr_YPixelsDetector_read = self.det.y_pixels_detector
         except:
             print "Error reading parameter limit from detector"
+        dectris_eiger.backup.buffer = self.buffer
+        try:
+            self.StartBackupScript()
+        except Exception as e:
+            print "Error starting backup script, script not running", e
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.init_device
 
@@ -1101,6 +1109,24 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.DownloadFilesFromBuffer
 
+    def StartBackupScript(self):
+        """
+        """
+        self.debug_stream("In StartBackupScript()")
+        #----- PROTECTED REGION ID(EigerDectris.StartBackupScript) ENABLED START -----#
+
+        dectris_eiger.backup._target_dir = self.PathPrefix
+        dectris_eiger.backup.spawn()
+        #----- PROTECTED REGION END -----#	//	EigerDectris.StartBackupScript
+
+    def StopBackupScript(self):
+        """
+        """
+        self.debug_stream("In StopBackupScript()")
+        #----- PROTECTED REGION ID(EigerDectris.StopBackupScript) ENABLED START -----#
+        dectris_eiger.backup.keep_polling = False
+        #----- PROTECTED REGION END -----#	//	EigerDectris.StopBackupScript
+
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
 
     #----- PROTECTED REGION END -----#	//	EigerDectris.programmer_methods
@@ -1161,6 +1187,12 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevVoid, "none"]],
         'DownloadFilesFromBuffer':
             [[PyTango.DevString, "Filename or pattern"],
+            [PyTango.DevVoid, "none"]],
+        'StartBackupScript':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'StopBackupScript':
+            [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
     }
 
