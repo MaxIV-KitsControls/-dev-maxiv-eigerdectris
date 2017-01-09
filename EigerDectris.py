@@ -906,6 +906,14 @@ class EigerDectris (PyTango.Device_4Impl):
     #    EigerDectris command methods
     # -------------------------------------------------------------------------
 
+    def check_path_collision(self):
+        """helper method for checking collision"""
+        if os.path.exists(os.path.join(self.PathPrefix,
+                                       EigerFilewriter.filename_pattern)):
+            self.debug_stream("Path collision detected")
+            return True
+        return False
+
     def dev_state(self):
         """ This command gets the device state (stored in its device_state data member) and returns it to the caller.
         :return: Device state
@@ -927,7 +935,7 @@ class EigerDectris (PyTango.Device_4Impl):
                 self.debug_stream("In dev_state()... flag gonna reset")
                 self.flag_arm = 0
 
-        if rstate == "error":
+        if rstate == "error" or self.check_path_collision():
             self.set_state(PyTango.DevState.FAULT)
         elif (rstate == "na"):
             self.set_state(PyTango.DevState.OFF)
@@ -966,6 +974,9 @@ class EigerDectris (PyTango.Device_4Impl):
         if self.get_status() == "busy":
             self.argout = "busy"  # never override busy status
 
+        if self.check_path_collision():
+            self.argout = self.argout + '\n' + 'ERROR: path collision detected'
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
         self.__status = PyTango.Device_4Impl.dev_status(self)
@@ -980,10 +991,8 @@ class EigerDectris (PyTango.Device_4Impl):
         rstate = self.det.get_state()
         self.debug_stream("In Arm() state: %s", rstate)
 
-        if os.path.exists(os.path.join(self.PathPrefix,
-                                       EigerFilewriter.filename_pattern)):
-            self.debug_stream("In Arm(): Path collision detected")
-            raise("In Arm(): Path collision detected")
+        if self.check_path_collision():
+            raise("Path collision detected")
 
         if rstate != "ready":
             self.flag_arm = 1
@@ -1006,10 +1015,8 @@ class EigerDectris (PyTango.Device_4Impl):
 
         rstate = self.det.get_state()
 
-        if os.path.exists(os.path.join(self.PathPrefix,
-                                       EigerFilewriter.filename_pattern)):
-            self.debug_stream("In Trigger(): Path collision detected")
-            raise("In Trigger(): Path collision detected")
+        if self.check_path_collision():
+            raise("Path collision detected")
 
         if rstate != "ready":
             raise Exception(
@@ -1126,7 +1133,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
         'PathPrefix':
             [PyTango.DevString,
             '',
-            []],
+            ["/data"]],
     }
 
     #    Command definitions
