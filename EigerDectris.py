@@ -197,6 +197,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det = EigerDetector(self.Host, self.PortNb, self.APIVersion)
 
         self.flag_arm = 0
+        self.backup_thread = None
 
         try:
             self.attr_CountTimeMax_read = self.det.get_param_lim("count_time", "max")
@@ -217,12 +218,11 @@ class EigerDectris (PyTango.Device_4Impl):
             self.attr_YPixelsDetector_read = self.det.y_pixels_detector
         except:
             print "Error reading parameter limit from detector"
-        dectris_eiger.backup.buffer = self.buffer
         try:
             self.StartBackupScript()
         except Exception as e:
             print "Error starting backup script, script not running", e
-
+        print 'device started....'
         #----- PROTECTED REGION END -----#	//	EigerDectris.init_device
 
     def always_executed_hook(self):
@@ -1114,9 +1114,13 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In StartBackupScript()")
         #----- PROTECTED REGION ID(EigerDectris.StartBackupScript) ENABLED START -----#
+        self.backup_thread = dectris_eiger.backup.BackupThread()
+        self.backup_thread.target_dir = self.PathPrefix
+        self.backup_thread.buffer = self.det.buffer
 
-        dectris_eiger.backup._target_dir = self.PathPrefix
-        dectris_eiger.backup.spawn()
+        self.backup_thread.start()
+
+        dectris_eiger.backup.start(dectris_eiger.backup)
         #----- PROTECTED REGION END -----#	//	EigerDectris.StartBackupScript
 
     def StopBackupScript(self):
@@ -1124,8 +1128,8 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In StopBackupScript()")
         #----- PROTECTED REGION ID(EigerDectris.StopBackupScript) ENABLED START -----#
-        dectris_eiger.backup.keep_polling = False
-        #----- PROTECTED REGION END -----#	//	EigerDectris.StopBackupScript
+        self.backup_thread.stop()
+	#----- PROTECTED REGION END -----#	//	EigerDectris.StopBackupScript
 
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
 
