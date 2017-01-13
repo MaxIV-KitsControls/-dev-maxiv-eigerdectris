@@ -68,43 +68,10 @@ except:
     print "EigerHiDRAClient can not be imported"
 
 
-import thread
-
+backup_thread = None
 # attr_list_w = ["photon_energy"]
 # attr_list_r = ["detector_readout_time"]
 reading_list = []
-
-
-def writer_thread(*args):
-    """This is to avoid the long timeouts when writing to some attributes.
-        While writing the state of the device is "busy"
-    """
-    func, data, self = args
-    previous_status = self.get_status()
-    self.set_status("busy")
-    try:
-        func(data)
-    except Exception as e:
-        raise e
-
-    self.set_status(previous_status)
-
-
-def reader_thread(*args):
-    """This is to avoid the long timeouts when reading some attributes.
-    """
-    global reading_list
-    func, attr, device_self = args
-    try:
-        if attr in reading_list:  # do not read again if we are already reading
-            return
-        reading_list.append(attr)
-        read_value = func()  # for consistency
-    except Exception as e:
-        reading_list.pop(attr)
-        raise e
-    attr.set_value(read_value)
-    reading_list.pop(attr)
 
 
 #----- PROTECTED REGION END -----#	//	EigerDectris.additionnal_import
@@ -197,7 +164,6 @@ class EigerDectris (PyTango.Device_4Impl):
         self.det = EigerDetector(self.Host, self.PortNb, self.APIVersion)
 
         self.flag_arm = 0
-        self.backup_thread = None
 
         try:
             self.attr_CountTimeMax_read = self.det.get_param_lim("count_time", "max")
@@ -1114,11 +1080,15 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In StartBackupScript()")
         #----- PROTECTED REGION ID(EigerDectris.StartBackupScript) ENABLED START -----#
-        self.backup_thread = dectris_eiger.backup.BackupThread()
-        self.backup_thread.target_dir = self.PathPrefix
-        self.backup_thread.buffer = self.det.buffer
+        global backup_thread
 
-        self.backup_thread.start()
+        if backup_thread is not None:
+            backup_thread.stop()
+        backup_thread = dectris_eiger.backup.BackupThread()
+        backup_thread.target_dir = self.PathPrefix
+        backup_thread.buffer = self.det.buffer
+
+        backup_thread.start()
 
         dectris_eiger.backup.start(dectris_eiger.backup)
         #----- PROTECTED REGION END -----#	//	EigerDectris.StartBackupScript
@@ -1128,7 +1098,9 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In StopBackupScript()")
         #----- PROTECTED REGION ID(EigerDectris.StopBackupScript) ENABLED START -----#
-        self.backup_thread.stop()
+        global backup_thread
+        backup_thread.stop()
+        backup_thread = None
 	#----- PROTECTED REGION END -----#	//	EigerDectris.StopBackupScript
 
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
@@ -1595,6 +1567,9 @@ def main():
         U = PyTango.Util.instance()
         U.server_init()
         U.server_run()
+
+        if backup_thread is not None:
+            backup_thread.stop()
 
     except PyTango.DevFailed as e:
         print('-------> Received a DevFailed exception:', e)
