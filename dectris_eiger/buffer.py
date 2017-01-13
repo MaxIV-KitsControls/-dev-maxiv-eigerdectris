@@ -131,6 +131,14 @@ class EigerDataBuffer(object):
                         "filename": filename
                         }
             url = "http://{host}:{port}/data/{filename}".format(**fmt_data)
+        targetPath = os.path.join(targetDir,filename)
+        if not os.path.exists(os.path.dirname(targetPath)):
+            try:
+                os.makedirs(os.path.dirname(targetPath))
+            except OSError as exc: 
+                if exc.errno != errno.EEXIST:
+                    self._log('Could not create directory', os.path.dirname(targetPath))
+                    raise
 
         response = requests.get(url)
         if response.status_code == 200:
