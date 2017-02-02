@@ -1088,9 +1088,7 @@ class EigerDectris (PyTango.Device_4Impl):
         backup_thread.target_dir = self.PathPrefix
         backup_thread.buffer = self.det.buffer
 
-        backup_thread.start()
-
-        dectris_eiger.backup.start(dectris_eiger.backup)
+        backup_thread.run()
         #----- PROTECTED REGION END -----#	//	EigerDectris.StartBackupScript
 
     def StopBackupScript(self):
