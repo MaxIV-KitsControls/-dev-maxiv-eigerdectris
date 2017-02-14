@@ -50,7 +50,7 @@ import os
 
 from dectris_eiger.eiger import EigerDetector
 import json
-
+import glob
 import dectris_eiger.backup
 
 try:
@@ -881,9 +881,10 @@ class EigerDectris (PyTango.Device_4Impl):
     # -------------------------------------------------------------------------
 
     def check_path_collision(self):
-        """helper method for checking collision"""
-        if os.path.exists(os.path.join(self.PathPrefix,
-                                       EigerFilewriter.filename_pattern)):
+        """helper method for checking collision. The full path does not contains '_data_0001.h5' etc."""
+        full_path = os.path.join(self.PathPrefix, EigerFilewriter.filename_pattern)
+        
+        if len(glob.glob(os.path.join(full_path + '*')) > 0:
             self.debug_stream("Path collision detected")
             return True
         return False
