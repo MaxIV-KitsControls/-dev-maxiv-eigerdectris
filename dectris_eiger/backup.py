@@ -2,7 +2,7 @@ import time
 import threading
 import logging
 import h5py
-
+import os
 
 class BackupThread(threading.Thread):
     def __init__(self, name='BackupThread'):
@@ -38,14 +38,15 @@ class BackupThread(threading.Thread):
             target_dir: Directory, where to store the files
         """
         logging.info("checking files....")
-        print 'check files'
-        dcu_files = self.buffer.list_files(name_pattern=None)
+        dcu_files = self.buffer.list_files()
         num_files = len(dcu_files)
-        print 'in back up...'
         start = time.time()
 
         for filename in dcu_files:
-            self.buffer.download_file(filename, target_dir)
+            try:
+                self.buffer.download_file(filename, target_dir)
+            except Exception as ex:
+                print ex
             if "master.h5" in filename:
             #    #generate XDS.INP !? do it in mxCuBE
                 self.add_header(os.path.join(target_dir, filename))

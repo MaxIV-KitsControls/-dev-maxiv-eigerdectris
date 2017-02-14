@@ -188,6 +188,8 @@ class EigerDectris (PyTango.Device_4Impl):
             self.StartBackupScript()
         except Exception as e:
             print "Error starting backup script, script not running", e
+        ## workaround for att proxy
+        self.filename = PyTango.AttributeProxy('b311a-e/dia/det-fw-02/FilenamePattern')
         print 'device started....'
         #----- PROTECTED REGION END -----#	//	EigerDectris.init_device
 
@@ -882,7 +884,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
     def check_path_collision(self):
         """helper method for checking collision. The full path does not contains '_data_0001.h5' etc."""
-        full_path = os.path.join(self.PathPrefix, EigerFilewriter.filename_pattern)
+        full_path = os.path.join(self.PathPrefix, self.filename.read().value)
         
         if len(glob.glob(os.path.join(full_path + '*')) > 0:
             self.debug_stream("Path collision detected")
@@ -1082,14 +1084,16 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In StartBackupScript()")
         #----- PROTECTED REGION ID(EigerDectris.StartBackupScript) ENABLED START -----#
         global backup_thread
-
         if backup_thread is not None:
-            backup_thread.stop()
+            try:
+                backup_thread.stop()
+            except Exception as ex:
+                print ex
         backup_thread = dectris_eiger.backup.BackupThread()
         backup_thread.target_dir = self.PathPrefix
         backup_thread.buffer = self.det.buffer
-
-        backup_thread.run()
+        print 'gonna run....'
+        backup_thread.start()
         #----- PROTECTED REGION END -----#	//	EigerDectris.StartBackupScript
 
     def StopBackupScript(self):
