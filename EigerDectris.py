@@ -886,7 +886,7 @@ class EigerDectris (PyTango.Device_4Impl):
         """helper method for checking collision. The full path does not contains '_data_0001.h5' etc."""
         full_path = os.path.join(self.PathPrefix, self.filename.read().value)
         
-        if len(glob.glob(os.path.join(full_path + '*')) > 0:
+        if len(glob.glob(os.path.join(full_path + '*'))) > 0:
             self.debug_stream("Path collision detected")
             return True
         return False
