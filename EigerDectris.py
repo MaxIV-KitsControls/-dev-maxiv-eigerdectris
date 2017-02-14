@@ -911,7 +911,6 @@ class EigerDectris (PyTango.Device_4Impl):
             if rstate == "configure" or rstate == "idle":
                 self.debug_stream("In dev_state()... flag gonna reset")
                 self.flag_arm = 0
-
         if rstate == "error" or self.check_path_collision():
             self.set_state(PyTango.DevState.FAULT)
         elif (rstate == "na"):
@@ -950,10 +949,11 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if self.get_status() == "busy":
             self.argout = "busy"  # never override busy status
-
-        if self.check_path_collision():
-            self.argout = self.argout + '\n' + 'ERROR: path collision detected'
-
+	try:
+            if self.check_path_collision():
+                self.argout = self.argout + '\n' + 'ERROR: path collision detected'
+	except Exception as ex:
+	    print ex
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
         self.__status = PyTango.Device_4Impl.dev_status(self)

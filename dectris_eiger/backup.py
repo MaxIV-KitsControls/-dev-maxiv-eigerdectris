@@ -13,7 +13,7 @@ class BackupThread(threading.Thread):
         self.buffer = None
         threading.Thread.__init__(self, name=name)
 
-    def run(self):
+    def start(self):
         """Main loop."""
         print "%s starts" % (self.getName(),)
 
