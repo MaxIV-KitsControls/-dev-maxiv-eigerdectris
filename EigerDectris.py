@@ -884,7 +884,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
     def check_path_collision(self):
         """helper method for checking collision. The full path does not contains '_data_0001.h5' etc."""
-        full_path = os.path.join(self.PathPrefix, self.filename.read().value)
+        full_path = os.path.join(self.PathPrefix, (self.filename.read().value).lstrip(os.sep))
         
         if len(glob.glob(os.path.join(full_path + '*'))) > 0:
             self.debug_stream("Path collision detected")
@@ -969,7 +969,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.debug_stream("In Arm() state: %s", rstate)
 
         if self.check_path_collision():
-            raise("Path collision detected")
+            raise Exception("Path collision detected")
 
         if rstate != "ready":
             self.flag_arm = 1
@@ -993,7 +993,7 @@ class EigerDectris (PyTango.Device_4Impl):
         rstate = self.det.get_state()
 
         if self.check_path_collision():
-            raise("Path collision detected")
+            raise Exception("Path collision detected")
 
         if rstate != "ready":
             raise Exception(
