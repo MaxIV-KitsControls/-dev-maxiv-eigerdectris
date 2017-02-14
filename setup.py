@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name = "tangods-eigerdectris",
-      version = "0.2.1",
+      version = "0.2.2",
       description = "Device server for the Eiger detector",
       packages =['dectris_eiger'],
       py_modules=['EigerDectris'],
