@@ -161,7 +161,7 @@ class EigerDectris (PyTango.Device_4Impl):
         if int(nums[1]) > 2:
             self.PortNb = -1
 
-        self.det = EigerDetector(self.Host, self.PortNb, self.APIVersion)
+        self.det = EigerDetector(self.Host, self.PortNb, self.APIVersion, self.DataHost, self.DataPortNb)
 
         self.flag_arm = 0
 
@@ -1130,6 +1130,14 @@ class EigerDectrisClass(PyTango.DeviceClass):
             "Host name",
             []],
         'PortNb':
+            [PyTango.DevLong,
+            "Port number",
+            [80]],
+        'DataHost':
+            [PyTango.DevString,
+            "Host name",
+            []],
+        'DataPortNb':
             [PyTango.DevLong,
             "Port number",
             [80]],
