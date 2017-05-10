@@ -949,11 +949,13 @@ class EigerDectris (PyTango.Device_4Impl):
 
         if self.get_status() == "busy":
             self.argout = "busy"  # never override busy status
-	try:
+        try:
             if self.check_path_collision():
-                self.argout = self.argout + '\n' + 'ERROR: path collision detected'
-	except Exception as ex:
-	    print ex
+                msg = 'WARNING: current filename configuration will lead to a data path collision for the next data collection.\n'
+                msg += 'If a data collection is in progress you can ignore this message.'
+                self.argout = self.argout + '\n' + msg
+        except Exception as ex:
+            print ex
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
         self.__status = PyTango.Device_4Impl.dev_status(self)
