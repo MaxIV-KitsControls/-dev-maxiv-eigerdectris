@@ -39,9 +39,9 @@ class BackupThread(threading.Thread):
         """
         logging.info("checking files....")
         dcu_files = self.buffer.list_files()
+        dcu_files.reverse()
         num_files = len(dcu_files)
         start = time.time()
-
         for filename in dcu_files:
             try:
                 self.buffer.download_file(filename, target_dir)
@@ -57,7 +57,7 @@ class BackupThread(threading.Thread):
         end = time.time()
         elapsed_time = end - start
 
-        logging.info("Elapsed time for backing up %d files is %d s." % (num_files, elapsed_time))
+        logging.info("Elapsed time for backing up %d files is %f s." % (num_files, elapsed_time))
 
     def add_header(self, filename):
         h5file = h5py.File(filename)
