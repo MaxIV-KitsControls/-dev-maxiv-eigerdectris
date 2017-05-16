@@ -23,9 +23,9 @@ class EigerDetector(object):
     This can be used to configure the temporary data storage.
     """
 
-    def __init__(self, host, port=80, api_version="1.0.0", data_host, data_port=80):
+    def __init__(self, host, data_host, port=80, api_version="1.0.0", data_port=80):
         super(EigerDetector, self).__init__()
-        self.filewriter = EigerFileWriter(host, port, api_version)
+        self.filewriter = EigerFileWriter(host, port, api_version)	
         self.buffer = EigerDataBuffer(data_host, data_port, api_version)
         self._host = host
         self._port = port
