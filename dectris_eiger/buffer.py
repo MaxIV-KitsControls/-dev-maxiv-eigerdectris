@@ -11,9 +11,10 @@ import fnmatch
 import json
 import os
 import requests
+import urllib2
+import shutil
 
-
-DOWNLOAD_CHUNK_SIZE = 1024 * 1024
+DOWNLOAD_CHUNK_SIZE = 512 * 1024
 
 
 def download_chunks(response, f):
@@ -53,6 +54,7 @@ class EigerDataBuffer(object):
         self._host = host
         self._port = port
         self._api_v = api_version
+        self._connectionTimeout = 24*3600
 
     def list_files(self):
         """
@@ -139,12 +141,13 @@ class EigerDataBuffer(object):
                 if exc.errno != errno.EEXIST:
                     self._log('Could not create directory', os.path.dirname(targetPath))
                     raise
-
-        response = requests.get(url)
-        if response.status_code == 200:
+        response = urllib2.urlopen(url, timeout = self._connectionTimeout)
+        #response = requests.get(url)
+        if response.getcode() == 200:
             target_fn = os.sep.join([target_dir, filename])
             with open(target_fn, "wb") as f:
-                download_chunks(response, f)
+                shutil.copyfileobj(response, f, DOWNLOAD_CHUNK_SIZE)
+                #download_chunks(response, f)
         else:
             raise UnknownDataFileError(filename)
 
