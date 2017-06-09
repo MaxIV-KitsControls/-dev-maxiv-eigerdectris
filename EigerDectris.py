@@ -911,10 +911,12 @@ class EigerDectris (PyTango.Device_4Impl):
             if rstate == "configure" or rstate == "idle":
                 self.debug_stream("In dev_state()... flag gonna reset")
                 self.flag_arm = 0
-        if rstate == "error" or self.check_path_collision():
+        if rstate == "error":
             self.set_state(PyTango.DevState.FAULT)
         elif (rstate == "na"):
             self.set_state(PyTango.DevState.OFF)
+        elif self.check_path_collision():
+            self.set_state(PyTango.DevState.ALARM)
         elif (rstate != "idle" and rstate != "ready"):
             self.set_state(PyTango.DevState.MOVING)
         elif rstate == 'acquire':
