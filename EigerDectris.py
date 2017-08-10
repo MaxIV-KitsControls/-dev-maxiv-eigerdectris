@@ -996,8 +996,8 @@ class EigerDectris (PyTango.Device_4Impl):
 
         rstate = self.det.get_state()
 
-        if self.check_path_collision():
-            raise Exception("Path collision detected")
+        # if self.check_path_collision():
+        #     raise Exception("Path collision detected")
 
         if rstate != "ready":
             raise Exception(
