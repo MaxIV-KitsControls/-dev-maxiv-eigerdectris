@@ -11,7 +11,39 @@ class BackupThread(threading.Thread):
         self._sleepperiod = 2.0
         self.target_dir = '/data'
         self.buffer = None
+        self.data_threads = 1
+        self.MAX_THREADS = 4  # To be fine tunned
+
         threading.Thread.__init__(self, name=name)
+
+    def convert_bytes(self, size):
+        for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+            if size < 1024.0:
+                return size, x
+            size /= 1024.0
+
+    def set_number_of_data_threads(self, value):
+        if 1 <= value <= self.MAX_THREADS:
+            self.data_threads = value
+        else:
+            self.data_threads = self.MAX_THREADS
+
+    def save_and_remove(self, filename, target_dir, regex=False):
+        start = time.time()
+        logging.info("start to copy %s from DCU to  %s" % (filename, target_dir))
+        self.save_files(filename, target_dir)
+        file_path = os.path.join(target_dir,filename)
+        if "master.h5" in filename:
+           #generate XDS.INP !? do it in mxCuBE
+            self.add_header(file_path)
+        logging.info("%s has been copied from DCU to  %s" % (filename, target_dir))
+        self.remove_files(filename)
+        logging.info("%s is removed from DCU" % filename)
+
+        end = time.time()
+        elapsed_time = end - start
+        file_size, unit = self.convert_bytes(os.path.getsize(file_path))
+        logging.info("Elapsed time for backing up file %s is %d s, and speed is %.2f %s/s" % (filename, elapsed_time, file_size/elapsed_time, unit))
 
     def run(self):
         """Main loop."""
@@ -37,27 +69,16 @@ class BackupThread(threading.Thread):
         Args:
             target_dir: Directory, where to store the files
         """
-        logging.info("checking files....")
         dcu_files = self.buffer.list_files()
         dcu_files.reverse()
-        num_files = len(dcu_files)
-        start = time.time()
-        for filename in dcu_files:
-            try:
-                self.buffer.download_file(filename, target_dir)
-            except Exception as ex:
-                print ex
-            if "master.h5" in filename:
-            #    #generate XDS.INP !? do it in mxCuBE
-                self.add_header(os.path.join(target_dir, filename))
-            logging.info("%s has been copied from DCU to  %s" % (filename, target_dir))
-            self.buffer.delete_file(filename)
-            logging.info("%s is removed from DCU" % filename)
 
-        end = time.time()
-        elapsed_time = end - start
+        threads = [threading.Thread(target=self.save_and_remove,
+                                    args=(filename, target_dir)) for filename in dcu_files[0:self.data_threads]]
 
-        logging.info("Elapsed time for backing up %d files is %f s." % (num_files, elapsed_time))
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
 
     def add_header(self, filename):
         h5file = h5py.File(filename)

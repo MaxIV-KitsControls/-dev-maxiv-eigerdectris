@@ -1096,6 +1096,7 @@ class EigerDectris (PyTango.Device_4Impl):
         backup_thread = dectris_eiger.backup.BackupThread()
         backup_thread.target_dir = self.PathPrefix
         backup_thread.buffer = self.det.buffer
+        backup_thread.data_threads = backup_thread.set_number_of_data_threads(self.DataThreads)
         print 'gonna run....'
         backup_thread.start()
         #----- PROTECTED REGION END -----#	//	EigerDectris.StartBackupScript
@@ -1151,6 +1152,10 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevString,
             '',
             ["/data"]],
+        'DataThreads':
+            [PyTango.DevLong,
+            'Number of threads for data transfer',
+            [1]],
     }
 
     #    Command definitions
