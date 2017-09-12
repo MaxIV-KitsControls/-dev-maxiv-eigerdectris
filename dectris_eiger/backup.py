@@ -31,13 +31,13 @@ class BackupThread(threading.Thread):
     def save_and_remove(self, filename, target_dir, regex=False):
         start = time.time()
         logging.info("start to copy %s from DCU to  %s" % (filename, target_dir))
-        self.save_files(filename, target_dir)
+        self.buffer.download_file(filename, target_dir)
         file_path = os.path.join(target_dir,filename)
         if "master.h5" in filename:
            #generate XDS.INP !? do it in mxCuBE
             self.add_header(file_path)
         logging.info("%s has been copied from DCU to  %s" % (filename, target_dir))
-        self.remove_files(filename)
+        self.buffer.delete_file(filename)
         logging.info("%s is removed from DCU" % filename)
 
         end = time.time()
