@@ -980,6 +980,11 @@ class EigerDectris (PyTango.Device_4Impl):
                 self.argout = self.argout + '\n' + msg
         except Exception as ex:
             print ex
+
+        if self.read_CacheMode:
+            msg = 'Data stored in local cache.\n'
+            self.argout = self.argout + '\n' + msg
+
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
         self.__status = PyTango.Device_4Impl.dev_status(self)
