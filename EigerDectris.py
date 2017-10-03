@@ -154,6 +154,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_YPixelsDetector_read = 0
         self.attr_FilesInBuffer_read = [""]
         self.attr_Error_read = [""]
+        self.attr_CacheMode_read = False
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
         nums = self.APIVersion.split(".")
@@ -878,13 +879,34 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.read_attr_hardware
 
+    def read_CacheMode(self, attr):
+        self.debug_stream("In read_CacheMode()")
+        #----- PROTECTED REGION ID(EigerDectris.CacheMode_read) ENABLED START -----#
+        attr.set_value(self.attr_CacheMode_read)
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.CacheMode_read
+
+    def write_CacheMode(self, attr):
+        self.debug_stream("In write_CacheMode()")
+        data = attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.CacheMode_write) ENABLED START -----#
+        if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
+            self.attr_CacheMode_read = data
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.CacheMode_write
+
     # -------------------------------------------------------------------------
     #    EigerDectris command methods
     # -------------------------------------------------------------------------
 
     def check_path_collision(self):
         """helper method for checking collision. The full path does not contains '_data_0001.h5' etc."""
-        full_path = os.path.join(self.PathPrefix, (self.filename.read().value).lstrip(os.sep))
+        if self.attr_CacheMode_read:
+            path = self.CachePrefix
+        else:
+            path = self.PathPrefix
+
+        full_path = os.path.join(path, (self.filename.read().value).lstrip(os.sep))
         files = [fn for fn in glob.glob(full_path + '*') if not os.path.basename(fn).endswith(('jpeg', 'jpg'))]
         if len(files) > 0:
             self.debug_stream("Path collision detected")
@@ -1094,7 +1116,12 @@ class EigerDectris (PyTango.Device_4Impl):
             except Exception as ex:
                 print ex
         backup_thread = dectris_eiger.backup.BackupThread()
-        backup_thread.target_dir = self.PathPrefix
+        if self.attr_CacheMode_read:
+            path = self.CachePrefix
+        else:
+            path = self.PathPrefix
+        backup_thread.target_dir = path
+
         backup_thread.buffer = self.det.buffer
         backup_thread.data_threads = backup_thread.set_number_of_data_threads(self.DataThreads)
         print 'gonna run....'
@@ -1152,6 +1179,10 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevString,
             '',
             ["/data"]],
+        'CachePrefix':
+            [PyTango.DevString,
+            '',
+            ["/localdata"]],
         'DataThreads':
             [PyTango.DevLong,
             'Number of threads for data transfer',
@@ -1555,6 +1586,13 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ, 100],
             {
                 'description': "List of status parameters causing error condition",
+            }],
+        'CacheMode':
+            [[PyTango.DevBoolean,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Current cache mode, True: cached, False: non-cached",
             }],
     }
 
