@@ -960,6 +960,7 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In dev_status()")
         argout = ""
+        msg = ""
         #----- PROTECTED REGION ID(EigerDectris.Status) ENABLED START -----#
         self.dev_state()
         # Workaround: this might get fixed in api v1.8.x
@@ -975,14 +976,14 @@ class EigerDectris (PyTango.Device_4Impl):
             self.argout = "busy"  # never override busy status
         try:
             if self.check_path_collision():
-                msg = 'WARNING: current filename configuration will lead to a data path collision for the next data collection.\n'
-                msg += 'If a data collection is in progress you can ignore this message.'
+                msg += 'WARNING: current filename configuration will lead to a data path collision for the next data collection.\n'
+                msg += 'If a data collection is in progress you can ignore this message.\n'
                 self.argout = self.argout + '\n' + msg
         except Exception as ex:
             print ex
 
-        if self.read_CacheMode:
-            msg = 'Data stored in local cache.\n'
+        if self.attr_CacheMode_read:
+            msg += 'Data stored in local cache.\n'
             self.argout = self.argout + '\n' + msg
 
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
