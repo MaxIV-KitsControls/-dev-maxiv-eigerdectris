@@ -991,27 +991,27 @@ class EigerDectris (PyTango.Device_4Impl):
             self.argout = "busy"  # never override busy status
         try:
             if self.check_path_collision():
-                msg += 'WARNING: current filename configuration will lead to a data path collision for the next data collection.\n'
-                msg += 'If a data collection is in progress you can ignore this message.\n'
-                self.argout = self.argout + '\n' + msg
+                msg += '\nWARNING: current filename configuration will lead to a data path collision for the next data collection.\n'
+                msg += 'If a data collection is in progress you can ignore this message.\n\n'
+                #self.argout = self.argout + '\n' + msg
         except Exception as ex:
             print ex
 
         if self.attr_CacheMode_read:
             msg += 'Data stored in local cache.\n'
-            self.argout = self.argout + '\n' + msg
+            #self.argout += msg
 
         if data_transfer_thread is not None:
-            msg = 'Data Transfer to storage is running.\n'
+            msg += 'Data Transfer to storage is running.\n'
         else:
-            msg = 'Data Transfer to storage is NOT running.\n'
+            msg += 'Data Transfer to storage is NOT running.\n'
 
-        self.argout += msg
+        #self.argout += msg
 
         if backup_thread is not None:
-            msg = 'Backup thread from DCU is running.\n'
+            msg += 'Backup thread from DCU is running.\n'
         else:
-            msg = 'Backup thread from DCU is NOT running.\n'
+            msg += 'Backup thread from DCU is NOT running.\n'
 
         self.argout += msg
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
