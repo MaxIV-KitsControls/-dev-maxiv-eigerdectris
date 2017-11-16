@@ -97,6 +97,8 @@ class DataTransferThread(threading.Thread):
         self.target_dir = '/data'
         self.local_dir = '/localdata'
 
+        threading.Thread.__init__(self, name=name)
+
     def run(self):
         """Main loop for hte data transfer to final storage."""
         print "%s data transfer starts" % (self.getName(),)
@@ -115,7 +117,7 @@ class DataTransferThread(threading.Thread):
         threading.Thread.join(self, timeout)
 
     def rsync(self, local_dir, target_dir):
-        os.system("rsync -aqz %s %s" % (local_dir, target_dir))
+        os.system("rsync -aqz %s/* %s/." % (local_dir, target_dir))
 
     def transfer_data(self, local_dir, target_dir):
         """
