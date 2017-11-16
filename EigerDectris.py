@@ -190,7 +190,7 @@ class EigerDectris (PyTango.Device_4Impl):
             self.StartBackupScript()
         except Exception as e:
             print "Error starting backup script, script not running", e
-        if self.attr_CacheMode_read():
+        if self.attr_CacheMode_read:
             try:
                 self.StartDataTransfer()
             except Exception as e:
@@ -898,6 +898,11 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.CacheMode_write) ENABLED START -----#
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
             self.attr_CacheMode_read = data
+	    # so that we put the data in the path prefix corresponding to the
+	    # cache mode, need to reset the backup script only if it was already running
+	    global backup_thread
+	    if backup_thread is not None:
+	        self.StartBackupScript()
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.CacheMode_write
 
