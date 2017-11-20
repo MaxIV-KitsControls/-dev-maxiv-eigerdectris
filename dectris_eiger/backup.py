@@ -113,11 +113,25 @@ class DataTransferThread(threading.Thread):
 
     def stop(self, timeout=None):
         """Stop the thread and wait for it to end."""
-        self._stopevent_data_transfer.set()
-        threading.Thread.join(self, timeout)
+	try:
+            self._stopevent_data_transfer.set()
+            #threading.Thread.join(self, timeout)
+	except Exception as ex:
+	    print ex
 
     def rsync(self, local_dir, target_dir):
-        os.system("rsync -aqz %s/* %s/." % (local_dir, target_dir))
+        visitors_local = os.path.join(local_dir, 'visitors', 'biomax')
+        visitors = os.path.join(target_dir, 'visitors', 'biomax')
+        staff_local = os.path.join(local_dir, 'staff', 'biomax')
+        staff = os.path.join(target_dir, 'staff', 'biomax')
+
+	if os.path.exists(visitors_local):
+	    visitors_dirs = ' '.join(os.listdir(visitors_local))
+            os.system("parsync --NP=8 --startdir=/localdata/visitors/biomax --nowait %s %s/." % (visitors_dirs, visitors))
+	
+	if os.path.exists(staff_local):
+	    staff_dirs = ' '.join(os.listdir(staff_local))
+            os.system("parsync --NP=8 --startdir=/localdata/staff/biomax --nowait  %s %s/." % (staff_dirs, staff))
 
     def transfer_data(self, local_dir, target_dir):
         """
