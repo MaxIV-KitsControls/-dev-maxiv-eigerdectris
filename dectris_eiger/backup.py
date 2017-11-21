@@ -46,7 +46,7 @@ class BackupThread(threading.Thread):
         logging.info("Elapsed time for backing up file %s is %d s, and speed is %.2f %s/s" % (filename, elapsed_time, file_size/elapsed_time, unit))
 
     def run(self):
-        """Main loop."""
+        """Main loop for downloading data from the dcu."""
         print "%s starts" % (self.getName(),)
 
         while not self._stopevent.isSet():
@@ -88,3 +88,62 @@ class BackupThread(threading.Thread):
         omega.attrs['vector'] = (0.0, -1.0, 0.0)
         h5file.close()
         logging.info("%s has been updated with rotation axis" % (filename))
+
+
+class DataTransferThread(threading.Thread):
+    def __init__(self, name='DataTransferThread'):
+        self._stopevent_data_transfer = threading.Event()
+        self._sleepperiod_data_transfer = 30.0
+        self.target_dir = '/data'
+        self.local_dir = '/localdata'
+
+        threading.Thread.__init__(self, name=name)
+
+    def run(self):
+        """Main loop for hte data transfer to final storage."""
+        print "%s data transfer starts" % (self.getName(),)
+
+        while not self._stopevent_data_transfer.isSet():
+            try:
+                self.transfer_data(self.local_dir, self.target_dir)
+            except:
+                self._stopevent_data_transfer.wait(self._sleepperiod_data_transfer)
+                continue
+            self._stopevent_data_transfer.wait(self._sleepperiod_data_transfer)
+
+    def stop(self, timeout=None):
+        """Stop the thread and wait for it to end."""
+	try:
+            self._stopevent_data_transfer.set()
+            #threading.Thread.join(self, timeout)
+	except Exception as ex:
+	    print ex
+
+    def rsync(self, local_dir, target_dir):
+        visitors_local = os.path.join(local_dir, 'visitors', 'biomax')
+        visitors = os.path.join(target_dir, 'visitors', 'biomax')
+        staff_local = os.path.join(local_dir, 'staff', 'biomax')
+        staff = os.path.join(target_dir, 'staff', 'biomax')
+
+	if os.path.exists(visitors_local):
+	    visitors_dirs = ' '.join(os.listdir(visitors_local))
+            os.system("parsync --NP=8 --startdir=/localdata/visitors/biomax --nowait %s %s/." % (visitors_dirs, visitors))
+	
+	if os.path.exists(staff_local):
+	    staff_dirs = ' '.join(os.listdir(staff_local))
+            os.system("parsync --NP=8 --startdir=/localdata/staff/biomax --nowait  %s %s/." % (staff_dirs, staff))
+
+    def transfer_data(self, local_dir, target_dir):
+        """
+        Copy all files in localfolder (e.g. /localdata) to final storage (e.g. /data.
+
+        Args:
+            local_dir: Directory, where to pick the files from
+            target_dir: Directory, where to store the files
+        """
+
+        thread = threading.Thread(target=self.rsync,
+                                  args=(local_dir, target_dir))
+
+        thread.start()
+        thread.join()

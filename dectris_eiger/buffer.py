@@ -13,6 +13,7 @@ import os
 import requests
 import urllib2
 import shutil
+import errno
 
 DOWNLOAD_CHUNK_SIZE = 512 * 1024
 
@@ -75,10 +76,10 @@ class EigerDataBuffer(object):
                         "port": self._port,
                         "api_version": self._api_v
                         }
-        
+
             url = ("http://{host}:{port}/filewriter/api/"
                    "{api_version}/files").format(**fmt_data)
-        
+
         response = requests.get(url)
         filenames = json.loads(response.text)
         return filenames
@@ -139,7 +140,7 @@ class EigerDataBuffer(object):
                 os.makedirs(os.path.dirname(targetPath))
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
-                    self._log('Could not create directory', os.path.dirname(targetPath))
+                    print 'Could not create directory: ', os.path.dirname(targetPath)
                     raise
         response = urllib2.urlopen(url, timeout = self._connectionTimeout)
         #response = requests.get(url)

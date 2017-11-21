@@ -69,6 +69,7 @@ except:
 
 
 backup_thread = None
+data_transfer_thread = None
 # attr_list_w = ["photon_energy"]
 # attr_list_r = ["detector_readout_time"]
 reading_list = []
@@ -189,6 +190,11 @@ class EigerDectris (PyTango.Device_4Impl):
             self.StartBackupScript()
         except Exception as e:
             print "Error starting backup script, script not running", e
+        if self.attr_CacheMode_read:
+            try:
+                self.StartDataTransfer()
+            except Exception as e:
+                print "Error starting data transfer script, script not running", e
         ## workaround for att proxy
         self.filename = PyTango.AttributeProxy('b311a-e/dia/det-fw-02/FilenamePattern')
         print 'device started....'
@@ -892,6 +898,11 @@ class EigerDectris (PyTango.Device_4Impl):
         #----- PROTECTED REGION ID(EigerDectris.CacheMode_write) ENABLED START -----#
         if self.flag_arm == 0 and self.get_state() != PyTango.DevState.MOVING:
             self.attr_CacheMode_read = data
+	    # so that we put the data in the path prefix corresponding to the
+	    # cache mode, need to reset the backup script only if it was already running
+	    global backup_thread
+	    if backup_thread is not None:
+	        self.StartBackupScript()
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.CacheMode_write
 
@@ -901,16 +912,17 @@ class EigerDectris (PyTango.Device_4Impl):
 
     def check_path_collision(self):
         """helper method for checking collision. The full path does not contains '_data_0001.h5' etc."""
-        if self.attr_CacheMode_read:
-            path = self.CachePrefix
-        else:
-            path = self.PathPrefix
-
-        full_path = os.path.join(path, (self.filename.read().value).lstrip(os.sep))
-        files = [fn for fn in glob.glob(full_path + '*') if not os.path.basename(fn).endswith(('jpeg', 'jpg'))]
+        full_cache_path = os.path.join(self.CachePrefix, (self.filename.read().value).lstrip(os.sep))
+        files = [fn for fn in glob.glob(full_cache_path + '*') if not os.path.basename(fn).endswith(('jpeg', 'jpg'))]
         if len(files) > 0:
-            self.debug_stream("Path collision detected")
+            self.debug_stream("Path collision detected in Cache path.")
             return True
+        full_data_path = os.path.join(self.PathPrefix, (self.filename.read().value).lstrip(os.sep))
+        files = [fn for fn in glob.glob(full_data_path + '*') if not os.path.basename(fn).endswith(('jpeg', 'jpg'))]
+        if len(files) > 0:
+            self.debug_stream("Path collision detected in Data path.")
+            return True
+
         return False
 
     def dev_state(self):
@@ -958,6 +970,9 @@ class EigerDectris (PyTango.Device_4Impl):
         :return: Device status
         :rtype: PyTango.ConstDevString
         """
+        global data_transfer_thread
+        global backup_thread
+
         self.debug_stream("In dev_status()")
         argout = ""
         msg = ""
@@ -976,16 +991,29 @@ class EigerDectris (PyTango.Device_4Impl):
             self.argout = "busy"  # never override busy status
         try:
             if self.check_path_collision():
-                msg += 'WARNING: current filename configuration will lead to a data path collision for the next data collection.\n'
-                msg += 'If a data collection is in progress you can ignore this message.\n'
-                self.argout = self.argout + '\n' + msg
+                msg += '\nWARNING: current filename configuration will lead to a data path collision for the next data collection.\n'
+                msg += 'If a data collection is in progress you can ignore this message.\n\n'
+                #self.argout = self.argout + '\n' + msg
         except Exception as ex:
             print ex
 
         if self.attr_CacheMode_read:
             msg += 'Data stored in local cache.\n'
-            self.argout = self.argout + '\n' + msg
+            #self.argout += msg
 
+        if data_transfer_thread is not None:
+            msg += 'Data Transfer to storage is running.\n'
+        else:
+            msg += 'Data Transfer to storage is NOT running.\n'
+
+        #self.argout += msg
+
+        if backup_thread is not None:
+            msg += 'Backup thread from DCU is running.\n'
+        else:
+            msg += 'Backup thread from DCU is NOT running.\n'
+
+        self.argout += msg
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
         self.__status = PyTango.Device_4Impl.dev_status(self)
@@ -1142,7 +1170,42 @@ class EigerDectris (PyTango.Device_4Impl):
         global backup_thread
         backup_thread.stop()
         backup_thread = None
-	#----- PROTECTED REGION END -----#	//	EigerDectris.StopBackupScript
+        #----- PROTECTED REGION END -----#	//	EigerDectris.StopBackupScript
+
+    def StartDataTransfer(self):
+        """
+        """
+        self.debug_stream("In StartDataTransfer()")
+        #----- PROTECTED REGION ID(EigerDectris.StartDataTransfer) ENABLED START -----#
+        global data_transfer_thread
+        if data_transfer_thread is not None:
+            try:
+                data_transfer_thread.stop()
+            except Exception as ex:
+                print ex
+        data_transfer_thread = dectris_eiger.backup.DataTransferThread()
+
+        # not sure if I should block the transfer if not in cache mode...
+        # Leaving out for now, less limiting...
+        # if not self.attr_CacheMode_read:
+        #     raise Exception("Device not in cache mode, nothing to transfer.")
+
+        data_transfer_thread.local_dir = self.CachePrefix
+        data_transfer_thread.target_dir = self.PathPrefix
+
+        print 'gonna run data transfer....'
+        data_transfer_thread.start()
+        #----- PROTECTED REGION END -----#  //  EigerDectris.StartDataTransfer
+
+    def StopDataTransfer(self):
+        """
+        """
+        self.debug_stream("In StopDataTransfer()")
+        #----- PROTECTED REGION ID(EigerDectris.StopDataTransfer) ENABLED START -----#
+        global data_transfer_thread
+        data_transfer_thread.stop()
+        data_transfer_thread = None
+    #----- PROTECTED REGION END -----#  //  EigerDectris.StopDataTransfer
 
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
 
@@ -1225,6 +1288,12 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
         'StopBackupScript':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'StartDataTransfer':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'StopDataTransfer':
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
     }
