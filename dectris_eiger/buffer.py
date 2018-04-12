@@ -146,7 +146,7 @@ class EigerDataBuffer(object):
                 os.makedirs(os.path.dirname(targetPath))
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
-                    self._log('Could not create directory', os.path.dirname(targetPath))
+                    print 'Could not create directory: ', os.path.dirname(targetPath)
                     raise
         response = urllib2.urlopen(url, timeout = self._connectionTimeout)
         #response = requests.get(url)
