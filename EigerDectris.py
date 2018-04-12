@@ -156,6 +156,7 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_FilesInBuffer_read = [""]
         self.attr_Error_read = [""]
         self.attr_CacheMode_read = False
+        self.attr_CollectionUUID_read = ""
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
         nums = self.APIVersion.split(".")
@@ -164,7 +165,7 @@ class EigerDectris (PyTango.Device_4Impl):
             self.PortNb = -1
 
         self.det = EigerDetector(self.Host, self.DataHost, self.PortNb, self.APIVersion, self.DataPortNb)
-
+        self.det.buffer.datacatalog_url = self.Datacatalog_url
         self.flag_arm = 0
 
         try:
@@ -901,6 +902,22 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.CacheMode_write
 
+    def read_CollectionUUID(self, attr):
+        self.debug_stream("In read_CollectionUUID()")
+        #----- PROTECTED REGION ID(EigerDectris.CollectionUUID_read) ENABLED START -----#
+        self.attr_CollectionUUID_read = self.det.buffer.CollectionUUID
+        attr.set_value(self.attr_CollectionUUID_read)
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.CollectionUUID_read
+
+    def write_CollectionUUID(self, attr):
+        self.debug_stream("In write_CollectionUUID()")
+        data = attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.CollectionUUID_write) ENABLED START -----#
+        self.det.buffer.CollectionUUID = data
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.CollectionUUID_write
+
     # -------------------------------------------------------------------------
     #    EigerDectris command methods
     # -------------------------------------------------------------------------
@@ -1250,6 +1267,10 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [PyTango.DevLong,
             'Number of threads for data transfer',
             [1]],
+        'Datacatalog_url':
+            [PyTango.DevString,
+            '',
+            ["http://b-v-kafka-0:9000/topics/biomax"]],
     }
 
     #    Command definitions

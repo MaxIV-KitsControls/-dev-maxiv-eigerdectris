@@ -56,6 +56,12 @@ class EigerDataBuffer(object):
         self._port = port
         self._api_v = api_version
         self._connectionTimeout = 24*3600
+        self.datacatalog_url = None
+        self.CollectionUUID = None
+        self.proxies = {
+            "http": None,
+            "https": None
+        }
 
     def list_files(self):
         """
@@ -149,6 +155,15 @@ class EigerDataBuffer(object):
             with open(target_fn, "wb") as f:
                 shutil.copyfileobj(response, f, DOWNLOAD_CHUNK_SIZE)
                 #download_chunks(response, f)
+            if self.datacatalog_url and self.CollectionUUID:
+                msg = {}
+                try:
+                    msg['uuid'] = self.CollectionUUID
+                    msg['file'] = target_fn
+                    msg['event'] = 'file_copied'
+                    requests.post(msg, data=json.dumps(msg), proxies=self.proxies)
+                except Exception as ex:
+                    self._log("Error sending collection info to the data catalog: %s" % self.msg)
         else:
             raise UnknownDataFileError(filename)
 
