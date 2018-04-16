@@ -14,6 +14,7 @@ import requests
 import urllib2
 import shutil
 import errno
+import time
 
 DOWNLOAD_CHUNK_SIZE = 512 * 1024
 
@@ -161,6 +162,7 @@ class EigerDataBuffer(object):
                     msg['uuid'] = self.CollectionUUID
                     msg['file'] = target_fn
                     msg['event'] = 'biomax-file-copied'
+                    msg['time'] = str(time.time())
                     requests.post(self.datacatalog_url, data=json.dumps(msg), proxies=self.proxies)
                 except Exception as ex:
                     print "Error sending collection info to the data catalog: message %s || error: %s" % (msg, ex)
