@@ -160,7 +160,7 @@ class EigerDataBuffer(object):
                 try:
                     msg['uuid'] = self.CollectionUUID
                     msg['file'] = target_fn
-                    msg['event'] = 'file_copied'
+                    msg['event'] = 'biomax-file-copied'
                     requests.post(self.datacatalog_url, data=json.dumps(msg), proxies=self.proxies)
                 except Exception as ex:
                     print "Error sending collection info to the data catalog: message %s || error: %s" % (msg, ex)
