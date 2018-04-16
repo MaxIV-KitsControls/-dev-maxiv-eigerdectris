@@ -56,6 +56,12 @@ class EigerDataBuffer(object):
         self._port = port
         self._api_v = api_version
         self._connectionTimeout = 24*3600
+        self.datacatalog_url = None
+        self.CollectionUUID = ""
+        self.proxies = {
+            "http": None,
+            "https": None
+        }
 
     def list_files(self):
         """
@@ -149,6 +155,15 @@ class EigerDataBuffer(object):
             with open(target_fn, "wb") as f:
                 shutil.copyfileobj(response, f, DOWNLOAD_CHUNK_SIZE)
                 #download_chunks(response, f)
+            if self.datacatalog_url and self.CollectionUUID != "":
+                msg = {}
+                try:
+                    msg['uuid'] = self.CollectionUUID
+                    msg['file'] = target_fn
+                    msg['event'] = 'biomax-file-copied'
+                    requests.post(self.datacatalog_url, data=json.dumps(msg), proxies=self.proxies)
+                except Exception as ex:
+                    print "Error sending collection info to the data catalog: message %s || error: %s" % (msg, ex)
         else:
             raise UnknownDataFileError(filename)
 
