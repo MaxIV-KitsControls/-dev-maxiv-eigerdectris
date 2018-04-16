@@ -1276,7 +1276,7 @@ class EigerDectrisClass(PyTango.DeviceClass):
         'Datacatalog_url':
             [PyTango.DevString,
             '',
-            ["http://b-v-kafka-0:9000/topics/biomax"]],
+            ["http://b-v-kafka-0:9000/topics/biomax-test"]],
     }
 
     #    Command definitions
@@ -1689,6 +1689,13 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Current cache mode, True: cached, False: non-cached",
+            }],
+        'CollectionUUID':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Unique id for the data collection",
             }],
     }
 
