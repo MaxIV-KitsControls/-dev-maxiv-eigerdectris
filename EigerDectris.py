@@ -981,7 +981,7 @@ class EigerDectris (PyTango.Device_4Impl):
     def read_StreamState(self, attr):
         self.debug_stream("In read_StreamState()")
         self.attr_StreamState_read = self.det.stream.stream_state
-        attr.set_value(self.attr_ImageAppendix_read)
+        attr.set_value(self.attr_StreamState_read)
 
     def read_StreamError(self, attr):
         self.debug_stream("In read_StreamError()")
