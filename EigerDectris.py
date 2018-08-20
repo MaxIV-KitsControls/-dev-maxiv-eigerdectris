@@ -160,6 +160,9 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_HeaderDetail_read = ""
         self.attr_HeaderAppendix_read = ""
         self.attr_ImageAppendix_read = ""
+        self.attr_StreamState_read = ""
+        self.attr_StreamError_read = ""
+        self.attr_StreamDropped_read = ""
 
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
@@ -975,7 +978,20 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderAppendix_write
 
+    def read_StreamState(self, attr):
+        self.debug_stream("In read_StreamState()")
+        self.attr_StreamState_read = self.det.stream.stream_state
+        attr.set_value(self.attr_ImageAppendix_read)
 
+    def read_StreamError(self, attr):
+        self.debug_stream("In read_StreamError()")
+        self.attr_StreamError_read = self.det.stream.stream_error
+        attr.set_value(self.attr_StreamError_read)
+
+    def read_StreamDropped(self, attr):
+        self.debug_stream("In read_StreamDropped()")
+        self.attr_StreamDropped_read = self.det.stream.stream_dropped
+        attr.set_value(self.attr_StreamDropped_read)
 
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderDetail_write
@@ -1057,7 +1073,7 @@ class EigerDectris (PyTango.Device_4Impl):
         rstate = self.det.get_state()
 
         if rstate == "na":
-            rstate = rstate + ". The detector was rebooted and \n has to be initialized"
+            rstate = rstate + "\nThe detector was rebooted and \n has to be initialized"
         self.argout = str(rstate)
 
         if self.get_status() == "busy":
@@ -1088,7 +1104,7 @@ class EigerDectris (PyTango.Device_4Impl):
 
         self.argout += msg
 
-        stream_msg = 'Stream interface is ' + self.det.stream.stream_mode + '\n'
+        stream_msg = 'Stream interface is ' + self.det.stream.stream_state + '\n'
         self.argout += stream_msg
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
@@ -1296,7 +1312,7 @@ class EigerDectris (PyTango.Device_4Impl):
         """
         self.debug_stream("In DisableStream()")
         #----- PROTECTED REGION ID(EigerDectris.DisableStream) ENABLED START -----#
-        self.det.stream.stream_mode = 'enabled'
+        self.det.stream.stream_mode = 'disabled'
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.DisableStream
 
@@ -1799,6 +1815,27 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Data that is appended to the image data",
+            }],        
+        'StreamState':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "State of the stream interface",
+            }],        
+        'StreamError':
+            [[PyTango.DevString,
+            PyTango.SPECTRUM,
+            PyTango.READ, 10],
+            {
+                'description': "status parameters causing error condition",
+            }],        
+        'StreamDropped':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "Number of images that got dropped as not requested",
             }],
     }
 

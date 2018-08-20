@@ -120,3 +120,47 @@ class EigerStream(object):
 
     stream_mode = property(get_stream_mode, set_stream_mode)
 
+    def get_stream_state(self, timeout=2.0, return_full=False):
+        """
+        Returns the stream state.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: the stream state
+        :rytpe: str
+        """
+        return get_value(self._host, self._port, self._api_v, "stream",
+                         "status", "state", timeout=timeout,
+                         return_full=return_full)
+
+    stream_state = property(get_stream_state)
+
+    def get_stream_error(self, timeout=2.0, return_full=False):
+        """
+        Returns the stream error.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: the stream state
+        :rytpe: str
+        """
+        return get_value(self._host, self._port, self._api_v, "stream",
+                         "status", "error", timeout=timeout,
+                         return_full=return_full)
+
+    stream_error = property(get_stream_error)
+
+    def get_stream_dropped(self, timeout=2.0, return_full=False):
+        """
+        Returns the stream error.
+
+        :param float timeout: communication timeout in seconds
+        :param bool return_full: whether to return the full response dict
+        :returns: the stream state
+        :rytpe: str
+        """
+        return get_value(self._host, self._port, self._api_v, "stream",
+                         "status", "dropped", timeout=timeout,
+                         return_full=return_full)
+
+    stream_dropped = property(get_stream_dropped)
