@@ -1316,6 +1316,13 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.DisableStream
 
+
+    def Initialize(self):
+        """
+        """
+        self.debug_stream("In Initialize()")
+        self.det.initialize()
+
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
 
     #----- PROTECTED REGION END -----#	//	EigerDectris.programmer_methods
@@ -1373,6 +1380,9 @@ class EigerDectrisClass(PyTango.DeviceClass):
 
     #    Command definitions
     cmd_list = {
+        'Initialize':
+            [[PyTango.DevVoid, "none"], 
+            [PyTango.DevVoid, "none"]],
         'Arm':
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],

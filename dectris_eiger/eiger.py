@@ -535,7 +535,7 @@ class EigerDetector(object):
     sensor_thickness = property(get_sensor_thickness)
 
     # initialize
-    def initialize(self, timeout=100.0):
+    def initialize(self, timeout=1.0):
         """
         Initialize the detector.
 
