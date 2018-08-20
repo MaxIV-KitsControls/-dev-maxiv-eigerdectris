@@ -11,6 +11,7 @@
 from .buffer import EigerDataBuffer
 from .communication import get_value, set_value
 from .filewriter import EigerFileWriter
+from .stream import EigerStream
 
 
 class EigerDetector(object):
@@ -25,8 +26,9 @@ class EigerDetector(object):
 
     def __init__(self, host, data_host, port=80, api_version="1.0.0", data_port=80):
         super(EigerDetector, self).__init__()
-        self.filewriter = EigerFileWriter(host, port, api_version)	
+        self.filewriter = EigerFileWriter(host, port, api_version)
         self.buffer = EigerDataBuffer(data_host, data_port, api_version)
+        self.stream = EigerStream(host, port, api_version)
         self._host = host
         self._port = port
         self._api_v = api_version
