@@ -157,6 +157,13 @@ class EigerDectris (PyTango.Device_4Impl):
         self.attr_Error_read = [""]
         self.attr_CacheMode_read = False
         self.attr_CollectionUUID_read = ""
+        self.attr_HeaderDetail_read = ""
+        self.attr_HeaderAppendix_read = ""
+        self.attr_ImageAppendix_read = ""
+        self.attr_StreamState_read = ""
+        self.attr_StreamError_read = ""
+        self.attr_StreamDropped_read = ""
+
         #----- PROTECTED REGION ID(EigerDectris.init_device) ENABLED START -----#
 
         nums = self.APIVersion.split(".")
@@ -923,6 +930,71 @@ class EigerDectris (PyTango.Device_4Impl):
 
         #----- PROTECTED REGION END -----#  //  EigerDectris.CollectionUUID_write
 
+    def read_HeaderDetail(self, attr):
+        self.debug_stream("In read_HeaderDetail()")
+        #----- PROTECTED REGION ID(EigerDectris.HeaderDetail_read) ENABLED START -----#
+        self.attr_HeaderDetail_read = self.det.stream.header_detail
+        attr.set_value(self.attr_HeaderDetail_read)
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderDetail_read
+
+    def write_HeaderDetail(self, attr):
+        self.debug_stream("In write_HeaderDetail()")
+        data = attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.HeaderDetail_write) ENABLED START -----#
+        self.det.stream.header_detail = data
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderDetail_write
+
+    def read_HeaderAppendix(self, attr):
+        self.debug_stream("In read_HeaderAppendix()")
+        #----- PROTECTED REGION ID(EigerDectris.HeaderAppendix_read) ENABLED START -----#
+        self.attr_HeaderAppendix_read = self.det.stream.header_appendix
+        attr.set_value(self.attr_HeaderAppendix_read)
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderAppendix_read
+
+    def write_HeaderAppendix(self, attr):
+        self.debug_stream("In write_HeaderAppendix()")
+        data = attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.HeaderAppendix_write) ENABLED START -----#
+        self.det.stream.header_appendix = data
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderAppendix_write
+
+    def read_ImageAppendix(self, attr):
+        self.debug_stream("In read_ImageAppendix()")
+        #----- PROTECTED REGION ID(EigerDectris.ImageAppendix_read) ENABLED START -----#
+        self.attr_ImageAppendix_read = self.det.stream.image_appendix
+        attr.set_value(self.attr_ImageAppendix_read)
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderAppendix_read
+
+    def write_ImageAppendix(self, attr):
+        self.debug_stream("In write_ImageAppendix()")
+        data = attr.get_write_value()
+        #----- PROTECTED REGION ID(EigerDectris.ImageAppendix_write) ENABLED START -----#
+        self.det.stream.image_appendix = data
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderAppendix_write
+
+    def read_StreamState(self, attr):
+        self.debug_stream("In read_StreamState()")
+        self.attr_StreamState_read = self.det.stream.stream_state
+        attr.set_value(self.attr_StreamState_read)
+
+    def read_StreamError(self, attr):
+        self.debug_stream("In read_StreamError()")
+        self.attr_StreamError_read = self.det.stream.stream_error
+        attr.set_value(self.attr_StreamError_read)
+
+    def read_StreamDropped(self, attr):
+        self.debug_stream("In read_StreamDropped()")
+        self.attr_StreamDropped_read = self.det.stream.stream_dropped
+        attr.set_value(self.attr_StreamDropped_read)
+
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.HeaderDetail_write
     # -------------------------------------------------------------------------
     #    EigerDectris command methods
     # -------------------------------------------------------------------------
@@ -1001,7 +1073,7 @@ class EigerDectris (PyTango.Device_4Impl):
         rstate = self.det.get_state()
 
         if rstate == "na":
-            rstate = rstate + ". The detector was rebooted and \n has to be initialized"
+            rstate = rstate + "\nThe detector was rebooted and \n has to be initialized"
         self.argout = str(rstate)
 
         if self.get_status() == "busy":
@@ -1031,6 +1103,9 @@ class EigerDectris (PyTango.Device_4Impl):
             msg += 'Backup thread from DCU is NOT running.\n'
 
         self.argout += msg
+
+        stream_msg = 'Stream interface is ' + self.det.stream.stream_state + '\n'
+        self.argout += stream_msg
         #----- PROTECTED REGION END -----#	//	EigerDectris.Status
         self.set_status(self.argout)
         self.__status = PyTango.Device_4Impl.dev_status(self)
@@ -1224,6 +1299,30 @@ class EigerDectris (PyTango.Device_4Impl):
         data_transfer_thread = None
     #----- PROTECTED REGION END -----#  //  EigerDectris.StopDataTransfer
 
+    def EnableStream(self):
+        """
+        """
+        self.debug_stream("In EnableStream()")
+        #----- PROTECTED REGION ID(EigerDectris.EnableStream) ENABLED START -----#
+        self.det.stream.stream_mode = 'enabled'
+        #----- PROTECTED REGION END -----#  //  EigerDectris.EnableStream
+
+    def DisableStream(self):
+        """
+        """
+        self.debug_stream("In DisableStream()")
+        #----- PROTECTED REGION ID(EigerDectris.DisableStream) ENABLED START -----#
+        self.det.stream.stream_mode = 'disabled'
+
+        #----- PROTECTED REGION END -----#  //  EigerDectris.DisableStream
+
+
+    def Initialize(self):
+        """
+        """
+        self.debug_stream("In Initialize()")
+        self.det.initialize()
+
     #----- PROTECTED REGION ID(EigerDectris.programmer_methods) ENABLED START -----#
 
     #----- PROTECTED REGION END -----#	//	EigerDectris.programmer_methods
@@ -1281,6 +1380,9 @@ class EigerDectrisClass(PyTango.DeviceClass):
 
     #    Command definitions
     cmd_list = {
+        'Initialize':
+            [[PyTango.DevVoid, "none"], 
+            [PyTango.DevVoid, "none"]],
         'Arm':
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
@@ -1315,6 +1417,12 @@ class EigerDectrisClass(PyTango.DeviceClass):
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
         'StopDataTransfer':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'EnableStream':
+            [[PyTango.DevVoid, "none"],
+            [PyTango.DevVoid, "none"]],
+        'DisableStream':
             [[PyTango.DevVoid, "none"],
             [PyTango.DevVoid, "none"]],
     }
@@ -1696,6 +1804,48 @@ class EigerDectrisClass(PyTango.DeviceClass):
             PyTango.READ_WRITE],
             {
                 'description': "Unique id for the data collection",
+            }],
+        'HeaderDetail':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Detail of header data to be sent",
+            }],
+        'HeaderAppendix':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Data that is appended to the header data",
+            }],       
+        'ImageAppendix':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ_WRITE],
+            {
+                'description': "Data that is appended to the image data",
+            }],        
+        'StreamState':
+            [[PyTango.DevString,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "State of the stream interface",
+            }],        
+        'StreamError':
+            [[PyTango.DevString,
+            PyTango.SPECTRUM,
+            PyTango.READ, 10],
+            {
+                'description': "status parameters causing error condition",
+            }],        
+        'StreamDropped':
+            [[PyTango.DevLong,
+            PyTango.SCALAR,
+            PyTango.READ],
+            {
+                'description': "Number of images that got dropped as not requested",
             }],
     }
 
